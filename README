@@ -1,0 +1,10 @@
+Utilities
+
+A collection of (mostly) static utility classes and methods. Crafted
+for function and fun.
+
+- Reflection
+- Conversion
+- Logging
+- Byte array search (Knuth-Morris-Pratt)
+- Property binding

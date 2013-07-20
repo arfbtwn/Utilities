@@ -27,15 +27,17 @@ import java.util.List;
 import little.nj.util.ReflectionUtil;
 
 /**
+ * Grand Unified Event Support
+ * 
  * @author Nicholas Little
  *
  */
-public final class EventSupport<T extends EventListener, E extends EventObject> 
-    implements IEventSupport<T, E> {
+public class EventSupport<T extends EventListener, E extends EventObject> 
+    implements IEventSupport<T> {
 
-    Method event = null;
+    private Method event = null;
     
-    List<T> listeners = new ArrayList<>();
+    private final List<T> listeners = new ArrayList<>();
     
     /* (non-Javadoc)
      * @see little.nj.gui.events.IEventSupport#addEventListener(java.lang.Object)
@@ -53,15 +55,22 @@ public final class EventSupport<T extends EventListener, E extends EventObject>
         listeners.remove(aListener);
     }
     
+    /**
+     * Fires the appropriate event method, based on 
+     * event argument type
+     * 
+     * @param args
+     */
     public final synchronized void fireEvent(E args) {
-        if (findMethod(args)) {
+        Method m = getMethod(args);
+        if (m != null) {
             for(T i : listeners) {
                 
                 try {
-                    event.invoke(i, args);
+                    m.invoke(i, args);
                 } catch (IllegalAccessException | IllegalArgumentException
                         | InvocationTargetException e) {
-                    // TODO Auto-generated catch block
+                    
                     e.printStackTrace();
                 }
                 
@@ -69,15 +78,28 @@ public final class EventSupport<T extends EventListener, E extends EventObject>
         }
     }
     
-    private boolean findMethod(E args) {
+    /**
+     * Gets the Method to execute on the listeners
+     * 
+     * @param args
+     * @return
+     */
+    protected Method getMethod(E args) {
         if (event == null && listeners.size() > 0) {
             
             Class<?> t = args.getClass();
             T listener = listeners.get(0);
             
             event = ReflectionUtil.getInstance().getMethodByArgs(listener, t);
+            
+            if (event == null)
+                throw new IllegalArgumentException(
+                        String.format(
+                                "No method receiving type '%s' on listener",
+                                listener.getClass()
+                                ));
         }
-        return event != null;
+        return event;
     }
     
 }

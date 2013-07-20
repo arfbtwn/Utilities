@@ -18,15 +18,25 @@
 package little.nj.gui.events;
 
 import java.util.EventListener;
-import java.util.EventObject;
 
 /**
+ * 
+ * 
  * @author Nicholas Little
  *
  */
-public interface IEventSupport<T extends EventListener, E extends EventObject> {
+public interface IEventSupport<T extends EventListener> {
 
+    /**
+     * Register a listener
+     * @param aListener
+     */
     void addEventListener(T aListener);
+    
+    /**
+     * Remove a registered listener
+     * @param aListener
+     */
     void removeEventListener(T aListener);
     
 }

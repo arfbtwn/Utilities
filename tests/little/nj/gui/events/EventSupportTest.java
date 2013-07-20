@@ -75,15 +75,18 @@ public class EventSupportTest {
         es.fireEvent(new ActionEvent(this, 0, "Foo"));
         
         assertEquals(1, ml.count);
+        assertEquals("Foo", ml.last_command);
     }
 
     class MockListener implements ActionListener {
 
         int count = 0;
+        String last_command = null;
         
         @Override
         public void actionPerformed(ActionEvent e) {
             ++count;
+            last_command = e.getActionCommand();
         }
         
     }

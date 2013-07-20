@@ -20,7 +20,7 @@ package little.nj.gui.events;
 import java.util.EventListener;
 
 /**
- * 
+ * A decoration interface, used to standardise {@link EventSupport}
  * 
  * @author Nicholas Little
  *

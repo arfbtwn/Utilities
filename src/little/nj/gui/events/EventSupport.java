@@ -83,6 +83,7 @@ public class EventSupport<T extends EventListener, E extends EventObject>
      * 
      * @param args
      * @return
+     * @throws IllegalArgumentException if no method taking parameter E is found
      */
     protected Method getMethod(E args) {
         if (event == null && listeners.size() > 0) {

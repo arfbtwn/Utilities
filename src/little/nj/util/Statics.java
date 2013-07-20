@@ -33,7 +33,7 @@ import javax.swing.ImageIcon;
  * 
  */
 public final class Statics {
-
+    
     private Statics() { }
     
     /**
@@ -65,6 +65,11 @@ public final class Statics {
     public final static boolean isNullOrWhiteSpace(String x) {
         return x == null || x.trim().isEmpty();
     }
+    
+    /**
+     * The empty string, for semantic effect
+     */
+    public final static String EMPTY_STRING = "";
 
     /**
      * Reads a file, returns a byte array

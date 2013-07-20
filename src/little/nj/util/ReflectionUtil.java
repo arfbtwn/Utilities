@@ -19,27 +19,98 @@ package little.nj.util;
 
 import java.lang.reflect.Method;
 
+import little.nj.util.MethodMatchers.IMethodMatcher;
+import little.nj.util.MethodMatchers.NameMatcher;
+import little.nj.util.MethodMatchers.ArgumentMatcher;
+import little.nj.util.MethodMatchers.ExactMatcher;
 
 /**
  * @author Nicholas Little
  *
  */
-public class ReflectionUtil {
-
-    public enum Strategy { RECURSIVE, ITERATIVE } 
+public abstract class ReflectionUtil {
     
-    private Strategy strategy;
-    
-    public ReflectionUtil() {
-        this(Strategy.RECURSIVE);
-    }
-    
-    public ReflectionUtil(Strategy strategy) { 
-        this.strategy = strategy;
+    /**
+     * Searches the ancestral tree by recursion
+     *
+     */
+    public static class RecursiveUtil extends ReflectionUtil {
+        @Override 
+        protected Method getMethodImpl(Class<?> claz, IMethodMatcher matcher) {
+            if (claz == null)
+                return null;
+            
+            try {
+                Method[] poss = claz.getDeclaredMethods();
+                
+                Method rv;
+                if ((rv = matcher.find(poss)) != null) {
+                    return rv;
+                }
+                
+            } catch (SecurityException e) { }
+            
+            return getMethodImpl(claz.getSuperclass(), matcher);
+        }
     }
     
     /**
-     * @see ReflectionUtil#getMethod(Class, String, Class...)
+     * Searches the tree by iteration
+     *
+     */
+    public static class IterativeUtil extends ReflectionUtil {
+        @Override 
+        protected Method getMethodImpl(Class<?> claz, IMethodMatcher matcher) {
+            do {
+                try {
+                    if (claz == null)
+                        break;
+                    
+                    Method[] poss = claz.getDeclaredMethods();
+                    
+                    Method rv;
+                    if ((rv = matcher.find(poss)) != null) {
+                        return rv;
+                    }
+                    
+                    claz = claz.getSuperclass();
+                    
+                } catch (SecurityException e) { break; }
+            } while(true);
+            
+            return null;
+        }
+    }
+    
+    /**
+     * @see ReflectionUtil#getMethodImpl(Class, IMethodMatcher)
+     * 
+     * @param obj
+     * @param matcher
+     * @return 
+     */
+    protected Method getMethodImpl(Object obj, IMethodMatcher matcher) {
+        if (obj == null)
+            return null;
+        
+        return getMethodImpl(obj.getClass(), matcher);
+    }
+    
+    /**
+     * Searches the ancestral tree by recursion or iteration until
+     * the appropriate method signature is found, or the tree has
+     * been fully traversed
+     * 
+     * @param clz
+     * @param matcher
+     * @return null if clz is null or the method was not found
+     */
+    protected abstract Method getMethodImpl(Class<?> clz, IMethodMatcher matcher);
+    
+    /**
+     * Uses an {@link ExactMatcher} to return the appropriate method
+     * 
+     * @see ReflectionUtil#getMethodImpl(Object, IMethodMatcher)
      * 
      * @param obj
      * @param method
@@ -47,140 +118,78 @@ public class ReflectionUtil {
      * @return Method or null
      */
     public Method getMethod(Object obj, String method, Class<?>...clz) {
-        if (obj == null)
-            return null;
-        
-        return getMethod(obj.getClass(), method, clz);
+        return getMethodImpl(obj, new ExactMatcher(method, clz));
     }
     
     /**
-     * Searches the ancestral tree for the appropriate method until
-     * we get to the top.
+     * Uses an {@link ExactMatcher} to return the appropriate method
      * 
-     * @param obj
-     * @param method
-     * @param clz
-     * @return Method or null
-     */
-    public Method getMethod(Class<?> claz, String method, Class<?>...clz)
-    {
-        switch(strategy) {
-        case RECURSIVE:
-            return getMethodRecursive(claz, method, clz);
-        case ITERATIVE:
-        default:
-            return getMethodIterative(claz, method, clz);
-                
-        }
-    }
-    
-    /**
-     * Searches the ancestral tree for the named method until
-     * we get to the top.
-     * 
-     * @param obj
-     * @param method
-     * @return
-     */
-    public Method getMethodByName(Object obj, String method) {
-        if (obj == null)
-            return null;
-        
-        return getMethodByName(obj.getClass(), method);
-    }
-    
-    /**
-     * @see ReflectionUtil#getMethodByName(Object, String)
+     * @see ReflectionUtil#getMethodImpl(Class, IMethodMatcher)
      * 
      * @param claz
      * @param method
+     * @param clz
+     * @return
+     */
+    public Method getMethod(Class<?> claz, String method, Class<?>...clz)
+    {
+        return getMethodImpl(claz, new ExactMatcher(method, clz));
+    }
+    
+    /**
+     * Uses a {@link NameMatcher} to return the appropriate method
+     * 
+     * @see ReflectionUtil#getMethodImpl(Object, IMethodMatcher)
+     * 
+     * @param obj
+     * @param method
+     * @param clzprivate 
+     * @return Method or null
+     */
+    public Method getMethodByName(Object obj, String method) {
+        return getMethodImpl(obj, new NameMatcher(method));
+    }
+    
+    /**
+     * Uses a {@link NameMatcher} to return the appropriate method
+     * 
+     * @see ReflectionUtil#getMethodImpl(Class, IMethodMatcher)
+     * 
+     * @param claz
+     * @param method
+     * @param clz
      * @return
      */
     public Method getMethodByName(Class<?> claz, String method) {
-        switch(strategy) {
-        case RECURSIVE:
-            return getMethodByNameRecursive(claz, method);
-        case ITERATIVE:
-        default:
-            return getMethodByNameIterative(claz, method);
-        }
+        return getMethodImpl(claz, new NameMatcher(method));
     }
     
-    private final static Method getMethodIterative(Class<?> claz, String method, Class<?>...clz) {
-        do {
-            try {
-                return claz.getDeclaredMethod(method, clz);
-            } catch (NoSuchMethodException e) {
-                claz = claz.getSuperclass();
-                
-                if (claz == null)
-                    break;
-                
-            } catch (SecurityException e) { break; }
-        } while(true);
-        
-        return null;
+    /**
+     * Uses an {@link ArgumentMatcher} to return the appropriate method
+     * 
+     * @see ReflectionUtil#getMethodImpl(Object, IMethodMatcher)
+     * 
+     * @param obj
+     * @param method
+     * @param clzprivate 
+     * @return Method or null
+     */
+    public Method getMethodByArgs(Object obj, Class<?>...clz) {
+        return getMethodImpl(obj, new ArgumentMatcher(clz));
     }
     
-    private final static Method getMethodRecursive(Class<?> claz, String method, Class<?>...clz) {
-        try {
-            return claz.getDeclaredMethod(method, clz);
-        } catch (NoSuchMethodException e) {
-            claz = claz.getSuperclass();
-            if (claz != null)
-                return getMethodRecursive(claz, method, clz);
-                
-        } catch (SecurityException e) { }
-        
-        return null;
-    }
-    
-    private final static Method getMethodByNameRecursive(Class<?> claz, String method) {
-        try {
-            Method[] poss = claz.getDeclaredMethods();
-            
-            Method rv;
-            if ((rv = match(poss, method)) != null) {
-                return rv;
-            }
-            
-            claz = claz.getSuperclass();
-                
-            if (claz != null)
-                return getMethodByNameRecursive(claz, method);
-            
-        } catch (SecurityException e) { }
-        
-        return null;
-    }
-    
-    private final static Method getMethodByNameIterative(Class<?> claz, String method) {
-        do {
-            try {
-                Method[] poss = claz.getDeclaredMethods();
-                
-                Method rv;
-                if ((rv = match(poss, method)) != null) {
-                    return rv;
-                }
-                
-                claz = claz.getSuperclass();
-                
-                if (claz == null)
-                    break;
-                
-            } catch (SecurityException e) { break; }
-        } while(true);
-        
-        return null;
-    }
-    
-    private final static Method match(Method[] methods, String name) {
-        for(Method i : methods) {
-            if (i.getName().equals(name))
-                return i;
-        }
-        return null;
+    /**
+     * Uses an {@link ArgumentMatcher} to return the appropriate method
+     * 
+     * @see ReflectionUtil#getMethodImpl(Class, IMethodMatcher)
+     * 
+     * @param claz
+     * @param method
+     * @param clz
+     * @return
+     */
+    public Method getMethodByArgs(Class<?> claz, Class<?>...clz) {
+        return getMethodImpl(claz, new ArgumentMatcher(clz));
     }
     
     /**
@@ -189,7 +198,7 @@ public class ReflectionUtil {
      */
     public final synchronized static ReflectionUtil getInstance() {
         if (_instance == null)
-            _instance = new ReflectionUtil();
+            _instance = new RecursiveUtil();
         
         return _instance;
     }

@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 import java.lang.reflect.Method;
 
 import little.nj.util.ReflectionUtil;
-import little.nj.util.ReflectionUtil.Strategy;
+import little.nj.util.ReflectionUtil.*;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -59,8 +59,8 @@ public class ReflectionUtilTest {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        RECURSOR = new ReflectionUtil(Strategy.RECURSIVE);
-        ITERATOR = new ReflectionUtil(Strategy.ITERATIVE);
+        RECURSOR = new RecursiveUtil();
+        ITERATOR = new IterativeUtil();
         
         OBJECT = new Obj();
         OBJECT2 = new Obj2();
@@ -98,6 +98,24 @@ public class ReflectionUtilTest {
         assertNotNull(rv);
         assertEquals(METHOD2, rv.getName());
         assertEquals(String.class, rv.getParameterTypes()[0]);
+    }
+    
+    @Test
+    public void Test_Recursive_Finds_Method_By_Args() {
+        Method rv = RECURSOR.getMethodByArgs(OBJECT, new Class[] { int.class });
+        
+        assertNotNull(rv);
+        assertEquals(METHOD, rv.getName());
+        assertEquals(int.class, rv.getParameterTypes()[0]);
+    }
+    
+    @Test
+    public void Test_Iterative_Finds_Method_By_Args() {
+        Method rv = ITERATOR.getMethodByArgs(OBJECT, new Class[] { int.class });
+        
+        assertNotNull(rv);
+        assertEquals(METHOD, rv.getName());
+        assertEquals(int.class, rv.getParameterTypes()[0]);
     }
 
 }

@@ -17,10 +17,12 @@
  */
 package little.nj.gui;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +41,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class LookAndFeelDialog extends JDialog {
 
     public static final Map<String, LookAndFeelInfo> LOOK_AND_FEELS;
+    
     static {
         LOOK_AND_FEELS = new HashMap<String, LookAndFeelInfo>();
         for (LookAndFeelInfo i : UIManager.getInstalledLookAndFeels())
@@ -51,6 +54,7 @@ public class LookAndFeelDialog extends JDialog {
      */
     public static void showDialog() {
         LookAndFeelDialog d = new LookAndFeelDialog();
+        
         d.setVisible(true);
         while (d.isShowing())
             try {
@@ -59,26 +63,63 @@ public class LookAndFeelDialog extends JDialog {
                 e.printStackTrace();
             }
     }
+    
+    /**
+     * Changes the UIManager's style, swallows all exceptions
+     * 
+     * @param key
+     */
+    public static void setStyle(String key) {
+     
+        if (!LOOK_AND_FEELS.containsKey(key))
+            throw new IllegalArgumentException(
+                    String.format("Invalid Key: '%s'\nPossibles: '%s'",
+                            key, LOOK_AND_FEELS.keySet().toArray())
+                            );        
+        
+        try {
+            UIManager.setLookAndFeel(
+                    LOOK_AND_FEELS.get(key).getClassName()
+                    );
+            
+        } catch (ClassNotFoundException e1) {
+            e1.printStackTrace();
+        } catch (InstantiationException e1) {
+            e1.printStackTrace();
+        } catch (IllegalAccessException e1) {
+            e1.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e1) {
+            e1.printStackTrace();
+        }
+        
+    }
 
-    private final JButton           close;
+    private JButton           close;
 
-    private final JLabel            label;
+    private JLabel            label;
 
-    private final JComboBox<String> list;
+    private JComboBox<String> list;
 
-    private final JPanel            panel;
+    private JPanel            panel;
 
     private LookAndFeelDialog() {
         super();
-        panel = new JPanel();
-        label = new JLabel("Select Look 'n' Feel");
-        list = new JComboBox<String>(LOOK_AND_FEELS.keySet().toArray(
-                new String[0]));
-        close = new JButton("Close");
+        init();
+    }
+    
+    public LookAndFeelDialog(Window owner, ModalityType modality) {
+        super(owner, modality);
         init();
     }
 
-    private void init() {
+    protected void init() {
+        panel = new JPanel();
+        label = new JLabel("Select Look 'n' Feel");
+        list = new JComboBox<String>(
+                LOOK_AND_FEELS.keySet().toArray(new String[0])
+                );
+        close = new JButton("Close");
+        
         setContentPane(panel);
         GroupLayout layout = new GroupLayout(panel);
         panel.setLayout(layout);
@@ -103,36 +144,46 @@ public class LookAndFeelDialog extends JDialog {
                                 .addGap(10).addComponent(list))
                 .addComponent(close).addContainerGap());
         list.setSelectedItem(UIManager.getLookAndFeel().getName());
-        list.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    String key = (String) e.getItem();
-                    try {
-                        UIManager.setLookAndFeel(LOOK_AND_FEELS.get(key)
-                                .getClassName());
-                        SwingUtilities
-                                .updateComponentTreeUI(LookAndFeelDialog.this);
-                    } catch (ClassNotFoundException e1) {
-                        e1.printStackTrace();
-                    } catch (InstantiationException e1) {
-                        e1.printStackTrace();
-                    } catch (IllegalAccessException e1) {
-                        e1.printStackTrace();
-                    } catch (UnsupportedLookAndFeelException e1) {
-                        e1.printStackTrace();
-                    }
-                }
-            }
-        });
-        close.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                LookAndFeelDialog.this.setVisible(false);
-            }
-        });
+        
+        list.addItemListener(DEFAULT_ITEM_LISTENER);
+        close.addActionListener(DEFAULT_CLOSE_LISTENER);
+        
         pack();
     }
+    
+    public void addStyleChangeListener(ItemListener aListener) {
+        list.addItemListener(aListener);
+    }
+    
+    public void removeStyleChangeListener(ItemListener aListener) {
+        list.removeItemListener(aListener);
+    }
+    
+    protected final ActionListener DEFAULT_CLOSE_LISTENER = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            LookAndFeelDialog.this.dispatchEvent(
+                    new WindowEvent(
+                            LookAndFeelDialog.this, WindowEvent.WINDOW_CLOSING
+                            )
+                    );
+        }
+        
+    };
+    
+    protected final ItemListener DEFAULT_ITEM_LISTENER = new ItemListener() {
+
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                String key = (String) e.getItem();
+                
+                setStyle(key);
+
+                SwingUtilities.updateComponentTreeUI(LookAndFeelDialog.this);
+            }
+        }
+    };
 }

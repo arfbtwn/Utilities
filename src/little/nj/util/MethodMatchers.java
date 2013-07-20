@@ -4,22 +4,18 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 public class MethodMatchers {
-
-    static interface IMethodMatcher extends IMatcher<Method> { }
     
-    static abstract class AbstractMatcher implements IMethodMatcher {
-        public abstract boolean matches(Method m);
-        
-        public Method find(Method[] m) {
-            for(Method i : m)
-                if (matches(i))
-                    return i;
-            
-            return null;
-        }
-    }
+    public static interface IMethodMatcher extends IMatcher<Method> { }
     
-    static class NameMatcher extends AbstractMatcher {
+    public static abstract class MethodMatcher 
+        extends AbstractMatcher<Method>
+        implements IMethodMatcher
+    { }
+    
+    /**
+     * Matches method names against a regular expression
+     */
+    static class NameMatcher extends MethodMatcher {
         
         final String pattern;
         
@@ -32,7 +28,10 @@ public class MethodMatchers {
         }
     }
     
-    static class ArgumentMatcher extends AbstractMatcher {
+    /**
+     * Matches on parameter types
+     */
+    static class ArgumentMatcher extends MethodMatcher {
         final Class<?>[] args;
         
         ArgumentMatcher(Class<?>...args) {
@@ -44,7 +43,10 @@ public class MethodMatchers {
         }
     }
     
-    static class ExactMatcher extends AbstractMatcher {
+    /**
+     * Matches on name and parameters
+     */
+    static class ExactMatcher extends MethodMatcher {
         NameMatcher name;
         ArgumentMatcher args;
         

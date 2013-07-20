@@ -32,7 +32,6 @@ public abstract class ReflectionUtil {
     
     /**
      * Searches the ancestral tree by recursion
-     *
      */
     public static class RecursiveUtil extends ReflectionUtil {
         @Override 
@@ -44,7 +43,7 @@ public abstract class ReflectionUtil {
                 Method[] poss = claz.getDeclaredMethods();
                 
                 Method rv;
-                if ((rv = matcher.find(poss)) != null) {
+                if ((rv = matcher.findFirst(poss)) != null) {
                     return rv;
                 }
                 
@@ -56,7 +55,6 @@ public abstract class ReflectionUtil {
     
     /**
      * Searches the tree by iteration
-     *
      */
     public static class IterativeUtil extends ReflectionUtil {
         @Override 
@@ -69,7 +67,7 @@ public abstract class ReflectionUtil {
                     Method[] poss = claz.getDeclaredMethods();
                     
                     Method rv;
-                    if ((rv = matcher.find(poss)) != null) {
+                    if ((rv = matcher.findFirst(poss)) != null) {
                         return rv;
                     }
                     

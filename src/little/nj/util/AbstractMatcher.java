@@ -15,28 +15,36 @@
  *  You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.gui.events;
+package little.nj.util;
 
-import java.util.EventListener;
+import java.util.ArrayList;
+import java.util.List;
+
+@SuppressWarnings("unchecked")
 
 /**
- * A decoration interface, used to standardise {@link EventSupport}
+ * The abstract base class of all matchers
  * 
  * @author Nicholas Little
  *
  */
-public interface IEventSupport<T extends EventListener> {
-
-    /**
-     * Register a listener
-     * @param aListener
-     */
-    void addEventListener(T aListener);
+public abstract class AbstractMatcher<T> implements IMatcher<T> {
     
-    /**
-     * Remove a registered listener
-     * @param aListener
-     */
-    void removeEventListener(T aListener);
+    public T findFirst(T[] m) {
+        for(T i : m)
+            if (matches(i))
+                return i;
+        
+        return null;
+    }
     
+    public T[] findAll(T[] m) {
+        List<T> rv = new ArrayList<>();
+        
+        for(T i : m)
+            if (matches(i))
+                rv.add(i);
+        
+        return (T[])rv.toArray();
+    }
 }

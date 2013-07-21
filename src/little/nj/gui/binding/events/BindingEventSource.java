@@ -17,10 +17,8 @@
  */
 package little.nj.gui.binding.events;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import little.nj.gui.binding.IBinding;
+import little.nj.gui.events.EventSupport;
 
 
 /**
@@ -31,10 +29,15 @@ import little.nj.gui.binding.IBinding;
  *
  */
 public abstract class BindingEventSource implements IBindingEventSource {
+    
+    private EventSupport<IBindingListener, BindingEvent> support;
     private IBinding bind;
     
     public BindingEventSource(IBinding binding) {
+        support = new EventSupport<>();
+        
         bind = binding;
+        
         init();
     }
     
@@ -44,25 +47,24 @@ public abstract class BindingEventSource implements IBindingEventSource {
     
     protected abstract void init();
     
-    public final synchronized void addBindingListener(IBindingListener listener) {
-        listeners.add(listener);
+    public void addBindingListener(IBindingListener listener) {
+        support.addEventListener(listener);
     }
     
-    public final synchronized void removeBindingListener(IBindingListener listener) {
-        listeners.remove(listener);
+    public void removeBindingListener(IBindingListener listener) {
+        support.removeEventListener(listener);
     }
     
-    protected final synchronized void fireBindingEvent(BindingEvent evt) {
-        if (!bind.isEnabled())
-            return;
-        
-        for(IBindingListener i : listeners)
-            i.handleBindingEvent(evt);
+    protected void fireBindingEvent(BindingEvent evt) {
+        if (bind.isEnabled())
+            support.fireEvent(evt);
     }
     
-    protected final void fireBindingEvent() {
-        fireBindingEvent(new BindingEvent(getSource(), bind));
+    protected void fireBindingEvent(Object source) {
+        fireBindingEvent(new BindingEvent(source, bind));
     }
     
-    private List<IBindingListener> listeners = new ArrayList<>();
+    protected void fireBindingEvent() {
+        fireBindingEvent(this);
+    }
 }

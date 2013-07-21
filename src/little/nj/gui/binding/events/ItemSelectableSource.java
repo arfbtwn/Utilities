@@ -58,7 +58,7 @@ public class ItemSelectableSource extends BindingEventSource {
                 public void itemStateChanged(ItemEvent e) {
                     
                     if (e.getStateChange() == ItemEvent.SELECTED)
-                        fireBindingEvent();
+                        fireBindingEvent(e);
                     
                 }
                 

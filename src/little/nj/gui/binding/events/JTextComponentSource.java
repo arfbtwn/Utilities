@@ -60,17 +60,17 @@ public class JTextComponentSource extends BindingEventSource {
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-                fireBindingEvent();
+                fireBindingEvent(e);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                fireBindingEvent();
+                fireBindingEvent(e);
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                fireBindingEvent();
+                fireBindingEvent(e);
             }
             
         });

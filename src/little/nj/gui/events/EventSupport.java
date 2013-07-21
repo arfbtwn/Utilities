@@ -96,11 +96,12 @@ public class EventSupport<T extends EventListener, E extends EventObject>
             if (event == null)
                 throw new IllegalArgumentException(
                         String.format(
-                                "No method receiving type '%s' on listener",
-                                listener.getClass()
+                                "No method on listener '%s' receiving parameter type '%s'",
+                                listener.getClass(), t
                                 ));
+            
+            event.setAccessible(true);
         }
         return event;
     }
-    
 }

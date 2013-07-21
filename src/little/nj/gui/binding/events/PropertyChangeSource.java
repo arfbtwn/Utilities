@@ -64,8 +64,8 @@ public class PropertyChangeSource extends BindingEventSource {
             listen.invoke(obj, new PropertyChangeListener() {
             
                 @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    fireBindingEvent();
+                public void propertyChange(PropertyChangeEvent e) {
+                    fireBindingEvent(e);
                 } 
               
             });

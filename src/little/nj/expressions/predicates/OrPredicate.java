@@ -15,12 +15,24 @@
  *  You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.gui.binding.events;
+package little.nj.expressions.predicates;
 
-import java.util.EventListener;
+public class OrPredicate<T> extends BinaryPredicate<T> {
+    
+    public OrPredicate(IPredicate<T> lhs, IPredicate<T> rhs) {
+        super(lhs, rhs);
+    }
+    
+    public OrPredicate(IPredicateFactory<T> factory, IPredicate<T> lhs, IPredicate<T> rhs) {
+        super(factory, lhs, rhs);
+    }
+    
+    /* (non-Javadoc)
+     * @see little.nj.expressions.IExpression#evaluate(java.lang.Object)
+     */
+    @Override
+    public Boolean evaluate(T obj) {
+        return unbox(lhs.evaluate(obj)) || unbox(rhs.evaluate(obj));
+    }
 
-public interface IBindingListener extends EventListener {
-    
-    void handleBindingEvent(BindingEvent x);
-    
 }

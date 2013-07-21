@@ -26,7 +26,7 @@ import little.nj.gui.binding.events.ItemSelectableSource;
 import little.nj.gui.binding.events.JTextComponentSource;
 import little.nj.gui.binding.events.JToggleButtonSource;
 import little.nj.gui.binding.events.PropertyChangeSource;
-import little.nj.util.ReflectionUtil;
+import little.nj.reflection.ReflectionUtil;
 
 
 /**

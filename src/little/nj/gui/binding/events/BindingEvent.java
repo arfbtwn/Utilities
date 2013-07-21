@@ -23,17 +23,21 @@ import little.nj.gui.binding.IBinding;
 
 @SuppressWarnings("serial")
 public class BindingEvent extends EventObject {
-
-    private IBinding bind;
     
-    public BindingEvent(Object source) {
-        super(source);
-    }
+    /**
+     * The binding we are managing events for
+     */
+    private transient IBinding bind;
     
     public BindingEvent(Object source, IBinding bind) {
-        this(source);
+        super(source);
+        
         this.bind = bind;
     }
     
+    /**
+     * The binding we are managing events for
+     * @return The binding we are managing events for
+     */
     public IBinding getBinding() { return bind; }
 }

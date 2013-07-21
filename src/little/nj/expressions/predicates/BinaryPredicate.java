@@ -15,12 +15,22 @@
  *  You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.gui.binding.events;
+package little.nj.expressions.predicates;
 
-import java.util.EventListener;
+public abstract class BinaryPredicate<T> extends AbstractPredicate<T> {
 
-public interface IBindingListener extends EventListener {
+    protected final IPredicate<T> lhs;
+    protected final IPredicate<T> rhs;
     
-    void handleBindingEvent(BindingEvent x);
+    public BinaryPredicate(IPredicateFactory<T> factory, IPredicate<T> lhs, IPredicate<T> rhs) {
+        super(factory);
+        this.lhs = lhs;
+        this.rhs = rhs;
+    }
     
+    public BinaryPredicate(IPredicate<T> lhs, IPredicate<T> rhs) {
+        this.lhs = lhs;
+        this.rhs = rhs;
+    }
+
 }

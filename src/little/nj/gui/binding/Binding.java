@@ -22,7 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import little.nj.gui.binding.events.IBindingEventSource;
-import little.nj.util.ReflectionUtil;
+import little.nj.reflection.ReflectionUtil;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 

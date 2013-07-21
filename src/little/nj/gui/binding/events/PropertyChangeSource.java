@@ -22,7 +22,7 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import little.nj.util.ReflectionUtil;
+import little.nj.reflection.ReflectionUtil;
 import little.nj.gui.binding.IBinding;
 
 /**
@@ -64,8 +64,8 @@ public class PropertyChangeSource extends BindingEventSource {
             listen.invoke(obj, new PropertyChangeListener() {
             
                 @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    fireBindingEvent();
+                public void propertyChange(PropertyChangeEvent e) {
+                    fireBindingEvent(e);
                 } 
               
             });

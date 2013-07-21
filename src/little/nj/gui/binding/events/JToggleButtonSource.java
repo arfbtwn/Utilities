@@ -58,7 +58,7 @@ public class JToggleButtonSource extends BindingEventSource {
                 @Override
                 public void itemStateChanged(ItemEvent e) {
                     if (e.getStateChange() == ItemEvent.SELECTED)
-                        fireBindingEvent();
+                        fireBindingEvent(e);
                 } });
         }
 

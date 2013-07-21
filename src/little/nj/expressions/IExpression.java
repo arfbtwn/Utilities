@@ -15,12 +15,13 @@
  *  You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.gui.binding.events;
+package little.nj.expressions;
 
-import java.util.EventListener;
 
-public interface IBindingListener extends EventListener {
-    
-    void handleBindingEvent(BindingEvent x);
-    
+/**
+ * @author Nicholas Little
+ *
+ */
+public interface IExpression<A, B> {
+    A evaluate(B obj);
 }

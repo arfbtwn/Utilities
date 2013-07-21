@@ -21,8 +21,9 @@ import static org.junit.Assert.*;
 
 import java.lang.reflect.Method;
 
-import little.nj.util.ReflectionUtil;
-import little.nj.util.ReflectionUtil.*;
+import little.nj.reflection.IterativeUtil;
+import little.nj.reflection.RecursiveUtil;
+import little.nj.reflection.ReflectionUtil;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -118,4 +119,21 @@ public class ReflectionUtilTest {
         assertEquals(int.class, rv.getParameterTypes()[0]);
     }
 
+    @Test
+    public void Test_Recursive_Finds_Method_By_Sig() {
+        Method rv = RECURSOR.getMethod(OBJECT, METHOD, new Class[] { int.class });
+        
+        assertNotNull(rv);
+        assertEquals(METHOD, rv.getName());
+        assertEquals(int.class, rv.getParameterTypes()[0]);
+    }
+    
+    @Test
+    public void Test_Iterative_Finds_Method_By_Sig() {
+        Method rv = ITERATOR.getMethod(OBJECT, METHOD, new Class[] { int.class });
+        
+        assertNotNull(rv);
+        assertEquals(METHOD, rv.getName());
+        assertEquals(int.class, rv.getParameterTypes()[0]);
+    }
 }

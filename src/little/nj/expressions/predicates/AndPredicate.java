@@ -15,36 +15,23 @@
  *  You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.util;
+package little.nj.expressions.predicates;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@SuppressWarnings("unchecked")
-
-/**
- * The abstract base class of all matchers
- * 
- * @author Nicholas Little
- *
- */
-public abstract class AbstractMatcher<T> implements IMatcher<T> {
+public class AndPredicate<T> extends BinaryPredicate<T> {
     
-    public T findFirst(T[] m) {
-        for(T i : m)
-            if (matches(i))
-                return i;
-        
-        return null;
+    public AndPredicate(IPredicate<T> lhs, IPredicate<T> rhs) {
+        super(lhs, rhs);
     }
     
-    public T[] findAll(T[] m) {
-        List<T> rv = new ArrayList<>();
-        
-        for(T i : m)
-            if (matches(i))
-                rv.add(i);
-        
-        return (T[])rv.toArray();
+    public AndPredicate(IPredicateFactory<T> factory, IPredicate<T> lhs, IPredicate<T> rhs) {
+        super(factory, lhs, rhs);
+    }
+
+    /* (non-Javadoc)
+     * @see little.nj.expressions.IExpression#evaluate(java.lang.Object)
+     */
+    @Override
+    public Boolean evaluate(T obj) {
+        return unbox(lhs.evaluate(obj)) && unbox(rhs.evaluate(obj));
     }
 }

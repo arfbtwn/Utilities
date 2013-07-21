@@ -21,9 +21,9 @@ import static org.junit.Assert.*;
 
 import javax.swing.JCheckBox;
 
+import little.nj.core.tests.MockObjects.ObGeneric;
 import little.nj.gui.binding.Binding;
 import little.nj.gui.binding.ITypeConverter;
-import little.nj.gui.binding.tests.MockObjects.ObGeneric;
 
 import org.junit.Test;
 

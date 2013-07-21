@@ -15,12 +15,23 @@
  *  You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.gui.binding.events;
+package little.nj.expressions.predicates;
 
-import java.util.EventListener;
+public class NotPredicate<T> extends UnaryPredicate<T> {
 
-public interface IBindingListener extends EventListener {
+    public NotPredicate(IPredicateFactory<T> factory, IPredicate<T> predicate) {
+        super(factory, predicate);
+    }
     
-    void handleBindingEvent(BindingEvent x);
-    
+    public NotPredicate(IPredicate<T> predicate) {
+        super(predicate);
+    }
+
+    /* (non-Javadoc)
+     * @see little.nj.expressions.IExpression#evaluate(java.lang.Object)
+     */
+    @Override
+    public Boolean evaluate(T obj) {
+        return !unbox(predicate.evaluate(obj));
+    }
 }

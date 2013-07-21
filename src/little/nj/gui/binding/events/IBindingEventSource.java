@@ -23,6 +23,8 @@ package little.nj.gui.binding.events;
  *
  */
 public interface IBindingEventSource {
+    
     void addBindingListener(IBindingListener listener);
     void removeBindingListener(IBindingListener listener);
+    
 }

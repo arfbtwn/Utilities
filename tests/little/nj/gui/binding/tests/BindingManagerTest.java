@@ -23,9 +23,9 @@ import static org.junit.Assert.assertNotSame;
 import javax.swing.JCheckBox;
 import javax.swing.JTextArea;
 
+import little.nj.core.tests.MockObjects.ObGenericChangeNotify;
 import little.nj.gui.binding.BindingFactory;
 import little.nj.gui.binding.BindingManager;
-import little.nj.gui.binding.tests.MockObjects.ObGenericChangeNotify;
 
 import org.junit.After;
 import org.junit.AfterClass;

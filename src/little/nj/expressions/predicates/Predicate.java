@@ -17,53 +17,51 @@
  */
 package little.nj.expressions.predicates;
 
-public abstract class AbstractPredicate<T> 
-    implements IPredicate<T> {
+import little.nj.expressions.predicates.finals.AndPredicate;
+import little.nj.expressions.predicates.finals.NotPredicate;
+import little.nj.expressions.predicates.finals.OrPredicate;
+import little.nj.expressions.predicates.finals.XorPredicate;
 
-    private final IPredicateFactory<T> factory;
+public abstract class Predicate<T> implements IPredicate<T> {
     
-    public AbstractPredicate() {
-        this(new PredicateFactory<T>());
-    }
-    
-    public AbstractPredicate(IPredicateFactory<T> factory) {
-        this.factory = factory;
-    }
-    
-    /* (non-Javadoc)
-     * @see little.nj.expressions.predicates.IComposingPredicate#and(little.nj.expressions.predicates.IPredicate)
+    /*
+     * (non-Javadoc)
+     * @see little.nj.expressions.predicates.IPredicate#and(little.nj.expressions.predicates.IPredicate)
      */
     @Override
     public IPredicate<T> and(IPredicate<T> rhs) {
-        return factory.and(this, rhs);
+        return new AndPredicate<>(this, rhs);
     }
 
-    /* (non-Javadoc)
-     * @see little.nj.expressions.predicates.IComposingPredicate#or(little.nj.expressions.predicates.IPredicate)
+    /*
+     * (non-Javadoc)
+     * @see little.nj.expressions.predicates.IPredicate#or(little.nj.expressions.predicates.IPredicate)
      */
     @Override
     public IPredicate<T> or(IPredicate<T> rhs) {
-        return factory.or(this, rhs);
+        return new OrPredicate<>(this, rhs);
     }
 
-    /* (non-Javadoc)
-     * @see little.nj.expressions.predicates.IComposingPredicate#xor(little.nj.expressions.predicates.IPredicate)
+    /*
+     * (non-Javadoc)
+     * @see little.nj.expressions.predicates.IPredicate#xor(little.nj.expressions.predicates.IPredicate)
      */
     @Override
     public IPredicate<T> xor(IPredicate<T> rhs) {
-        return factory.xor(this, rhs);
+        return new XorPredicate<>(this, rhs);
     }
 
-    /* (non-Javadoc)
-     * @see little.nj.expressions.predicates.IComposingPredicate#not()
+    /*
+     * (non-Javadoc)
+     * @see little.nj.expressions.predicates.IPredicate#not()
      */
     @Override
     public IPredicate<T> not() {
-        return factory.not(this);
+        return new NotPredicate<>(this);
     }
     
     /**
-     * For safe unboxing of boolean variables
+     * For safe unboxing of Boolean wrapper variables
      * 
      * @param b
      * @return primitive boolean

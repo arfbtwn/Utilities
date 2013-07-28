@@ -6,16 +6,16 @@ import java.util.Iterator;
  * @param <A> The Input type
  * @param <B> The Output type
  */
-public abstract class ExpressionIterator<A, B> implements Iterator<B> {
+public abstract class ExpressionIterator<A, B> implements Iterator<B>, Iterable<B> {
 
-    protected Iterator<? extends A> wrapped;
+    private final Iterator<A> iterator;
     
-    protected Iterator<? extends A> getIterator() {
-        return wrapped;
+    protected Iterator<A> getIterator() {
+        return iterator;
     }
     
-    protected ExpressionIterator(Iterator<? extends A> wrapped) {
-        this.wrapped = wrapped;
+    protected ExpressionIterator(Iterator<A> iterator) {
+        this.iterator = iterator;
     }
     
     /* (non-Javadoc)
@@ -32,5 +32,13 @@ public abstract class ExpressionIterator<A, B> implements Iterator<B> {
     @Override
     public void remove() {
         getIterator().remove();
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Iterable#iterator()
+     */
+    @Override
+    public Iterator<B> iterator() {
+        return this;
     }
 }

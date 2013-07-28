@@ -19,13 +19,12 @@ package little.nj.reflection;
 import java.lang.reflect.Method;
 
 import little.nj.expressions.predicates.IPredicate;
-import little.nj.expressions.predicates.IPredicateFactory;
 
 /**
  * @author Nicholas Little
  *
  */
-public interface IMethodMatcherFactory extends IPredicateFactory<Method> {
+public interface IMethodMatcherFactory {
     
     IPredicate<Method> getNameMatcher(String pattern);
 

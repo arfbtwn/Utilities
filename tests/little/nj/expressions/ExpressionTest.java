@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import little.nj.core.tests.MockObjects.Ob;
-import little.nj.expressions.predicates.AbstractPredicate;
+import little.nj.expressions.predicates.Predicate;
 import little.nj.util.Statics;
 
 import org.junit.*;
@@ -17,7 +17,7 @@ public class ExpressionTest {
     static final int TOTAL = 100;
     static final int ONES = 10;
     
-    List<Ob> obs;
+    protected List<Ob> obs;
     
     @Before
     public void setUp() {
@@ -30,12 +30,43 @@ public class ExpressionTest {
     }
     
     @Test
+    public void test_First() {
+        IExpressionIterable<Ob> ext = new ExpressionIterable<>(obs);
+        
+        Ob result = ext.first(new Predicate<Ob>() {
+
+            @Override
+            public Boolean evaluate(Ob obj) {
+                return obj.getField() == 1;
+            } });
+        
+        assertNotNull(result);
+        assertEquals(1, result.getField());
+        assertEquals(0, obs.indexOf(result));
+    }
+    
+    @Test
+    public void test_Last() {
+        IExpressionIterable<Ob> ext = new ExpressionIterable<>(obs);
+        
+        Ob result = ext.last(new Predicate<Ob>() {
+
+            @Override
+            public Boolean evaluate(Ob obj) {
+                return obj.getField() == 1;
+            } });
+        
+        assertNotNull(result);
+        assertEquals(1, result.getField());
+        assertEquals(90, obs.indexOf(result));
+    }
+    
+    @Test
     public void test_Where() {
         
-        IExpressionIterable<Ob> ext =
-                new ExpressionIterable<>(obs);
+        IExpressionIterable<Ob> ext = new ExpressionIterable<>(obs);
                 
-        IExpressionIterable<Ob> result = ext.where(new AbstractPredicate<Ob>() {
+        IExpressionIterable<Ob> result = ext.where(new Predicate<Ob>() {
 
             @Override
             public Boolean evaluate(Ob obj) {
@@ -76,10 +107,21 @@ public class ExpressionTest {
     @Test
     public void test_Count() {
         
-        IExpressionIterable<Ob> ext =
-                new ExpressionIterable<>(obs);
+        IExpressionIterable<Ob> ext = new ExpressionIterable<>(obs);
                 
-        assertEquals(ONES, ext.count(new AbstractPredicate<Ob>() {
+        assertEquals(ONES, ext.count(new Predicate<Ob>() {
+
+            @Override
+            public Boolean evaluate(Ob obj) {
+                return obj.getField() == 1;
+            } }));
+    }
+    
+    @Test
+    public void test_Contains() {
+        IExpressionIterable<Ob> ext = new ExpressionIterable<>(obs);
+        
+        assertEquals(true, ext.contains(new Predicate<Ob>() {
 
             @Override
             public Boolean evaluate(Ob obj) {
@@ -93,7 +135,7 @@ public class ExpressionTest {
         IExpressionIterable<Ob> ext =
                 new ExpressionIterable<>(obs);
                 
-        assertEquals(0, ext.count(new AbstractPredicate<Ob>() {
+        assertEquals(0, ext.count(new Predicate<Ob>() {
 
             @Override
             public Boolean evaluate(Ob obj) {

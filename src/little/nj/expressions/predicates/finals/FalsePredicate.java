@@ -15,23 +15,19 @@
  *  You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.expressions.predicates;
+package little.nj.expressions.predicates.finals;
 
-public class NotPredicate<T> extends UnaryPredicate<T> {
+import little.nj.expressions.predicates.Predicate;
 
-    public NotPredicate(IPredicateFactory<T> factory, IPredicate<T> predicate) {
-        super(factory, predicate);
-    }
-    
-    public NotPredicate(IPredicate<T> predicate) {
-        super(predicate);
-    }
+
+public final class FalsePredicate<T> extends Predicate<T> {
 
     /* (non-Javadoc)
      * @see little.nj.expressions.IExpression#evaluate(java.lang.Object)
      */
     @Override
     public Boolean evaluate(T obj) {
-        return !unbox(predicate.evaluate(obj));
+        return false;
     }
+
 }

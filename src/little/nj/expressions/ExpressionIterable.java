@@ -17,7 +17,6 @@
  */
 package little.nj.expressions;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 import little.nj.expressions.adapters.PredicateIterator;
@@ -32,14 +31,18 @@ import little.nj.expressions.predicates.IPredicate;
 public class ExpressionIterable<T> 
     implements IExpressionIterable<T> {
     
-    private final Iterator<T> iterator;
+    private final Iterable<T> backing;
     
-    public ExpressionIterable(Iterator<T> iterator) {
-        this.iterator = iterator;
+    public ExpressionIterable(Iterable<T> backing) {
+        this.backing = backing;
     }
     
-    public ExpressionIterable(Collection<T> backing) {
-        this(backing.iterator());
+    /* (non-Javadoc)
+     * @see little.nj.expressions.IExpressionIterable#first()
+     */
+    @Override
+    public T first() {
+        return iterator().hasNext() ? iterator().next() : null;
     }
     
     /* (non-Javadoc)
@@ -47,12 +50,27 @@ public class ExpressionIterable<T>
      */
     @Override
     public T first(IPredicate<T> predicate) {
-        Iterator<T> it = new PredicateIterator<>(iterator, predicate);
+        Iterator<T> it = new PredicateIterator<>(iterator(), predicate);
         
         if (it.hasNext())
             return it.next();
         
         return null;
+    }
+    
+    /* (non-Javadoc)
+     * @see little.nj.expressions.IExpressionIterable#last()
+     */
+    @Override
+    public T last() {
+        Iterator<T> it = iterator();
+        
+        T rv = null;
+        
+        while(it.hasNext())
+            rv = it.next();
+        
+        return rv;
     }
     
     /*
@@ -63,7 +81,7 @@ public class ExpressionIterable<T>
     public T last(IPredicate<T> predicate) {
         T rv = null;
         
-        Iterator<T> it = new PredicateIterator<>(iterator, predicate);
+        Iterator<T> it = new PredicateIterator<>(iterator(), predicate);
         
         while(it.hasNext())
             rv = it.next();
@@ -76,7 +94,7 @@ public class ExpressionIterable<T>
      */
     @Override
     public IExpressionIterable<T> where(IPredicate<T> predicate) {
-        return new ExpressionIterable<>(new PredicateIterator<>(iterator, predicate));
+        return new ExpressionIterable<>(new PredicateIterator<>(iterator(), predicate));
     }
 
     /* (non-Javadoc)
@@ -84,7 +102,7 @@ public class ExpressionIterable<T>
      */
     @Override
     public <E> IExpressionIterable<E> select(IExpression<E, T> expression) {
-        return new ExpressionIterable<>(new SelectIterator<>(iterator, expression));
+        return new ExpressionIterable<>(new SelectIterator<>(iterator(), expression));
     }
 
     /* (non-Javadoc)
@@ -93,8 +111,19 @@ public class ExpressionIterable<T>
     @Override
     public int count(IPredicate<T> predicate) {
         int rv = 0;
-        for(Iterator<T> it = new PredicateIterator<>(iterator, predicate);
+        for(Iterator<T> it = new PredicateIterator<>(iterator(), predicate);
                 it.hasNext(); ++rv, it.next());
+        return rv;
+    }
+    
+    /*
+     * (non-Javadoc)
+     * @see little.nj.expressions.IExpressionIterable#count()
+     */
+    @Override
+    public int count() {
+        int rv = 0;
+        for(Iterator<T> it = iterator(); it.hasNext(); ++rv, it.next());
         return rv;
     }
 
@@ -111,7 +140,7 @@ public class ExpressionIterable<T>
      */
     @Override
     public Iterator<T> iterator() {
-        return iterator;
+        return backing.iterator();
     }
 
     /* (non-Javadoc)
@@ -120,6 +149,6 @@ public class ExpressionIterable<T>
     @Override
     public IExpressionIterable<T> union(Iterable<T> union) {
         return new ExpressionIterable<>(
-                new UnionIterator<>(iterator, union.iterator()));
+                new UnionIterator<>(iterator(), union.iterator()));
     }
 }

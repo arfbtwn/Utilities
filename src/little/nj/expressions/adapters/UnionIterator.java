@@ -36,21 +36,33 @@ public class UnionIterator<T> extends ExpressionIterator<T, T>{
         super(begin);
         iterator = new ArrayList<>(Arrays.asList(iterators)).iterator();
     }
+    
+    /* (non-Javadoc)
+     * @see little.nj.expressions.adapters.ExpressionIterator#getIterator()
+     */
+    @Override
+    protected Iterator<T> getIterator() {
+        if (super.getIterator().hasNext())
+            return super.getIterator();
+        
+        Iterator<T> rv;
+        while(iterator.hasNext()) {
+            rv = iterator.next();
+            
+            if (rv.hasNext())
+                return rv;
+        }
+        
+        
+        return null;
+    }
 
     /* (non-Javadoc)
      * @see java.util.Iterator#hasNext()
      */
     @Override
     public boolean hasNext() {
-        if (getIterator().hasNext())
-            return true;
-        
-        if (iterator.hasNext()) {
-            wrapped = iterator.next();
-            return hasNext();
-        }
-        
-        return false;
+        return getIterator() != null;
     }
 
     /* (non-Javadoc)

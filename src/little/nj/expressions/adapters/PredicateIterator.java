@@ -17,8 +17,8 @@ public class PredicateIterator<T> extends ExpressionIterator<T, T> {
     
     private transient T next;
     
-    public PredicateIterator(Iterator<? extends T> wrapped, IPredicate<T> predicate) {
-        super(wrapped);
+    public PredicateIterator(Iterator<T> iterator, IPredicate<T> predicate) {
+        super(iterator);
         
         this.predicate = predicate;
     }

@@ -17,15 +17,9 @@
  */
 package little.nj.expressions.predicates;
 
-public abstract class UnaryPredicate<T> extends AbstractPredicate<T> {
+public abstract class UnaryPredicate<T> extends Predicate<T> {
 
     protected final IPredicate<T> predicate;
-    
-    public UnaryPredicate(IPredicateFactory<T> factory, IPredicate<T> predicate) {
-        super(factory);
-        
-        this.predicate = predicate;
-    }
     
     public UnaryPredicate(IPredicate<T> predicate) {
         this.predicate = predicate;

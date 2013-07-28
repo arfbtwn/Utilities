@@ -15,24 +15,23 @@
  *  You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.expressions.predicates;
+package little.nj.expressions.predicates.finals;
 
-public class XorPredicate<T> extends BinaryPredicate<T> {
+import little.nj.expressions.predicates.BinaryPredicate;
+import little.nj.expressions.predicates.IPredicate;
 
-    public XorPredicate(IPredicate<T> lhs, IPredicate<T> rhs) {
+
+public final class AndPredicate<T> extends BinaryPredicate<T> {
+    
+    public AndPredicate(IPredicate<T> lhs, IPredicate<T> rhs) {
         super(lhs, rhs);
     }
     
-    public XorPredicate(IPredicateFactory<T> factory, IPredicate<T> lhs, IPredicate<T> rhs) {
-        super(factory, lhs, rhs);
-    }
-
     /* (non-Javadoc)
      * @see little.nj.expressions.IExpression#evaluate(java.lang.Object)
      */
     @Override
     public Boolean evaluate(T obj) {
-        return unbox(lhs.evaluate(obj)) ^ unbox(rhs.evaluate(obj));
+        return unbox(lhs.evaluate(obj)) && unbox(rhs.evaluate(obj));
     }
-
 }

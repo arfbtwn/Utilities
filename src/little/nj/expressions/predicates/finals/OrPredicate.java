@@ -15,16 +15,15 @@
  *  You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.expressions.predicates;
+package little.nj.expressions.predicates.finals;
 
-public class OrPredicate<T> extends BinaryPredicate<T> {
+import little.nj.expressions.predicates.BinaryPredicate;
+import little.nj.expressions.predicates.IPredicate;
+
+public final class OrPredicate<T> extends BinaryPredicate<T> {
     
     public OrPredicate(IPredicate<T> lhs, IPredicate<T> rhs) {
         super(lhs, rhs);
-    }
-    
-    public OrPredicate(IPredicateFactory<T> factory, IPredicate<T> lhs, IPredicate<T> rhs) {
-        super(factory, lhs, rhs);
     }
     
     /* (non-Javadoc)

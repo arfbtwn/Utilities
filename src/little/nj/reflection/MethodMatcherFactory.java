@@ -3,12 +3,10 @@ package little.nj.reflection;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import little.nj.expressions.predicates.AbstractPredicate;
+import little.nj.expressions.predicates.Predicate;
 import little.nj.expressions.predicates.IPredicate;
-import little.nj.expressions.predicates.PredicateFactory;
 
 public class MethodMatcherFactory 
-    extends PredicateFactory<Method> 
     implements IMethodMatcherFactory {
     
     /* (non-Javadoc)
@@ -32,7 +30,7 @@ public class MethodMatcherFactory
      */
     @Override
     public IPredicate<Method> getSignatureMatcher(String pattern, Class<?>...clz) {
-        return and(new NameMatcher(pattern), new ArgumentMatcher(clz));
+        return new NameMatcher(pattern).and(new ArgumentMatcher(clz));
     }
     
     /* (non-Javadoc)
@@ -44,12 +42,7 @@ public class MethodMatcherFactory
     }
     
     public abstract class MethodMatcher
-        extends AbstractPredicate<Method>
-    { 
-        public MethodMatcher() {
-            super(MethodMatcherFactory.this);
-        }
-    }
+        extends Predicate<Method> { }
     
     /**
      * Matches method names against a regular expression

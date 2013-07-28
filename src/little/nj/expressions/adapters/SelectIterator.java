@@ -15,8 +15,8 @@ public class SelectIterator<X, Y> extends ExpressionIterator<X, Y> {
 
     protected final IExpression<Y, X> expression;
     
-    public SelectIterator(Iterator<? extends X> wrapped, IExpression<Y, X> expression) {
-        super(wrapped);
+    public SelectIterator(Iterator<X> iterator, IExpression<Y, X> expression) {
+        super(iterator);
         
         this.expression = expression;
     }

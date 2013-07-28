@@ -42,12 +42,33 @@ public interface IExpressionIterable<T> extends Iterable<T> {
     int count(IPredicate<T> predicate);
     
     /**
+     * Count the elements in this iterable
+     * 
+     * @return
+     */
+    int count();
+    
+    /**
+     * Get the first element
+     * 
+     * @return
+     */
+    T first();
+    
+    /**
      * Get the first element satisfying the predicate
      * 
      * @param predicate
      * @return element, or null if none present
      */
     T first(IPredicate<T> predicate);
+    
+    /**
+     * Get the last element
+     * 
+     * @return
+     */
+    T last();
     
     /**
      * Get the last element satisfying the predicate

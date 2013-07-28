@@ -1,4 +1,5 @@
 *.class
+*.patch
 
 # Package Files #
 *.jar

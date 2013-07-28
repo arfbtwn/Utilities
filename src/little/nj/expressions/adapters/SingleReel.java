@@ -18,24 +18,22 @@
 package little.nj.expressions.adapters;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 
-public class UnionIterator<T> extends MultiReel<T, T>{
+public abstract class SingleReel<A, B> extends ExpressionIterator<A, B> {
 
-    @SafeVarargs
-    public UnionIterator(Iterator<T>...iterators) {
-        super(iterators);
+    private final Iterator<A> iterator;
+    
+    public SingleReel(Iterator<A> iterator) {
+        this.iterator = iterator;
     }
 
     /* (non-Javadoc)
-     * @see java.util.Iterator#next()
+     * @see little.nj.expressions.adapters.ExpressionIterator#getIterator()
      */
     @Override
-    public T next() {
-        if (!hasNext())
-            throw new NoSuchElementException();
-        
-        return getIterator().next();
+    protected Iterator<A> getIterator() {
+        return iterator;
     }
+
 }

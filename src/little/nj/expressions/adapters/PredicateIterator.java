@@ -11,7 +11,7 @@ import little.nj.expressions.predicates.IPredicate;
  *
  * @param <T>
  */
-public class PredicateIterator<T> extends ExpressionIterator<T, T> {
+public class PredicateIterator<T> extends SingleReel<T, T> {
     
     private final IPredicate<T> predicate;
     
@@ -30,7 +30,7 @@ public class PredicateIterator<T> extends ExpressionIterator<T, T> {
     public boolean hasNext() {
         if (next == null) { 
             T poss;
-            Iterator<? extends T> it = getIterator();
+            Iterator<T> it = getIterator();
         
             while(it.hasNext()) {
                 poss = it.next();

@@ -24,10 +24,7 @@ import little.nj.expressions.adapters.SelectIterator;
 import little.nj.expressions.adapters.UnionIterator;
 import little.nj.expressions.predicates.IPredicate;
 
-/**
- * @author Nicholas Little
- *
- */
+
 public class ExpressionIterable<T> 
     implements IExpressionIterable<T> {
     
@@ -38,11 +35,20 @@ public class ExpressionIterable<T>
     }
     
     /* (non-Javadoc)
+     * @see java.lang.Iterable#iterator()
+     */
+    @Override
+    public Iterator<T> iterator() {
+        return backing.iterator();
+    }
+    
+    /* (non-Javadoc)
      * @see little.nj.expressions.IExpressionIterable#first()
      */
     @Override
     public T first() {
-        return iterator().hasNext() ? iterator().next() : null;
+        Iterator<T> it = iterator();
+        return it.hasNext() ? it.next() : null;
     }
     
     /* (non-Javadoc)
@@ -133,14 +139,6 @@ public class ExpressionIterable<T>
     @Override
     public boolean contains(IPredicate<T> predicate) {
         return first(predicate) != null;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Iterable#iterator()
-     */
-    @Override
-    public Iterator<T> iterator() {
-        return backing.iterator();
     }
 
     /* (non-Javadoc)

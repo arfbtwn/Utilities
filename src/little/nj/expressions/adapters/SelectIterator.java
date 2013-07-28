@@ -11,7 +11,7 @@ import little.nj.expressions.IExpression;
  * @param <X>
  * @param <Y>
  */
-public class SelectIterator<X, Y> extends ExpressionIterator<X, Y> {
+public class SelectIterator<X, Y> extends SingleReel<X, Y> {
 
     protected final IExpression<Y, X> expression;
     

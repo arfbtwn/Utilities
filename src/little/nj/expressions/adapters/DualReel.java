@@ -24,15 +24,12 @@ import little.nj.exceptions.NotImplementedException;
 
 public abstract class DualReel<A, B> implements IExpressionIterator<A, B> {
 
-    private final Iterable<A> rhs, lhs;
+    protected final Iterable<A> rhs, lhs;
     private Iterator<A> it_rhs, it_lhs;
     
     public DualReel(Iterable<A> rhs, Iterable<A> lhs) {
         this.rhs = rhs; this.lhs = lhs;
     }
-    
-    protected Iterable<A> getLhs() { return rhs; }
-    protected Iterable<A> getRhs() { return lhs; }
     
     protected Iterator<A> getLhsIterator() { 
         return it_lhs == null ? it_lhs = lhs.iterator() : it_lhs;

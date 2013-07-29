@@ -24,7 +24,7 @@ import little.nj.exceptions.NotImplementedException;
 
 public abstract class SingleReel<A, B> implements IExpressionIterator<A, B> {
 
-    private final Iterable<A> iterable;
+    protected final Iterable<A> iterable;
     private Iterator<A> iterator;
     
     public SingleReel(Iterable<A> iterable) {
@@ -36,13 +36,6 @@ public abstract class SingleReel<A, B> implements IExpressionIterator<A, B> {
      */
     protected Iterator<A> getIterator() {
         return iterator == null ? iterator = iterable.iterator() : iterator;
-    }
-    
-    /* (non-Javadoc)
-     * @see little.nj.expressions.adapters.ExpressionIterator#getBacking()
-     */
-    protected Iterable<A> getBacking() {
-        return iterable;
     }
 
     /* (non-Javadoc)

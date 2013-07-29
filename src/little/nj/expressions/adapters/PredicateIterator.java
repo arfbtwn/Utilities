@@ -76,6 +76,6 @@ public class PredicateIterator<T> extends SingleReel<T, T> {
      */
     @Override
     public Iterator<T> iterator() {
-        return new PredicateIterator<>(getBacking(), predicate);
+        return new PredicateIterator<>(iterable, predicate);
     }
 }

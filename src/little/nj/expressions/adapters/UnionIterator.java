@@ -43,6 +43,6 @@ public class UnionIterator<T> extends DualReel<T, T>{
      */
     @Override
     public Iterator<T> iterator() {
-        return new UnionIterator<>(getLhs(), getRhs());
+        return new UnionIterator<>(lhs, rhs);
     }
 }

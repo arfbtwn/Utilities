@@ -36,7 +36,7 @@ public class SelectIterator<X, Y> extends SingleReel<X, Y> {
      */
     @Override
     public Iterator<Y> iterator() {
-        return new SelectIterator<>(getBacking(), expression);
+        return new SelectIterator<>(iterable, expression);
     }
 
     

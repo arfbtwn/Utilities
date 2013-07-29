@@ -56,7 +56,7 @@ public class ExpressionIterable<T>
      */
     @Override
     public T first(IPredicate<T> predicate) {
-        Iterator<T> it = new PredicateIterator<>(iterator(), predicate);
+        Iterator<T> it = new PredicateIterator<>(backing, predicate);
         
         if (it.hasNext())
             return it.next();
@@ -87,7 +87,7 @@ public class ExpressionIterable<T>
     public T last(IPredicate<T> predicate) {
         T rv = null;
         
-        Iterator<T> it = new PredicateIterator<>(iterator(), predicate);
+        Iterator<T> it = new PredicateIterator<>(backing, predicate);
         
         while(it.hasNext())
             rv = it.next();
@@ -100,7 +100,7 @@ public class ExpressionIterable<T>
      */
     @Override
     public IExpressionIterable<T> where(IPredicate<T> predicate) {
-        return new ExpressionIterable<>(new PredicateIterator<>(iterator(), predicate));
+        return new ExpressionIterable<>(new PredicateIterator<>(backing, predicate));
     }
 
     /* (non-Javadoc)
@@ -108,7 +108,7 @@ public class ExpressionIterable<T>
      */
     @Override
     public <E> IExpressionIterable<E> select(IExpression<E, T> expression) {
-        return new ExpressionIterable<>(new SelectIterator<>(iterator(), expression));
+        return new ExpressionIterable<>(new SelectIterator<>(backing, expression));
     }
 
     /* (non-Javadoc)
@@ -117,7 +117,7 @@ public class ExpressionIterable<T>
     @Override
     public int count(IPredicate<T> predicate) {
         int rv = 0;
-        for(Iterator<T> it = new PredicateIterator<>(iterator(), predicate);
+        for(Iterator<T> it = new PredicateIterator<>(backing, predicate);
                 it.hasNext(); ++rv, it.next());
         return rv;
     }
@@ -147,6 +147,6 @@ public class ExpressionIterable<T>
     @Override
     public IExpressionIterable<T> union(Iterable<T> union) {
         return new ExpressionIterable<>(
-                new UnionIterator<>(iterator(), union.iterator()));
+                new UnionIterator<>(backing, union));
     }
 }

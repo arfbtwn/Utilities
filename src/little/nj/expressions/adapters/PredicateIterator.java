@@ -17,7 +17,7 @@ public class PredicateIterator<T> extends SingleReel<T, T> {
     
     private transient T next;
     
-    public PredicateIterator(Iterator<T> iterator, IPredicate<T> predicate) {
+    public PredicateIterator(Iterable<T> iterator, IPredicate<T> predicate) {
         super(iterator);
         
         this.predicate = predicate;
@@ -59,15 +59,6 @@ public class PredicateIterator<T> extends SingleReel<T, T> {
         
         return that;
     }
-
-    /* (non-Javadoc)
-     * @see java.util.Iterator#remove()
-     */
-    @Override
-    public void remove() {
-        if (next != null)
-            getIterator().remove();
-    }
     
     /**
      * Protects against null return values from
@@ -78,5 +69,13 @@ public class PredicateIterator<T> extends SingleReel<T, T> {
      */
     protected boolean protector(Boolean in) {
         return in == null ? false : in;
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Iterable#iterator()
+     */
+    @Override
+    public Iterator<T> iterator() {
+        return new PredicateIterator<>(getBacking(), predicate);
     }
 }

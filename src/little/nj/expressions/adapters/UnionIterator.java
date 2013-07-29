@@ -21,11 +21,10 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 
-public class UnionIterator<T> extends MultiReel<T, T>{
+public class UnionIterator<T> extends DualReel<T, T>{
 
-    @SafeVarargs
-    public UnionIterator(Iterator<T>...iterators) {
-        super(iterators);
+    public UnionIterator(Iterable<T> lhs, Iterable<T> rhs) {
+        super(lhs, rhs);
     }
 
     /* (non-Javadoc)
@@ -36,6 +35,14 @@ public class UnionIterator<T> extends MultiReel<T, T>{
         if (!hasNext())
             throw new NoSuchElementException();
         
-        return getIterator().next();
+        return getCurrentIterator().next();
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Iterable#iterator()
+     */
+    @Override
+    public Iterator<T> iterator() {
+        return new UnionIterator<>(getLhs(), getRhs());
     }
 }

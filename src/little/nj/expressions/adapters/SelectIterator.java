@@ -15,7 +15,7 @@ public class SelectIterator<X, Y> extends SingleReel<X, Y> {
 
     protected final IExpression<Y, X> expression;
     
-    public SelectIterator(Iterator<X> iterator, IExpression<Y, X> expression) {
+    public SelectIterator(Iterable<X> iterator, IExpression<Y, X> expression) {
         super(iterator);
         
         this.expression = expression;
@@ -29,6 +29,14 @@ public class SelectIterator<X, Y> extends SingleReel<X, Y> {
         X next = getIterator().next();
         
         return expression.evaluate(next);
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Iterable#iterator()
+     */
+    @Override
+    public Iterator<Y> iterator() {
+        return new SelectIterator<>(getBacking(), expression);
     }
 
     

@@ -22,35 +22,38 @@ import java.util.Iterator;
 import little.nj.exceptions.NotImplementedException;
 
 
-public abstract class SingleReel<A, B> implements IExpressionIterator<A, B> {
+public abstract class DualReel<A, B> implements IExpressionIterator<A, B> {
 
-    private final Iterable<A> iterable;
-    private Iterator<A> iterator;
+    private final Iterable<A> rhs, lhs;
+    private Iterator<A> it_rhs, it_lhs;
     
-    public SingleReel(Iterable<A> iterable) {
-        this.iterable = iterable;
-    }
-
-    /* (non-Javadoc)
-     * @see little.nj.expressions.adapters.ExpressionIterator#getIterator()
-     */
-    protected Iterator<A> getIterator() {
-        return iterator == null ? iterator = iterable.iterator() : iterator;
+    public DualReel(Iterable<A> rhs, Iterable<A> lhs) {
+        this.rhs = rhs; this.lhs = lhs;
     }
     
-    /* (non-Javadoc)
-     * @see little.nj.expressions.adapters.ExpressionIterator#getBacking()
-     */
-    protected Iterable<A> getBacking() {
-        return iterable;
+    protected Iterable<A> getLhs() { return rhs; }
+    protected Iterable<A> getRhs() { return lhs; }
+    
+    protected Iterator<A> getLhsIterator() { 
+        return it_lhs == null ? it_lhs = lhs.iterator() : it_lhs;
     }
-
+    
+    protected Iterator<A> getRhsIterator() { 
+        return it_rhs == null ? it_rhs = rhs.iterator() : it_rhs;
+    }
+    
+    protected Iterator<A> getCurrentIterator() {
+        return getLhsIterator().hasNext() ? getLhsIterator()
+                : getRhsIterator().hasNext() ? getRhsIterator()
+                        : null;
+    }
+    
     /* (non-Javadoc)
      * @see java.util.Iterator#hasNext()
      */
     @Override
     public boolean hasNext() {
-        return getIterator().hasNext();
+        return getCurrentIterator() != null;
     }
     
     /* (non-Javadoc)

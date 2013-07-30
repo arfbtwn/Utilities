@@ -87,7 +87,7 @@ public class ExpressionTest {
         
         IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
         
-        IExpressionEngine<String> result = ext.select(new IExpression<String, Ob>() {
+        IExpressionEngine<String> result = ext.select(new IExpression<Ob, String>() {
 
             @Override
             public String evaluate(Ob obj) {

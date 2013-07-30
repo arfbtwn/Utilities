@@ -5,17 +5,11 @@ import java.util.Iterator;
 import little.nj.expressions.IExpression;
 
 
-/**
- * A transform iterator
- *
- * @param <X>
- * @param <Y>
- */
 public class SelectIterator<X, Y> extends SingleReel<X, Y> {
 
-    protected final IExpression<Y, X> expression;
+    protected final IExpression<X, Y> expression;
     
-    public SelectIterator(Iterator<X> iterator, IExpression<Y, X> expression) {
+    public SelectIterator(Iterator<X> iterator, IExpression<X, Y> expression) {
         super(iterator);
         
         this.expression = expression;

@@ -22,6 +22,7 @@ import little.nj.expressions.predicates.finals.NotPredicate;
 import little.nj.expressions.predicates.finals.OrPredicate;
 import little.nj.expressions.predicates.finals.XorPredicate;
 
+
 public abstract class Predicate<T> implements IPredicate<T> {
     
     /*

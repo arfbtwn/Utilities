@@ -38,17 +38,11 @@ public abstract class DualReel<A, B>
                                              : null;
     }
     
-    /* (non-Javadoc)
-     * @see java.util.Iterator#hasNext()
-     */
     @Override
     public boolean hasNext() {
         return getCurrentIterator() != null;
     }
     
-    /* (non-Javadoc)
-     * @see java.util.Iterator#remove()
-     */
     @Override
     public void remove() {
         throw new NotImplementedException();

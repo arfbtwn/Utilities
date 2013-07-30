@@ -23,17 +23,12 @@ import little.nj.expressions.IExpression;
 import little.nj.expressions.iterators.SelectIterator;
 
 
-/**
- * @author Nicholas Little
- * @param <X>
- *
- */
 public class SelectCollection<A, B> implements Iterable<B> {
 
     private final Iterable<A> backing;
-    private final IExpression<B, A> expression;
+    private final IExpression<A, B> expression;
     
-    public SelectCollection(Iterable<A> backing, IExpression<B, A> expression) {
+    public SelectCollection(Iterable<A> backing, IExpression<A, B> expression) {
         this.backing = backing;
         this.expression = expression;
     }

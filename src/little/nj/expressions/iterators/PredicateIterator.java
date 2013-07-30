@@ -6,11 +6,6 @@ import java.util.NoSuchElementException;
 import little.nj.expressions.predicates.IPredicate;
 
 
-/**
- * A predicate iterator
- *
- * @param <T>
- */
 public class PredicateIterator<T> extends SingleReel<T, T> {
     
     private final IPredicate<T> predicate;

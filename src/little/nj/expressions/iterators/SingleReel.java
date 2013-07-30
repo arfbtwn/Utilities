@@ -31,9 +31,6 @@ public abstract class SingleReel<A, B>
         this.iterator = iterator;
     }
 
-    /* (non-Javadoc)
-     * @see little.nj.expressions.adapters.ExpressionIterator#getIterator()
-     */
     protected Iterator<A> getIterator() {
         return iterator;
     }

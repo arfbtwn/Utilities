@@ -20,10 +20,7 @@ import java.lang.reflect.Method;
 
 import little.nj.expressions.predicates.IPredicate;
 
-/**
- * @author Nicholas Little
- *
- */
+
 public interface IMethodMatcherFactory {
     
     IPredicate<Method> getNameMatcher(String pattern);

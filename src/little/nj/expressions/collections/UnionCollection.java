@@ -15,42 +15,28 @@
  *  You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.expressions.adapters;
+package little.nj.expressions.collections;
 
 import java.util.Iterator;
 
-import little.nj.exceptions.NotImplementedException;
+import little.nj.expressions.iterators.UnionIterator;
 
 
-public abstract class SingleReel<A, B> implements IExpressionIterator<A, B> {
+public class UnionCollection<T> implements Iterable<T> {
 
-    protected final Iterable<A> iterable;
-    private Iterator<A> iterator;
+    private final Iterable<T> lhs, rhs;
     
-    public SingleReel(Iterable<A> iterable) {
-        this.iterable = iterable;
-    }
-
-    /* (non-Javadoc)
-     * @see little.nj.expressions.adapters.ExpressionIterator#getIterator()
-     */
-    protected Iterator<A> getIterator() {
-        return iterator == null ? iterator = iterable.iterator() : iterator;
-    }
-
-    /* (non-Javadoc)
-     * @see java.util.Iterator#hasNext()
-     */
-    @Override
-    public boolean hasNext() {
-        return getIterator().hasNext();
+    public UnionCollection(Iterable<T> lhs, Iterable<T> rhs) {
+        this.lhs = lhs; 
+        this.rhs = rhs;
     }
     
     /* (non-Javadoc)
-     * @see java.util.Iterator#remove()
+     * @see java.lang.Iterable#iterator()
      */
     @Override
-    public void remove() {
-        throw new NotImplementedException();
+    public Iterator<T> iterator() {
+        return new UnionIterator<>(lhs.iterator(), rhs.iterator());
     }
+
 }

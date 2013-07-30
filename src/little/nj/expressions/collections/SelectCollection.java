@@ -15,34 +15,35 @@
  *  You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.expressions.adapters;
+package little.nj.expressions.collections;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
+
+import little.nj.expressions.IExpression;
+import little.nj.expressions.iterators.SelectIterator;
 
 
-public class UnionIterator<T> extends DualReel<T, T>{
+/**
+ * @author Nicholas Little
+ * @param <X>
+ *
+ */
+public class SelectCollection<A, B> implements Iterable<B> {
 
-    public UnionIterator(Iterable<T> lhs, Iterable<T> rhs) {
-        super(lhs, rhs);
+    private final Iterable<A> backing;
+    private final IExpression<B, A> expression;
+    
+    public SelectCollection(Iterable<A> backing, IExpression<B, A> expression) {
+        this.backing = backing;
+        this.expression = expression;
     }
-
-    /* (non-Javadoc)
-     * @see java.util.Iterator#next()
-     */
-    @Override
-    public T next() {
-        if (!hasNext())
-            throw new NoSuchElementException();
-        
-        return getCurrentIterator().next();
-    }
-
+    
     /* (non-Javadoc)
      * @see java.lang.Iterable#iterator()
      */
     @Override
-    public Iterator<T> iterator() {
-        return new UnionIterator<>(lhs, rhs);
+    public Iterator<B> iterator() {
+        return new SelectIterator<>(backing.iterator(), expression);
     }
+
 }

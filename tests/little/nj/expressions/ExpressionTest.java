@@ -1,6 +1,7 @@
 package little.nj.expressions;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,8 @@ import little.nj.core.tests.MockObjects.Ob;
 import little.nj.expressions.predicates.Predicate;
 import little.nj.util.Statics;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
 
 public class ExpressionTest {
@@ -31,7 +33,7 @@ public class ExpressionTest {
     
     @Test
     public void test_First() {
-        IExpressionIterable<Ob> ext = new ExpressionIterable<>(obs);
+        IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
         
         Ob result = ext.first(new Predicate<Ob>() {
 
@@ -47,7 +49,7 @@ public class ExpressionTest {
     
     @Test
     public void test_Last() {
-        IExpressionIterable<Ob> ext = new ExpressionIterable<>(obs);
+        IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
         
         Ob result = ext.last(new Predicate<Ob>() {
 
@@ -64,9 +66,9 @@ public class ExpressionTest {
     @Test
     public void test_Where() {
         
-        IExpressionIterable<Ob> ext = new ExpressionIterable<>(obs);
+        IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
                 
-        IExpressionIterable<Ob> result = ext.where(new Predicate<Ob>() {
+        IExpressionEngine<Ob> result = ext.where(new Predicate<Ob>() {
 
             @Override
             public Boolean evaluate(Ob obj) {
@@ -83,9 +85,9 @@ public class ExpressionTest {
     @Test
     public void test_Select() {
         
-        IExpressionIterable<Ob> ext = new ExpressionIterable<>(obs);
+        IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
         
-        IExpressionIterable<String> result = ext.select(new IExpression<String, Ob>() {
+        IExpressionEngine<String> result = ext.select(new IExpression<String, Ob>() {
 
             @Override
             public String evaluate(Ob obj) {
@@ -107,7 +109,7 @@ public class ExpressionTest {
     @Test
     public void test_Count() {
         
-        IExpressionIterable<Ob> ext = new ExpressionIterable<>(obs);
+        IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
                 
         assertEquals(ONES, ext.count(new Predicate<Ob>() {
 
@@ -119,7 +121,7 @@ public class ExpressionTest {
     
     @Test
     public void test_Contains() {
-        IExpressionIterable<Ob> ext = new ExpressionIterable<>(obs);
+        IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
         
         assertEquals(true, ext.contains(new Predicate<Ob>() {
 
@@ -132,8 +134,7 @@ public class ExpressionTest {
     @Test
     public void test_PredicateIterator_Null_Protector() {
         
-        IExpressionIterable<Ob> ext =
-                new ExpressionIterable<>(obs);
+        IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
                 
         assertEquals(0, ext.count(new Predicate<Ob>() {
 

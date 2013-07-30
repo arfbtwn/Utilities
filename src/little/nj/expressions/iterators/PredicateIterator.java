@@ -1,4 +1,4 @@
-package little.nj.expressions.adapters;
+package little.nj.expressions.iterators;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -17,7 +17,7 @@ public class PredicateIterator<T> extends SingleReel<T, T> {
     
     private transient T next;
     
-    public PredicateIterator(Iterable<T> iterator, IPredicate<T> predicate) {
+    public PredicateIterator(Iterator<T> iterator, IPredicate<T> predicate) {
         super(iterator);
         
         this.predicate = predicate;
@@ -69,13 +69,5 @@ public class PredicateIterator<T> extends SingleReel<T, T> {
      */
     protected boolean protector(Boolean in) {
         return in == null ? false : in;
-    }
-    
-    /* (non-Javadoc)
-     * @see java.lang.Iterable#iterator()
-     */
-    @Override
-    public Iterator<T> iterator() {
-        return new PredicateIterator<>(iterable, predicate);
     }
 }

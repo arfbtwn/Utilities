@@ -19,18 +19,19 @@ package little.nj.expressions;
 
 import java.util.Iterator;
 
-import little.nj.expressions.adapters.PredicateIterator;
-import little.nj.expressions.adapters.SelectIterator;
-import little.nj.expressions.adapters.UnionIterator;
+import little.nj.expressions.collections.PredicateCollection;
+import little.nj.expressions.collections.SelectCollection;
+import little.nj.expressions.collections.UnionCollection;
+import little.nj.expressions.iterators.PredicateIterator;
 import little.nj.expressions.predicates.IPredicate;
 
 
-public class ExpressionIterable<T> 
-    implements IExpressionIterable<T> {
+public class ExpressionEngine<T> 
+    implements IExpressionEngine<T> {
     
-    private final Iterable<T> backing;
+    protected final Iterable<T> backing;
     
-    public ExpressionIterable(Iterable<T> backing) {
+    public ExpressionEngine(Iterable<T> backing) {
         this.backing = backing;
     }
     
@@ -56,7 +57,7 @@ public class ExpressionIterable<T>
      */
     @Override
     public T first(IPredicate<T> predicate) {
-        Iterator<T> it = new PredicateIterator<>(backing, predicate);
+        Iterator<T> it = new PredicateCollection<>(backing, predicate).iterator();
         
         if (it.hasNext())
             return it.next();
@@ -87,7 +88,7 @@ public class ExpressionIterable<T>
     public T last(IPredicate<T> predicate) {
         T rv = null;
         
-        Iterator<T> it = new PredicateIterator<>(backing, predicate);
+        Iterator<T> it = new PredicateCollection<>(backing, predicate).iterator();
         
         while(it.hasNext())
             rv = it.next();
@@ -99,16 +100,16 @@ public class ExpressionIterable<T>
      * @see little.nj.expressions.IExpressionCollection#where(little.nj.expressions.IPredicate)
      */
     @Override
-    public IExpressionIterable<T> where(IPredicate<T> predicate) {
-        return new ExpressionIterable<>(new PredicateIterator<>(backing, predicate));
+    public IExpressionEngine<T> where(IPredicate<T> predicate) {
+        return new ExpressionEngine<>(new PredicateCollection<>(backing, predicate));
     }
 
     /* (non-Javadoc)
      * @see little.nj.expressions.IExpressionCollection#select(little.nj.expressions.IExpression)
      */
     @Override
-    public <E> IExpressionIterable<E> select(IExpression<E, T> expression) {
-        return new ExpressionIterable<>(new SelectIterator<>(backing, expression));
+    public <E> IExpressionEngine<E> select(IExpression<E, T> expression) {
+        return new ExpressionEngine<>(new SelectCollection<T, E>(backing, expression));
     }
 
     /* (non-Javadoc)
@@ -117,7 +118,7 @@ public class ExpressionIterable<T>
     @Override
     public int count(IPredicate<T> predicate) {
         int rv = 0;
-        for(Iterator<T> it = new PredicateIterator<>(backing, predicate);
+        for(Iterator<T> it = new PredicateIterator<>(backing.iterator(), predicate);
                 it.hasNext(); ++rv, it.next());
         return rv;
     }
@@ -145,8 +146,7 @@ public class ExpressionIterable<T>
      * @see little.nj.expressions.IExpressionProcess#union(java.lang.Iterable)
      */
     @Override
-    public IExpressionIterable<T> union(Iterable<T> union) {
-        return new ExpressionIterable<>(
-                new UnionIterator<>(backing, union));
+    public IExpressionEngine<T> union(Iterable<T> union) {
+        return new ExpressionEngine<>(new UnionCollection<>(backing, union));
     }
 }

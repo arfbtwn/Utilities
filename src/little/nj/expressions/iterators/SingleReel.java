@@ -15,42 +15,35 @@
  *  You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.expressions.adapters;
+package little.nj.expressions.iterators;
 
 import java.util.Iterator;
 
 import little.nj.exceptions.NotImplementedException;
 
 
-public abstract class DualReel<A, B> implements IExpressionIterator<A, B> {
+public abstract class SingleReel<A, B> 
+    implements IExpressionIterator<A, B> {
 
-    protected final Iterable<A> rhs, lhs;
-    private Iterator<A> it_rhs, it_lhs;
+    protected final Iterator<A> iterator;
     
-    public DualReel(Iterable<A> rhs, Iterable<A> lhs) {
-        this.rhs = rhs; this.lhs = lhs;
+    public SingleReel(Iterator<A> iterator) {
+        this.iterator = iterator;
     }
-    
-    protected Iterator<A> getLhsIterator() { 
-        return it_lhs == null ? it_lhs = lhs.iterator() : it_lhs;
+
+    /* (non-Javadoc)
+     * @see little.nj.expressions.adapters.ExpressionIterator#getIterator()
+     */
+    protected Iterator<A> getIterator() {
+        return iterator;
     }
-    
-    protected Iterator<A> getRhsIterator() { 
-        return it_rhs == null ? it_rhs = rhs.iterator() : it_rhs;
-    }
-    
-    protected Iterator<A> getCurrentIterator() {
-        return getLhsIterator().hasNext() ? getLhsIterator()
-                : getRhsIterator().hasNext() ? getRhsIterator()
-                        : null;
-    }
-    
+
     /* (non-Javadoc)
      * @see java.util.Iterator#hasNext()
      */
     @Override
     public boolean hasNext() {
-        return getCurrentIterator() != null;
+        return getIterator().hasNext();
     }
     
     /* (non-Javadoc)

@@ -19,8 +19,9 @@ package little.nj.reflection;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import little.nj.expressions.ExpressionIterable;
-import little.nj.expressions.IExpressionIterable;
+
+import little.nj.expressions.ExpressionEngine;
+import little.nj.expressions.IExpressionEngine;
 import little.nj.expressions.predicates.IPredicate;
 
 /**
@@ -83,8 +84,8 @@ public abstract class ReflectionUtil {
      * @return
      */
     protected Method matchImpl(Method[] poss, IPredicate<Method> matcher) {
-        IExpressionIterable<Method> ext
-            = new ExpressionIterable<>(Arrays.asList(poss));
+        IExpressionEngine<Method> ext
+            = new ExpressionEngine<>(Arrays.asList(poss));
     
         return ext.first(matcher);
     }

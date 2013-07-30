@@ -17,23 +17,20 @@
  */
 package little.nj.expressions.predictes;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import little.nj.core.tests.MockObjects.ObGeneric;
-import little.nj.expressions.ExpressionIterable;
-import little.nj.expressions.IExpressionIterable;
-import little.nj.expressions.predicates.Predicate;
+import little.nj.expressions.ExpressionEngine;
+import little.nj.expressions.IExpressionEngine;
 import little.nj.expressions.predicates.IPredicate;
-import org.junit.*;
+import little.nj.expressions.predicates.Predicate;
+
+import org.junit.Test;
 
 
-/**
- * @author Nicholas Little
- *
- */
 public class PredicateTest {
     
     @Test
@@ -67,7 +64,7 @@ public class PredicateTest {
         
         IPredicate<ObGeneric<String>> pred4 = pred3.not();
         
-        IExpressionIterable<ObGeneric<String>> start = new ExpressionIterable<>(obs);
+        IExpressionEngine<ObGeneric<String>> start = new ExpressionEngine<>(obs);
         
         assertEquals(100, start.count());
         

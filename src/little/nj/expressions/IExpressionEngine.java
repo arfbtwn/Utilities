@@ -23,7 +23,7 @@ import little.nj.expressions.predicates.IPredicate;
  * A wrapper for collection classes to allow the use of
  * abstract expressions
  */
-public interface IExpressionIterable<T> extends Iterable<T> {
+public interface IExpressionEngine<T> extends Iterable<T> {
     
     /**
      * Does this collection contain elements satisfying the 
@@ -35,18 +35,18 @@ public interface IExpressionIterable<T> extends Iterable<T> {
     boolean contains(IPredicate<T> predicate);
     
     /**
-     * Count the elements satisfying the predicate
-     * @param predicate
-     * @return
-     */
-    int count(IPredicate<T> predicate);
-    
-    /**
      * Count the elements in this iterable
      * 
      * @return
      */
     int count();
+    
+    /**
+     * Count the elements satisfying the predicate
+     * @param predicate
+     * @return
+     */
+    int count(IPredicate<T> predicate);
     
     /**
      * Get the first element
@@ -84,7 +84,7 @@ public interface IExpressionIterable<T> extends Iterable<T> {
      * @param predicate
      * @return
      */
-    IExpressionIterable<T> where(IPredicate<T> predicate);
+    IExpressionEngine<T> where(IPredicate<T> predicate);
     
     /**
      * Get an iterator on the union
@@ -92,7 +92,7 @@ public interface IExpressionIterable<T> extends Iterable<T> {
      * @param union
      * @return
      */
-    IExpressionIterable<T> union(Iterable<T> union);
+    IExpressionEngine<T> union(Iterable<T> union);
     
     /**
      * Perform the specified transformation expression on
@@ -101,6 +101,6 @@ public interface IExpressionIterable<T> extends Iterable<T> {
      * @param expression
      * @return
      */
-    <E> IExpressionIterable<E> select(IExpression<E, T> expression);
+    <E> IExpressionEngine<E> select(IExpression<E, T> expression);
     
 }

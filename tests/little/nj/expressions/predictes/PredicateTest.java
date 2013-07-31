@@ -81,6 +81,8 @@ public class PredicateTest {
         assertEquals(5, start.where(pred3).where(pred2).count());
         
         assertEquals(10, start.where(pred).union(start.where(pred2)).count());
+        
+        assertEquals(100, start.toList().size());
     }
 
 }

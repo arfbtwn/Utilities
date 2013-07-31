@@ -16,7 +16,9 @@
  */
 package little.nj.expressions;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import little.nj.expressions.collections.PredicateCollection;
 import little.nj.expressions.collections.SelectCollection;
@@ -159,5 +161,19 @@ public class ExpressionEngine<T> implements IExpressionEngine<T> {
     public <E> IExpressionEngine<E> select(IExpression<T, E> expression) {
         return new ExpressionEngine<>(new SelectCollection<>(backing,
                 expression));
+    }
+    
+    /* (non-Javadoc)
+     * @see little.nj.expressions.IExpressionEngine#toList()
+     */
+    @Override
+    public List<T> toList() {
+        List<T> rv = new ArrayList<>();
+        Iterator<T> it = iterator();
+        
+        while(it.hasNext())
+            rv.add(it.next());
+        
+        return rv;
     }
 }

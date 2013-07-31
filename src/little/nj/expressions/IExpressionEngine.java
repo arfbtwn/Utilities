@@ -16,6 +16,8 @@
  */
 package little.nj.expressions;
 
+import java.util.List;
+
 import little.nj.expressions.predicates.IPredicate;
 
 public interface IExpressionEngine<T> extends Iterable<T> {
@@ -98,4 +100,12 @@ public interface IExpressionEngine<T> extends Iterable<T> {
      */
     <E> IExpressionEngine<E> select(IExpression<T, E> expression);
 
+    /**
+     * Convert the current query result to a list
+     * format
+     * 
+     * @return
+     */
+    List<T> toList();
+    
 }

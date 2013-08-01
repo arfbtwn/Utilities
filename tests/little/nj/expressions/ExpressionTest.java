@@ -143,5 +143,16 @@ public class ExpressionTest {
                 return null;
             } }));
     }
+    
+    @Test
+    public void test_Union() {
+        IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
+        
+        List<Ob> rv = ext.union(obs).toList();
+        
+        assertEquals(obs.size(), rv.size());
+        
+        assertEquals(obs, rv);
+    }
 
 }

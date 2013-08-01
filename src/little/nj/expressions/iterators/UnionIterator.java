@@ -17,14 +17,39 @@
  */
 package little.nj.expressions.iterators;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 
 public class UnionIterator<T> extends DualReel<T, T>{
 
+    private final Set<T> set;
+    private T next;    
+    
     public UnionIterator(Iterator<T> lhs, Iterator<T> rhs) {
         super(lhs, rhs);
+        
+        set = new HashSet<>();
+    }
+    
+    /* (non-Javadoc)
+     * @see little.nj.expressions.iterators.DualReel#hasNext()
+     */
+    @Override
+    public boolean hasNext() {
+        
+        if (next == null && super.hasNext()) {
+            next = getCurrentIterator().next();
+        
+            if (!set.add(next)) {
+                next = null;
+                return hasNext();
+            }
+        }
+        
+        return next != null;
     }
 
     /* (non-Javadoc)
@@ -35,6 +60,10 @@ public class UnionIterator<T> extends DualReel<T, T>{
         if (!hasNext())
             throw new NoSuchElementException();
         
-        return getCurrentIterator().next();
+        T that = next;
+        
+        next = null;
+        
+        return that;
     }
 }

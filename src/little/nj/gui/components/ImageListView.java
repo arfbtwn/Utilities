@@ -467,11 +467,13 @@ public class ImageListView extends JPanel implements ItemSelectable {
             panel_map.get(i).check.setSelected(false);
         selected.clear();
         for (BufferedImage i : sel) {
-            if (!images.contains(i)) {
-                images.add(i);
-                addPanel(i);
+            if (i != null) {
+                if (!images.contains(i)) {
+                    images.add(i);
+                    addPanel(i);
+                }
+                panel_map.get(i).check.setSelected(true);
             }
-            panel_map.get(i).check.setSelected(true);
         }
     }
 

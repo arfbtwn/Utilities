@@ -17,15 +17,12 @@
 package little.nj.adts;
 
 import java.nio.ByteBuffer;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
 
 public class ByteFieldSet implements Cloneable,Iterable<ByteField> {
 
-    private TreeSet<ByteField>         backing;
-
-    private HashMap<String, ByteField> hash_backing;
+    private final TreeSet<ByteField>   backing;
 
     private int                        size_actual;
 
@@ -33,14 +30,12 @@ public class ByteFieldSet implements Cloneable,Iterable<ByteField> {
 
     public ByteFieldSet() {
         backing = new TreeSet<ByteField>();
-        hash_backing = new HashMap<String, ByteField>();
     }
 
     public void add(ByteField i) {
         i.setOffset(size_possible);
         size_possible += i.getLength();
         backing.add(i);
-        hash_backing.put(i.getName(), i);
     }
 
     @Override
@@ -56,38 +51,6 @@ public class ByteFieldSet implements Cloneable,Iterable<ByteField> {
     public ByteField get(int offset) {
         ByteField bf = new ByteField(offset);
         return backing.ceiling(bf);
-    }
-
-    public ByteField get(String name) {
-        return hash_backing.get(name);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T extends ByteField> T getAs(String name) {
-        T rtn = null;
-        
-        try {
-            rtn = (T) get(name);
-        } catch (ClassCastException ex) {
-            ex.printStackTrace();
-        }
-        
-        return rtn;
-    }
-    
-    @Deprecated
-    public IntByteField getAsInt(String name) {
-        return getAs(name);
-    }
-
-    @Deprecated
-    public ShortByteField getAsShort(String name) {
-        return getAs(name);
-    }
-
-    @Deprecated
-    public StringByteField getAsString(String name) {
-        return getAs(name);
     }
 
     public ByteBuffer getBuffer() {
@@ -142,7 +105,7 @@ public class ByteFieldSet implements Cloneable,Iterable<ByteField> {
         return sb.toString();
     }
 
-    public void write(ByteBuffer out) {
+    public int write(ByteBuffer out) {
         ByteBuffer tmp = out.slice();
         for (ByteField i : backing) {
             if (size_actual > 0 && i.getOffset() > size_actual)
@@ -150,8 +113,7 @@ public class ByteFieldSet implements Cloneable,Iterable<ByteField> {
             tmp.position(i.getOffset());
             tmp.put(i.getBuffer());
         }
-        out.position(out.position()
-                + (size_actual > 0 ? size_actual : size_possible));
+        return tmp.position();
     }
 
     /* (non-Javadoc)

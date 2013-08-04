@@ -106,14 +106,12 @@ public class ByteFieldSet implements Cloneable,Iterable<ByteField> {
     }
 
     public int write(ByteBuffer out) {
-        ByteBuffer tmp = out.slice();
         for (ByteField i : backing) {
             if (size_actual > 0 && i.getOffset() > size_actual)
                 break;
-            tmp.position(i.getOffset());
-            tmp.put(i.getBuffer());
+            out.put(i.getBuffer());
         }
-        return tmp.position();
+        return out.position();
     }
 
     /* (non-Javadoc)

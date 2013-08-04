@@ -20,11 +20,14 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.swing.ImageIcon;
+
+import little.nj.util.StreamUtil.InputAction;
+import little.nj.util.StreamUtil.OutputAction;
 
 /**
  * Useful static functions and variables
@@ -76,14 +79,21 @@ public final class Statics {
      * 
      * @param file
      * @return byte[]
-     * @throws IOException
      */
-    public final static byte[] readFile(File file) throws IOException {
-        FileInputStream fis = new FileInputStream(file);
-        int len = (int) file.length();
-        byte[] raw = new byte[len];
-        fis.read(raw);
-        fis.close();
+    public final static byte[] readFile(File file) {
+        FileUtil util = FileUtil.getInstance();
+        
+        long len = file.length();
+        
+        final byte[] raw = new byte[(int) len];
+        
+        util.readFile(file, new InputAction() {
+
+            @Override
+            public void act(InputStream stream) throws IOException {
+                stream.read(raw);
+            } });
+        
         return raw;
     }
 
@@ -94,10 +104,15 @@ public final class Statics {
      * @param bytes
      * @throws IOException
      */
-    public final static void writeFile(File file, byte[] bytes) throws IOException {
-        FileOutputStream fos = new FileOutputStream(file);
-        fos.write(bytes);
-        fos.close();
+    public final static boolean writeFile(File file, final byte[] bytes) {
+        FileUtil util = FileUtil.getInstance();
+        
+        return util.writeFile(file, new OutputAction() {
+
+            @Override
+            public void act(OutputStream stream) throws IOException {
+                stream.write(bytes);
+            } });
     }
 
     /**

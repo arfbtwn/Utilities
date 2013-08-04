@@ -56,4 +56,16 @@ public class ByteFieldMapSet extends ByteFieldSet {
         
         return rtn;
     }
+    
+    /* (non-Javadoc)
+     * @see little.nj.adts.ByteFieldSet#clone()
+     */
+    @Override
+    public ByteFieldMapSet clone() {
+        ByteFieldMapSet rv = new ByteFieldMapSet();
+        for(ByteField i : this)
+            rv.add(i);
+        
+        return rv;
+    }
 }

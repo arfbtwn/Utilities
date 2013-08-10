@@ -47,7 +47,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 
-import little.nj.util.Statics;
+import little.nj.util.ImageUtil;
 
 /**
  * A panel to display a list of images, and allow addition, removal and
@@ -125,9 +125,9 @@ public class ImageListView extends JPanel implements ItemSelectable {
             label = new JLabel();
             text = new JLabel();
             usertext = new JLabel();
-            up = new JButton(Statics.getImageIcon("images/Up24.gif"));
+            up = new JButton(ImageUtil.getImageIcon("images/Up24.gif"));
             up.addActionListener(transpose);
-            down = new JButton(Statics.getImageIcon("images/Down24.gif"));
+            down = new JButton(ImageUtil.getImageIcon("images/Down24.gif"));
             down.addActionListener(transpose);
             init();
         }
@@ -139,7 +139,7 @@ public class ImageListView extends JPanel implements ItemSelectable {
         private void init() {
             removeAll();
             setMaximumSize(dimension);
-            label.setIcon(new ImageIcon(Statics.resizeImage(image,
+            label.setIcon(new ImageIcon(ImageUtil.resizeImage(image,
                     (int) (dimension.getWidth() / 2.0D),
                     (int) dimension.getHeight())));
             text.setBorder(ImageListView.BORDER);
@@ -223,10 +223,10 @@ public class ImageListView extends JPanel implements ItemSelectable {
         return index;
     }
 
-    private JButton add = new JButton(Statics.getImageIcon("images/Add24.gif"));
+    private JButton add = new JButton(ImageUtil.getImageIcon("images/Add24.gif"));
 
     private JButton rem = new JButton(
-            Statics.getImageIcon("images/Delete24.gif"));
+            ImageUtil.getImageIcon("images/Delete24.gif"));
 
     private ActionListener button_listener = new ActionListener() {
 

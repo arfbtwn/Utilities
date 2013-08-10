@@ -8,7 +8,7 @@ import java.util.List;
 
 import little.nj.core.tests.MockObjects.Ob;
 import little.nj.expressions.predicates.Predicate;
-import little.nj.util.Statics;
+import little.nj.util.StringUtil;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -91,7 +91,7 @@ public class ExpressionTest {
 
             @Override
             public String evaluate(Ob obj) {
-                return obj.getField() == 1 ? "Hello World" : Statics.EMPTY_STRING; 
+                return obj.getField() == 1 ? "Hello World" : StringUtil.EMPTY_STRING; 
             } });
         
         int i = 0, j = 0;

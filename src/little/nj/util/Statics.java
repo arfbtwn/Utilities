@@ -16,15 +16,10 @@
  */
 package little.nj.util;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import javax.swing.ImageIcon;
 
 import little.nj.util.StreamUtil.InputAction;
 import little.nj.util.StreamUtil.OutputAction;
@@ -48,7 +43,7 @@ public final class Statics {
      * @return File object, or null if not found
      */
     public final static File findSysExe(String comm) {
-        String[] paths = System.getenv().get("PATH").split(":");
+        String[] paths = System.getenv().get("PATH").split(File.pathSeparator);
         File ex_file = null;
         for (String i : paths) {
             ex_file = new File(i, comm);
@@ -57,22 +52,6 @@ public final class Statics {
         }
         return ex_file;
     }
-
-    /**
-     * Test if a string is null or the empty string (after trimming)
-     * 
-     * @param x
-     *            String to test
-     * @return boolean
-     */
-    public final static boolean isNullOrWhiteSpace(String x) {
-        return x == null || x.trim().isEmpty();
-    }
-    
-    /**
-     * The empty string, for semantic effect
-     */
-    public final static String EMPTY_STRING = "";
 
     /**
      * Reads a file, returns a byte array
@@ -113,63 +92,5 @@ public final class Statics {
             public void act(OutputStream stream) throws IOException {
                 stream.write(bytes);
             } });
-    }
-
-    /**
-     * Resizes a buffered image according to some dimensions while 
-     * retaining aspect ratio
-     * 
-     * @param in
-     * @param max_w
-     * @param max_h
-     * @return Resized BufferedImage
-     */
-    public final static BufferedImage resizeImage(BufferedImage in, int max_w,
-            int max_h) {
-        int height = in.getHeight();
-        int width = in.getWidth();
-        double h_factor = (double) max_h / height;
-        double w_factor = (double) max_w / width;
-        switch (h_factor < w_factor ? 0 : 1) {
-        case 0:
-            height = (int) (h_factor * height);
-            width = (int) (h_factor * width);
-            break;
-        case 1:
-            height = (int) (w_factor * height);
-            width = (int) (w_factor * width);
-            break;
-        }
-        BufferedImage out = new BufferedImage(width, height, 2);
-        Graphics2D g = out.createGraphics();
-        g.drawImage(in, 0, 0, width, height, null);
-        g.dispose();
-        return out;
-    }
-    
-    /**
-     * @see Statics#resizeImage(BufferedImage, int, int)
-     * 
-     * @param in
-     * @param d
-     * @return Resized BufferedImage
-     */
-    public final static BufferedImage resizeImage(BufferedImage in, Dimension d) {
-        return resizeImage(in, (int) d.getWidth(), (int) d.getHeight());
-    }
-    
-    /**
-     * Retrieves an ImageIcon from the specified resource
-     * 
-     * @param res
-     * @return ImageIcon or null
-     */
-    public final static ImageIcon getImageIcon(String res) {
-        try {
-            return new ImageIcon(ClassLoader.getSystemResource(res));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }

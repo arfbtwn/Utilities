@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.expressions.predictes;
+package little.nj.expressions.predicates;
 
 import static org.junit.Assert.assertEquals;
 
@@ -25,7 +25,6 @@ import java.util.List;
 import little.nj.core.tests.MockObjects.ObGeneric;
 import little.nj.expressions.ExpressionEngine;
 import little.nj.expressions.IExpressionEngine;
-import little.nj.expressions.predicates.IPredicate;
 import little.nj.expressions.predicates.Predicate;
 
 import org.junit.Test;
@@ -44,25 +43,25 @@ public class PredicateTest {
                                                               : "World, Hello"));
         }
         
-        IPredicate<ObGeneric<String>> pred = new Predicate<ObGeneric<String>>() {
+        Predicate<ObGeneric<String>> pred = new Predicate<ObGeneric<String>>() {
 
             @Override
-            public Boolean evaluate(ObGeneric<String> obj) {
+            public Boolean evaluateImpl(ObGeneric<String> obj) {
                 return "Hello World".equals(obj.getField());
             }
         };
         
-        IPredicate<ObGeneric<String>> pred2 = new Predicate<ObGeneric<String>>() {
+        Predicate<ObGeneric<String>> pred2 = new Predicate<ObGeneric<String>>() {
 
             @Override
-            public Boolean evaluate(ObGeneric<String> obj) {
+            public Boolean evaluateImpl(ObGeneric<String> obj) {
                 return "Hello, World".equals(obj.getField());
             }
         };
         
-        IPredicate<ObGeneric<String>> pred3 = pred.or(pred2);
+        Predicate<ObGeneric<String>> pred3 = pred.or(pred2);
         
-        IPredicate<ObGeneric<String>> pred4 = pred3.not();
+        Predicate<ObGeneric<String>> pred4 = pred3.not();
         
         IExpressionEngine<ObGeneric<String>> start = new ExpressionEngine<>(obs);
         

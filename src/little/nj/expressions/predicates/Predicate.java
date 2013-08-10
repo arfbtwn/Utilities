@@ -25,41 +25,59 @@ import little.nj.expressions.predicates.finals.XorPredicate;
 
 public abstract class Predicate<T> implements IPredicate<T> {
     
-    /*
-     * (non-Javadoc)
-     * @see little.nj.expressions.predicates.IPredicate#and(little.nj.expressions.predicates.IPredicate)
+    /**
+     * Returns a new predicate expressing the binary AND operation
+     * 
+     * @param rhs
+     * @return
      */
-    @Override
-    public IPredicate<T> and(IPredicate<T> rhs) {
+    public final Predicate<T> and(IPredicate<T> rhs) {
         return new AndPredicate<>(this, rhs);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see little.nj.expressions.predicates.IPredicate#or(little.nj.expressions.predicates.IPredicate)
+    /**
+     * Returns a new predicate expressing the binary OR operation
+     * 
+     * @param rhs
+     * @return
      */
-    @Override
-    public IPredicate<T> or(IPredicate<T> rhs) {
+    public final Predicate<T> or(IPredicate<T> rhs) {
         return new OrPredicate<>(this, rhs);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see little.nj.expressions.predicates.IPredicate#xor(little.nj.expressions.predicates.IPredicate)
+    /**
+     * Returns a new predicate expressing the binary XOR operation
+     * 
+     * @param rhs
+     * @return
      */
-    @Override
-    public IPredicate<T> xor(IPredicate<T> rhs) {
+    public final Predicate<T> xor(IPredicate<T> rhs) {
         return new XorPredicate<>(this, rhs);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see little.nj.expressions.predicates.IPredicate#not()
+    /**
+     * Returns a new predicate expressing the NOT operation
+     * 
+     * @return
      */
-    @Override
-    public IPredicate<T> not() {
+    public final Predicate<T> not() {
         return new NotPredicate<>(this);
     }
+    
+    /*
+     * (non-Javadoc)
+     * @see little.nj.expressions.IExpression#evaluate(java.lang.Object)
+     */
+    public final Boolean evaluate(T obj) {
+        return unbox(evaluateImpl(obj));
+    }
+    
+    /**
+     * @see little.nj.expressions.IExpression#evaluate(java.lang.Object)
+     * @param obj
+     * @return
+     */
+    protected abstract Boolean evaluateImpl(T obj);
     
     /**
      * For safe unboxing of Boolean wrapper variables
@@ -67,7 +85,7 @@ public abstract class Predicate<T> implements IPredicate<T> {
      * @param b
      * @return primitive boolean
      */
-    protected boolean unbox(Boolean b) {
+    protected final boolean unbox(Boolean b) {
         return b == null ? false : b;
     }
 }

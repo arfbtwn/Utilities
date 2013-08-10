@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import little.nj.core.tests.MockObjects.Ob;
+import little.nj.expressions.predicates.IPredicate;
 import little.nj.expressions.predicates.Predicate;
 import little.nj.util.StringUtil;
 
@@ -38,7 +39,7 @@ public class ExpressionTest {
         Ob result = ext.first(new Predicate<Ob>() {
 
             @Override
-            public Boolean evaluate(Ob obj) {
+            public Boolean evaluateImpl(Ob obj) {
                 return obj.getField() == 1;
             } });
         
@@ -54,7 +55,7 @@ public class ExpressionTest {
         Ob result = ext.last(new Predicate<Ob>() {
 
             @Override
-            public Boolean evaluate(Ob obj) {
+            public Boolean evaluateImpl(Ob obj) {
                 return obj.getField() == 1;
             } });
         
@@ -71,7 +72,7 @@ public class ExpressionTest {
         IExpressionEngine<Ob> result = ext.where(new Predicate<Ob>() {
 
             @Override
-            public Boolean evaluate(Ob obj) {
+            public Boolean evaluateImpl(Ob obj) {
                 return obj.getField() == 1;
             } });
         
@@ -114,7 +115,7 @@ public class ExpressionTest {
         assertEquals(ONES, ext.count(new Predicate<Ob>() {
 
             @Override
-            public Boolean evaluate(Ob obj) {
+            public Boolean evaluateImpl(Ob obj) {
                 return obj.getField() == 1;
             } }));
     }
@@ -126,7 +127,7 @@ public class ExpressionTest {
         assertEquals(true, ext.contains(new Predicate<Ob>() {
 
             @Override
-            public Boolean evaluate(Ob obj) {
+            public Boolean evaluateImpl(Ob obj) {
                 return obj.getField() == 1;
             } }));
     }
@@ -136,7 +137,7 @@ public class ExpressionTest {
         
         IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
                 
-        assertEquals(0, ext.count(new Predicate<Ob>() {
+        assertEquals(0, ext.count(new IPredicate<Ob>() {
 
             @Override
             public Boolean evaluate(Ob obj) {

@@ -26,7 +26,7 @@ public final class TruePredicate<T> extends Predicate<T> {
      * @see little.nj.expressions.IExpression#evaluate(java.lang.Object)
      */
     @Override
-    public Boolean evaluate(T obj) {
+    public Boolean evaluateImpl(T obj) {
         return true;
     }
 

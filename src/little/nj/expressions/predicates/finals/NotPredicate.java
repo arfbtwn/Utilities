@@ -30,7 +30,7 @@ public final class NotPredicate<T> extends UnaryPredicate<T> {
      * @see little.nj.expressions.IExpression#evaluate(java.lang.Object)
      */
     @Override
-    public Boolean evaluate(T obj) {
+    public Boolean evaluateImpl(T obj) {
         return !unbox(predicate.evaluate(obj));
     }
 }

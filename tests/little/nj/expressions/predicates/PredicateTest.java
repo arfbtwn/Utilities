@@ -17,7 +17,7 @@
  */
 package little.nj.expressions.predicates;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class PredicateTest {
         Predicate<ObGeneric<String>> pred = new Predicate<ObGeneric<String>>() {
 
             @Override
-            public Boolean evaluateImpl(ObGeneric<String> obj) {
+            public boolean evaluate(ObGeneric<String> obj) {
                 return "Hello World".equals(obj.getField());
             }
         };
@@ -54,7 +54,7 @@ public class PredicateTest {
         Predicate<ObGeneric<String>> pred2 = new Predicate<ObGeneric<String>>() {
 
             @Override
-            public Boolean evaluateImpl(ObGeneric<String> obj) {
+            public boolean evaluate(ObGeneric<String> obj) {
                 return "Hello, World".equals(obj.getField());
             }
         };
@@ -82,6 +82,44 @@ public class PredicateTest {
         assertEquals(10, start.where(pred).union(start.where(pred2)).count());
         
         assertEquals(100, start.toList().size());
+    }
+    
+    private class BoxedPredicate<T> extends Predicate<T> {
+
+        IPredicate<T> misbehaved = new IPredicate<T>() {
+
+            @SuppressWarnings("null")
+            @Override
+            public boolean evaluate(T obj) {
+                Boolean rv = null;
+                return rv;
+            }
+            
+        };
+        
+        /* (non-Javadoc)
+         * @see little.nj.expressions.predicates.IPredicate#evaluate(java.lang.Object)
+         */
+        @Override
+        public boolean evaluate(T obj) {
+            return protect(misbehaved.evaluate(obj));
+        } 
+        
+        private final boolean protect(Boolean b) {
+            return b == null ? false : b;
+        }
+    }
+    
+    @Test
+    public void test_Boxed_Protect_Fails() {
+        BoxedPredicate<String> pred = new BoxedPredicate<>();
+        
+        try {
+            pred.evaluate(null);
+            fail();
+        } catch (NullPointerException ex) {
+            assertNotNull(ex);
+        }
     }
 
 }

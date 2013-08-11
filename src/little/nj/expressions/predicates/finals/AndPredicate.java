@@ -31,7 +31,7 @@ public final class AndPredicate<T> extends BinaryPredicate<T> {
      * @see little.nj.expressions.IExpression#evaluate(java.lang.Object)
      */
     @Override
-    public Boolean evaluateImpl(T obj) {
-        return unbox(lhs.evaluate(obj)) && unbox(rhs.evaluate(obj));
+    public boolean evaluate(T obj) {
+        return lhs.evaluate(obj) && rhs.evaluate(obj);
     }
 }

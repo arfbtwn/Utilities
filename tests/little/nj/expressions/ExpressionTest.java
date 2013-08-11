@@ -8,7 +8,6 @@ import java.util.List;
 
 import little.nj.core.tests.MockObjects.Ob;
 import little.nj.expressions.predicates.IPredicate;
-import little.nj.expressions.predicates.Predicate;
 import little.nj.util.StringUtil;
 
 import org.junit.Before;
@@ -36,10 +35,10 @@ public class ExpressionTest {
     public void test_First() {
         IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
         
-        Ob result = ext.first(new Predicate<Ob>() {
+        Ob result = ext.first(new IPredicate<Ob>() {
 
             @Override
-            public Boolean evaluateImpl(Ob obj) {
+            public boolean evaluate(Ob obj) {
                 return obj.getField() == 1;
             } });
         
@@ -52,10 +51,10 @@ public class ExpressionTest {
     public void test_Last() {
         IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
         
-        Ob result = ext.last(new Predicate<Ob>() {
+        Ob result = ext.last(new IPredicate<Ob>() {
 
             @Override
-            public Boolean evaluateImpl(Ob obj) {
+            public boolean evaluate(Ob obj) {
                 return obj.getField() == 1;
             } });
         
@@ -69,10 +68,10 @@ public class ExpressionTest {
         
         IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
                 
-        IExpressionEngine<Ob> result = ext.where(new Predicate<Ob>() {
+        IExpressionEngine<Ob> result = ext.where(new IPredicate<Ob>() {
 
             @Override
-            public Boolean evaluateImpl(Ob obj) {
+            public boolean evaluate(Ob obj) {
                 return obj.getField() == 1;
             } });
         
@@ -112,10 +111,10 @@ public class ExpressionTest {
         
         IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
                 
-        assertEquals(ONES, ext.count(new Predicate<Ob>() {
+        assertEquals(ONES, ext.count(new IPredicate<Ob>() {
 
             @Override
-            public Boolean evaluateImpl(Ob obj) {
+            public boolean evaluate(Ob obj) {
                 return obj.getField() == 1;
             } }));
     }
@@ -124,24 +123,11 @@ public class ExpressionTest {
     public void test_Contains() {
         IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
         
-        assertEquals(true, ext.contains(new Predicate<Ob>() {
+        assertEquals(true, ext.contains(new IPredicate<Ob>() {
 
             @Override
-            public Boolean evaluateImpl(Ob obj) {
+            public boolean evaluate(Ob obj) {
                 return obj.getField() == 1;
-            } }));
-    }
-    
-    @Test
-    public void test_PredicateIterator_Null_Protector() {
-        
-        IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
-                
-        assertEquals(0, ext.count(new IPredicate<Ob>() {
-
-            @Override
-            public Boolean evaluate(Ob obj) {
-                return null;
             } }));
     }
     

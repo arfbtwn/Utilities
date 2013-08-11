@@ -30,7 +30,7 @@ public class PredicateIterator<T> extends SingleReel<T, T> {
             while(it.hasNext()) {
                 poss = it.next();
             
-                if (protector(predicate.evaluate(poss))) {
+                if (predicate.evaluate(poss)) {
                     next = poss;
                     break;
                 }
@@ -53,16 +53,5 @@ public class PredicateIterator<T> extends SingleReel<T, T> {
         next = null;
         
         return that;
-    }
-    
-    /**
-     * Protects against null return values from
-     * the predicate evaluate() function
-     * 
-     * @param in
-     * @return
-     */
-    protected boolean protector(Boolean in) {
-        return in == null ? false : in;
     }
 }

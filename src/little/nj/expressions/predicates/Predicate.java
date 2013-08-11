@@ -63,29 +63,4 @@ public abstract class Predicate<T> implements IPredicate<T> {
     public final Predicate<T> not() {
         return new NotPredicate<>(this);
     }
-    
-    /*
-     * (non-Javadoc)
-     * @see little.nj.expressions.IExpression#evaluate(java.lang.Object)
-     */
-    public final Boolean evaluate(T obj) {
-        return unbox(evaluateImpl(obj));
-    }
-    
-    /**
-     * @see little.nj.expressions.IExpression#evaluate(java.lang.Object)
-     * @param obj
-     * @return
-     */
-    protected abstract Boolean evaluateImpl(T obj);
-    
-    /**
-     * For safe unboxing of Boolean wrapper variables
-     * 
-     * @param b
-     * @return primitive boolean
-     */
-    protected final boolean unbox(Boolean b) {
-        return b == null ? false : b;
-    }
 }

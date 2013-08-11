@@ -59,7 +59,7 @@ public class MethodMatcherFactory
          * @see little.nj.util.IMatcher#matches(java.lang.Object)
          */
         @Override
-        public Boolean evaluateImpl(Method m) {
+        public boolean evaluate(Method m) {
             return m.getName().matches(pattern);
         }
     }
@@ -78,7 +78,7 @@ public class MethodMatcherFactory
          * @see little.nj.util.IMatcher#matches(java.lang.Object)
          */
         @Override
-        public Boolean evaluateImpl(Method m) {
+        public boolean evaluate(Method m) {
             return Arrays.equals(m.getParameterTypes(), args);
         }
     }
@@ -98,7 +98,7 @@ public class MethodMatcherFactory
          * @see little.nj.util.IMatcher#matches(java.lang.Object)
          */
         @Override
-        public Boolean evaluateImpl(Method obj) {
+        public boolean evaluate(Method obj) {
             return rv.equals(obj.getReturnType());
         }   
     }

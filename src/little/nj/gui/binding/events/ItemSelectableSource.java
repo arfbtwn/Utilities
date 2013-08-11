@@ -21,16 +21,16 @@ import java.awt.ItemSelectable;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import little.nj.gui.binding.IBinding;
+import little.nj.gui.binding.Binding2;
 
 
 /**
  * @author Nicholas Little
  *
  */
-public class ItemSelectableSource extends BindingEventSource {
+public class ItemSelectableSource extends EventSourceImpl {
 
-    public static boolean handlesBinding(IBinding bind) {
+    public static boolean handlesBinding(Binding2 bind) {
         return bind.getSrc() instanceof ItemSelectable &&
                 "getSelectedObjects".equals(bind.getSrcMethod().getName());
     }
@@ -38,7 +38,7 @@ public class ItemSelectableSource extends BindingEventSource {
     /**
      * @param binding
      */
-    public ItemSelectableSource(IBinding binding) {
+    public ItemSelectableSource(Binding2 binding) {
         super(binding);
     }
 

@@ -17,19 +17,13 @@
  */
 package little.nj.gui.binding;
 
-import little.nj.gui.binding.events.IBindingEventSource;
 
 /**
- * Objects of this type agree to create bindings and objects which can
- * reliably 
- * 
  * @author Nicholas Little
  *
  */
-public interface IBindingFactory {
+public interface TypeConverter<X, Y> {
 
-    IBinding create(Object src, Object dst, String smth, String dmth);
-    
-    IBindingEventSource createEventSource(IBinding bind);
+    Y convert(X in);
     
 }

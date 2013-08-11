@@ -23,17 +23,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import little.nj.reflection.ReflectionUtil;
-import little.nj.gui.binding.IBinding;
+import little.nj.gui.binding.Binding2;
 
 /**
  * @author Nicholas Little
  *
  */
-public class PropertyChangeSource extends BindingEventSource {
+public class PropertyChangeSource extends EventSourceImpl {
 
     private final static ReflectionUtil REFLECTOR = ReflectionUtil.getInstance();
     
-    public static boolean handlesBinding(IBinding bind) {
+    public static boolean handlesBinding(Binding2 bind) {
         
         Method listen = REFLECTOR.getMethod(bind.getSrc(), "addPropertyChangeListener", 
                 PropertyChangeListener.class);
@@ -46,7 +46,7 @@ public class PropertyChangeSource extends BindingEventSource {
      * @param obj
      * @param binding
      */
-    public PropertyChangeSource(IBinding binding) {
+    public PropertyChangeSource(Binding2 binding) {
         super(binding);
     }
     

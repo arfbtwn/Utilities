@@ -17,13 +17,45 @@
  */
 package little.nj.gui.binding;
 
+import little.nj.gui.binding.GenericBindingImpl.Getter;
+import little.nj.gui.binding.GenericBindingImpl.Marshal;
+import little.nj.gui.binding.GenericBindingImpl.Setter;
 import little.nj.gui.binding.events.BindingEventSource;
 
 
-public interface BindingFactory {
-
-    Binding2 create(Object src, Object dst, String smth, String dmth);
+public interface FluentBinding<X, Y> extends Binding {
     
-    BindingEventSource createEventSource(Binding2 bind);
+    // TODO: Assess type parameters
     
+    /**
+     * The get accessor
+     * 
+     * @param get
+     * @return
+     */
+    FluentBinding<X, Y> from(Getter<X> get);
+    
+    /**
+     * The set mutator
+     * 
+     * @param set
+     * @return
+     */
+    FluentBinding<X, Y> to(Setter<Y> set);
+    
+    /**
+     * The marshaling component
+     * 
+     * @param marshal
+     * @return
+     */
+    FluentBinding<X, Y> via(Marshal<X, Y> marshal);
+    
+    /**
+     * The event source
+     * 
+     * @param source
+     * @return
+     */
+    FluentBinding<X, Y> when(BindingEventSource source);
 }

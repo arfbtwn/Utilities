@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import little.nj.gui.binding.events.BindingEvent;
-import little.nj.gui.binding.events.IBindingEventSource;
-import little.nj.gui.binding.events.IBindingListener;
+import little.nj.gui.binding.events.BindingEventSource;
+import little.nj.gui.binding.events.BindingListener;
 
 
 /**
@@ -43,11 +43,11 @@ public class BindingManager {
      */
     public static final String DEFAULT_SET_PREFIX = "set";
 
-    private IBindingFactory factory;
+    private BindingFactory factory;
     
-    private Map<IBinding, IBinding> bindings;
+    private Map<Binding, Binding> bindings;
     
-    private List<IBindingEventSource> event_sources;
+    private List<BindingEventSource> event_sources;
     
     /**
      * Creates a binding manager using the specified factory
@@ -55,7 +55,7 @@ public class BindingManager {
      * 
      * @param factory
      */
-    public BindingManager(IBindingFactory factory) {
+    public BindingManager(BindingFactory factory) {
         this.factory = factory;
         this.bindings = new HashMap<>();
         this.event_sources = new ArrayList<>();
@@ -95,7 +95,7 @@ public class BindingManager {
                        String src_get, String dst_set,
                        String dst_get, String src_set) {
         
-        IBinding up = factory.create(x, y, src_get, dst_set), 
+        Binding2 up = factory.create(x, y, src_get, dst_set), 
                  down = factory.create(y, x, dst_get, src_set);
 
         bindings.put(up, down);
@@ -103,8 +103,8 @@ public class BindingManager {
 
         up.bind();
         
-        IBindingEventSource up_evt = factory.createEventSource(up),
-                            down_evt = factory.createEventSource(down); 
+        BindingEventSource up_evt = factory.createEventSource(up),
+                           down_evt = factory.createEventSource(down); 
 
         if (up_evt != null) {
             up_evt.addBindingListener(listener);
@@ -118,17 +118,17 @@ public class BindingManager {
         
     }
     
-    private final IBindingListener listener = new IBindingListener() {
+    private final BindingListener listener = new BindingListener() {
 
         @Override
         public void handleBindingEvent(BindingEvent x) {
             
-            IBinding bind_src = x.getBinding(),
-                     bind_dst = bindings.get(bind_src);
+            Binding bind_src = x.getBinding(),
+                    bind_dst = bindings.get(bind_src);
             
-            bind_dst.isEnabled(false);
+            bind_dst.setEnabled(false);
             bind_src.bind();
-            bind_dst.isEnabled(true);
+            bind_dst.setEnabled(true);
         }
         
     };

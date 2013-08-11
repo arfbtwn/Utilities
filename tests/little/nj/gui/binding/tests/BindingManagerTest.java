@@ -24,7 +24,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextArea;
 
 import little.nj.core.tests.MockObjects.ObGenericChangeNotify;
-import little.nj.gui.binding.BindingFactory;
+import little.nj.gui.binding.BindingFactoryImpl;
 import little.nj.gui.binding.BindingManager;
 
 import org.junit.After;
@@ -57,7 +57,7 @@ public class BindingManagerTest {
      */
     @Before
     public void setUp() throws Exception {
-        manager = new BindingManager(new BindingFactory());
+        manager = new BindingManager(new BindingFactoryImpl());
     }
 
     /**

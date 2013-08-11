@@ -21,16 +21,16 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 
-import little.nj.gui.binding.IBinding;
+import little.nj.gui.binding.Binding2;
 
 
 /**
  * @author Nicholas Little
  *
  */
-public class JTextComponentSource extends BindingEventSource {
+public class JTextComponentSource extends EventSourceImpl {
 
-    public static boolean handlesBinding(IBinding binding) {
+    public static boolean handlesBinding(Binding2 binding) {
         
         if (!(binding.getSrc() instanceof JTextComponent))
             return false;
@@ -48,7 +48,7 @@ public class JTextComponentSource extends BindingEventSource {
      * @param obj
      * @param binding
      */
-    public JTextComponentSource(IBinding binding) {
+    public JTextComponentSource(Binding2 binding) {
         super(binding);
     }
 

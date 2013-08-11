@@ -22,8 +22,8 @@ import static org.junit.Assert.*;
 import javax.swing.JCheckBox;
 
 import little.nj.core.tests.MockObjects.ObGeneric;
-import little.nj.gui.binding.Binding;
-import little.nj.gui.binding.ITypeConverter;
+import little.nj.gui.binding.BindingImpl;
+import little.nj.gui.binding.TypeConverter;
 
 import org.junit.Test;
 
@@ -43,7 +43,7 @@ public class BindingConversionTest {
         
         ObGeneric<String> obj = new ObGeneric<>("true");
         
-        Binding bind = new Binding(obj, box, "getField", "setSelected");
+        BindingImpl bind = new BindingImpl(obj, box, "getField", "setSelected");
 
         bind.setConverter(converter);
         
@@ -59,7 +59,7 @@ public class BindingConversionTest {
         
     }
     
-    private ITypeConverter<String, Boolean> converter = new ITypeConverter<String, Boolean>() {
+    private TypeConverter<String, Boolean> converter = new TypeConverter<String, Boolean>() {
 
         @Override
         public Boolean convert(String in) {

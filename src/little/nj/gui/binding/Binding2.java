@@ -17,13 +17,14 @@
  */
 package little.nj.gui.binding;
 
+import java.lang.reflect.Method;
 
-/**
- * @author Nicholas Little
- *
- */
-public interface ITypeConverter<X, Y> {
-
-    Y convert(X in);
+@Deprecated
+public interface Binding2 extends Binding {
     
+    Object getSrc();
+    Object getDst();
+    
+    Method getSrcMethod();
+    Method getDstMethod();
 }

@@ -19,7 +19,7 @@ package little.nj.gui.binding.events;
 
 import java.util.EventListener;
 
-public interface IBindingListener extends EventListener {
+public interface BindingListener extends EventListener {
     
     void handleBindingEvent(BindingEvent x);
     

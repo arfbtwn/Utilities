@@ -22,16 +22,16 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JToggleButton;
 
-import little.nj.gui.binding.IBinding;
+import little.nj.gui.binding.Binding2;
 
 
 /**
  * @author Nicholas Little
  *
  */
-public class JToggleButtonSource extends BindingEventSource {
+public class JToggleButtonSource extends EventSourceImpl {
 
-    public static boolean handlesBinding(IBinding bind) {
+    public static boolean handlesBinding(Binding2 bind) {
         return bind.getSrc() instanceof JToggleButton &&
                 "isSelected".equals(bind.getSrcMethod().getName());
     }
@@ -39,7 +39,7 @@ public class JToggleButtonSource extends BindingEventSource {
     /**
      * @param binding
      */
-    public JToggleButtonSource(IBinding binding) {
+    public JToggleButtonSource(Binding2 binding) {
         super(binding);
     }
 

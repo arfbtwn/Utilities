@@ -17,32 +17,24 @@
  */
 package little.nj.gui.binding.events;
 
-import little.nj.gui.binding.Binding2;
+import little.nj.gui.binding.Binding;
 import little.nj.gui.events.EventSupport;
 
 
-/**
- * The purpose of this class is to register for events on 
- * different typed objects and raise a BindingEvent in response
- * 
- * @author Nicholas Little
- *
- */
-public abstract class EventSourceImpl implements BindingEventSource {
+public abstract class EventSourceImpl<T> implements BindingEventSource {
     
     private EventSupport<BindingListener, BindingEvent> support;
-    private Binding2 bind;
+    protected final Binding bind;
+    protected final T obj;
     
-    public EventSourceImpl(Binding2 binding) {
+    public EventSourceImpl(Binding binding, T src) {
         support = new EventSupport<>();
         
         bind = binding;
         
+        obj = src;
+        
         init();
-    }
-    
-    protected Object getSource() {
-        return bind.getSrc();
     }
     
     protected abstract void init();

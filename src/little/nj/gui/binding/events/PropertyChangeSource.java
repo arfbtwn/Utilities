@@ -47,12 +47,11 @@ public class PropertyChangeSource extends EventSourceImpl {
      * @param binding
      */
     public PropertyChangeSource(Binding2 binding) {
-        super(binding);
+        super(binding, binding.getSrc());
     }
     
     @Override
     protected void init() {
-        Object obj = getSource();
         
         Method listen = REFLECTOR.getMethod(obj, "addPropertyChangeListener", 
                                   PropertyChangeListener.class);

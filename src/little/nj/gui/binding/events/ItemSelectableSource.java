@@ -39,16 +39,14 @@ public class ItemSelectableSource extends EventSourceImpl {
      * @param binding
      */
     public ItemSelectableSource(Binding2 binding) {
-        super(binding);
+        super(binding, binding.getSrc());
     }
 
     /* (non-Javadoc)
      * @see little.nj.gui.binding.events.BindingEventSource#init()
      */
     @Override
-    protected void init() {
-        Object obj = getSource();
-        
+    protected void init() {        
         if (obj instanceof ItemSelectable) {
             ItemSelectable is = (ItemSelectable)obj;
             

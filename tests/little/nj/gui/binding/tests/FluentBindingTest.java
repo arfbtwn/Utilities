@@ -1,7 +1,12 @@
 package little.nj.gui.binding.tests;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import little.nj.core.tests.MockObjects.Ob;
 import little.nj.core.tests.MockObjects.ObGeneric;
+import little.nj.core.tests.MockObjects.ObGenericChangeNotify;
+
 import org.junit.Test;
 
 import static junit.framework.Assert.*;
@@ -11,6 +16,7 @@ import little.nj.gui.binding.FluentBindingFactoryImpl;
 import little.nj.gui.binding.GenericBindingImpl;
 import little.nj.gui.binding.FluentBinding;
 import little.nj.gui.binding.GenericBindingImpl.*;
+import little.nj.gui.binding.events.EventSourceImpl;
 
 
 public class FluentBindingTest {
@@ -140,17 +146,44 @@ public class FluentBindingTest {
         final ObGeneric<String> ob2 = new ObGeneric<>("Hello, World");
         
         FluentBindingImpl<Integer, String> bind = new FluentBindingImpl<>();
-        
-        bind.from(new FluentBindingFactoryImpl.GetterImpl<>(ob1, "getField", int.class));
-        
-        bind.to(new FluentBindingFactoryImpl.SetterImpl<>(ob2, "setField", String.class));
-        
-        bind.via(intToString);
+                
+        bind.from(new FluentBindingFactoryImpl.GetterImpl<>(ob1, "getField", int.class))
+            .to(new FluentBindingFactoryImpl.SetterImpl<>(ob2, "setField", String.class))
+            .via(intToString);
         
         bind.bind();
         
         assertEquals("10", ob2.getField());
+    }
+    
+    @Test
+    public void test_Fluent_Bind_Event()
+    {
+        ObGenericChangeNotify<String> ob1 = new ObGenericChangeNotify<>("Hello, World");
+        Ob ob2 = new Ob(10);
         
         
+        FluentBindingImpl<String, Integer> bind = new FluentBindingImpl<>();
+        bind.from(new FluentBindingFactoryImpl.GetterImpl<>(ob1, "getField", String.class))
+            .to(new FluentBindingFactoryImpl.SetterImpl<>(ob2, "setField", int.class))
+            .via(stringToInt)
+            .when(new EventSourceImpl<ObGenericChangeNotify<String>>(bind, ob1) {
+
+                @Override
+                protected void init() {
+                    obj.addPropertyChangeListener(new PropertyChangeListener() {
+                        
+                        @Override
+                        public void propertyChange(PropertyChangeEvent evt) {
+                            fireBindingEvent(evt.getSource());
+                        }
+                    });
+                }
+            });
+        
+        ob1.setField("35");
+        
+        assertEquals(35, ob2.getField());
+                
     }
 }

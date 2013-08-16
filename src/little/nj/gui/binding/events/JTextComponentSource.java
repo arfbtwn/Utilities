@@ -49,12 +49,10 @@ public class JTextComponentSource extends EventSourceImpl {
      * @param binding
      */
     public JTextComponentSource(Binding2 binding) {
-        super(binding);
+        super(binding, binding.getSrc());
     }
 
-    protected void init() {
-        Object obj = getSource();
-        
+    protected void init() {        
         JTextComponent jtc = (JTextComponent) obj;
         jtc.getDocument().addDocumentListener(new DocumentListener() {
 

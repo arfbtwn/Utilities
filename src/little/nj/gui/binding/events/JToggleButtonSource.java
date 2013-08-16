@@ -40,7 +40,7 @@ public class JToggleButtonSource extends EventSourceImpl {
      * @param binding
      */
     public JToggleButtonSource(Binding2 binding) {
-        super(binding);
+        super(binding, binding.getSrc());
     }
 
     /* (non-Javadoc)
@@ -48,7 +48,6 @@ public class JToggleButtonSource extends EventSourceImpl {
      */
     @Override
     protected void init() {
-        Object obj = getSource();
         
         if (obj instanceof JToggleButton) {
             JToggleButton jtb = (JToggleButton) obj;

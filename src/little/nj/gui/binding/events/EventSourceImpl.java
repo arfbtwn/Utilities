@@ -17,20 +17,16 @@
  */
 package little.nj.gui.binding.events;
 
-import little.nj.gui.binding.Binding;
 import little.nj.gui.events.EventSupport;
 
 
 public abstract class EventSourceImpl<T> implements BindingEventSource {
     
-    private EventSupport<BindingListener, BindingEvent> support;
-    protected final Binding bind;
+    private final EventSupport<BindingListener, BindingEvent> support;
     protected final T obj;
     
-    public EventSourceImpl(Binding binding, T src) {
+    public EventSourceImpl(T src) {
         support = new EventSupport<>();
-        
-        bind = binding;
         
         obj = src;
         
@@ -47,16 +43,13 @@ public abstract class EventSourceImpl<T> implements BindingEventSource {
         support.removeEventListener(listener);
     }
     
-    protected void fireBindingEvent(BindingEvent evt) {
-        if (bind.isEnabled())
-            support.fireEvent(evt);
-    }
-    
-    protected void fireBindingEvent(Object source) {
-        fireBindingEvent(new BindingEvent(source, bind));
-    }
-    
-    protected void fireBindingEvent() {
-        fireBindingEvent(this);
+    /**
+     * FIXME: I'd like to narrow this to EventObject, but the concrete
+     * class is trouble with interface typed events
+     * 
+     * @param event
+     */
+    protected void fireBindingEvent(Object event) {
+        support.fireEvent(new BindingEvent(event));
     }
 }

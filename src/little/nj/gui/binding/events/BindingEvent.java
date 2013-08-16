@@ -19,25 +19,10 @@ package little.nj.gui.binding.events;
 
 import java.util.EventObject;
 
-import little.nj.gui.binding.Binding;
-
 @SuppressWarnings("serial")
 public class BindingEvent extends EventObject {
     
-    /**
-     * The binding we are managing events for
-     */
-    private transient Binding bind;
-    
-    public BindingEvent(Object source, Binding bind) {
+    public BindingEvent(Object source) {
         super(source);
-        
-        this.bind = bind;
     }
-    
-    /**
-     * The binding we are managing events for
-     * @return The binding we are managing events for
-     */
-    public Binding getBinding() { return bind; }
 }

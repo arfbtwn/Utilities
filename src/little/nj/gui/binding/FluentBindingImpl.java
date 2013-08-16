@@ -17,7 +17,9 @@
  */
 package little.nj.gui.binding;
 
+import little.nj.gui.binding.events.BindingEvent;
 import little.nj.gui.binding.events.BindingEventSource;
+import little.nj.gui.binding.events.BindingListener;
 
 
 public class FluentBindingImpl<X, Y> extends GenericBindingImpl<X, Y> implements FluentBinding<X, Y> {
@@ -27,6 +29,9 @@ public class FluentBindingImpl<X, Y> extends GenericBindingImpl<X, Y> implements
         return new FluentBindingImpl<>();
     }
 
+    protected BindingEventSource events;
+    protected FluentBinding<Y, X> twin;
+    
     public FluentBindingImpl() { }
     
     public FluentBindingImpl(Class<X> sample1, Class<Y> sample2) { }
@@ -51,5 +56,52 @@ public class FluentBindingImpl<X, Y> extends GenericBindingImpl<X, Y> implements
         return this;
     }
     
+    public FluentBindingImpl<X, Y> twin(FluentBinding<Y, X> twin) {
+        
+        if (this.twin == null) {
+            this.twin = twin;
+            twin.twin(this);
+        }
+        
+        return this;
+    }
     
+    /* (non-Javadoc)
+     * @see little.nj.gui.binding.GenericBindingImpl#bind()
+     */
+    @Override
+    public void bind() {
+        disableTwin();
+        super.bind();
+        enableTwin();
+    }
+    
+    private void setEventSource(BindingEventSource events) {
+        if (this.events != null)
+            events.removeBindingListener(listener);
+        
+        this.events = events;
+        
+        if (this.events != null)
+            events.addBindingListener(listener);
+    }
+    
+    private void disableTwin() {
+        if (twin != null)
+            twin.setEnabled(false);
+    }
+    
+    private void enableTwin() {
+        if (twin != null)
+            twin.setEnabled(true);
+    }
+    
+    private BindingListener listener = new BindingListener() {
+
+        @Override
+        public void handleBindingEvent(BindingEvent x) {
+            bind();
+        }
+        
+    };
 }

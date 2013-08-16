@@ -17,8 +17,6 @@
  */
 package little.nj.gui.binding;
 
-import little.nj.gui.binding.events.BindingEventSource;
-
 
 public interface Binding {
 
@@ -39,10 +37,4 @@ public interface Binding {
      * @param enabled
      */
     void setEnabled(boolean enabled);
-    
-    /**
-     * 
-     * @param source
-     */
-    void setEventSource(BindingEventSource source);
 }

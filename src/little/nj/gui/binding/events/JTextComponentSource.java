@@ -21,40 +21,15 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 
-import little.nj.gui.binding.Binding2;
 
+public class JTextComponentSource extends EventSourceImpl<JTextComponent> {
 
-/**
- * @author Nicholas Little
- *
- */
-public class JTextComponentSource extends EventSourceImpl {
-
-    public static boolean handlesBinding(Binding2 binding) {
-        
-        if (!(binding.getSrc() instanceof JTextComponent))
-            return false;
-        
-        String src_mthd = binding.getSrcMethod().getName();
-        
-        if (!"getText".equals(src_mthd)) {
-            return false;
-        }
-        
-        return true;
-    }
-    
-    /**
-     * @param obj
-     * @param binding
-     */
-    public JTextComponentSource(Binding2 binding) {
-        super(binding, binding.getSrc());
+    public JTextComponentSource(JTextComponent source) {
+        super(source);
     }
 
-    protected void init() {        
-        JTextComponent jtc = (JTextComponent) obj;
-        jtc.getDocument().addDocumentListener(new DocumentListener() {
+    protected void init() {
+        obj.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
             public void insertUpdate(DocumentEvent e) {

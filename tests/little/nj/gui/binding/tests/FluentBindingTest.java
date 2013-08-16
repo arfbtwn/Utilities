@@ -1,22 +1,25 @@
 package little.nj.gui.binding.tests;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Arrays;
 
 import little.nj.core.tests.MockObjects.Ob;
 import little.nj.core.tests.MockObjects.ObGeneric;
 import little.nj.core.tests.MockObjects.ObGenericChangeNotify;
+import little.nj.gui.binding.FluentBinding;
+import little.nj.gui.binding.FluentBindingFactoryImpl;
+import little.nj.gui.binding.FluentBindingImpl;
+import little.nj.gui.binding.GenericBindingImpl;
+import little.nj.gui.binding.GenericBindingImpl.Getter;
+import little.nj.gui.binding.GenericBindingImpl.Marshal;
+import little.nj.gui.binding.GenericBindingImpl.Setter;
+import little.nj.gui.binding.events.EventSourceImpl;
 
 import org.junit.Test;
-
-import static junit.framework.Assert.*;
-
-import little.nj.gui.binding.FluentBindingImpl;
-import little.nj.gui.binding.FluentBindingFactoryImpl;
-import little.nj.gui.binding.GenericBindingImpl;
-import little.nj.gui.binding.FluentBinding;
-import little.nj.gui.binding.GenericBindingImpl.*;
-import little.nj.gui.binding.events.EventSourceImpl;
 
 
 public class FluentBindingTest {
@@ -167,7 +170,7 @@ public class FluentBindingTest {
         bind.from(new FluentBindingFactoryImpl.GetterImpl<>(ob1, "getField", String.class))
             .to(new FluentBindingFactoryImpl.SetterImpl<>(ob2, "setField", int.class))
             .via(stringToInt)
-            .when(new EventSourceImpl<ObGenericChangeNotify<String>>(bind, ob1) {
+            .when(new EventSourceImpl<ObGenericChangeNotify<String>>(ob1) {
 
                 @Override
                 protected void init() {
@@ -185,5 +188,47 @@ public class FluentBindingTest {
         
         assertEquals(35, ob2.getField());
                 
+    }
+    
+    @Test
+    public void test_Bind_Primitive_Array() {
+        
+        class ObPrim {
+            byte[] field;
+            byte[] getField() { return field; }
+            void setField(byte[] value) { field = value; }
+        }
+        
+        final ObPrim ob1 = new ObPrim(),
+                     ob2 = new ObPrim();
+        
+        final byte[] field1 = new byte[] { 0x0, 0x1, 0x2, 0x3 },
+                     field2 = new byte[] { 0x3, 0x2, 0x1, 0x0 }; 
+        
+        ob1.setField(field1);
+        ob2.setField(field2);
+        
+        FluentBindingImpl<byte[], byte[]> bind = new FluentBindingImpl<>(byte[].class, byte[].class);
+        
+        bind.from(new Getter<byte[]>() {
+            @Override
+            public byte[] get() {
+                return ob1.getField();
+            }
+        }).to(new Setter<byte[]>() {
+            @Override
+            public void set(byte[] value) {
+                ob2.setField(value);
+            }
+        }).via(new Marshal<byte[], byte[]>() {
+            @Override
+            public byte[] marshal(byte[] value) {
+                return Arrays.copyOf(value, value.length);
+            } });
+        
+        bind.bind();
+        
+        assertEquals(true, Arrays.equals(field1, ob2.getField()));
+        
     }
 }

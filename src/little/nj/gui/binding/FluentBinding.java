@@ -58,4 +58,12 @@ public interface FluentBinding<X, Y> extends Binding {
      * @return
      */
     FluentBinding<X, Y> when(BindingEventSource source);
+    
+    /**
+     * The twin binding
+     * 
+     * @param twin
+     * @return
+     */
+    FluentBinding<X, Y> twin(FluentBinding<Y, X> twin);
 }

@@ -22,25 +22,11 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JToggleButton;
 
-import little.nj.gui.binding.Binding2;
 
-
-/**
- * @author Nicholas Little
- *
- */
-public class JToggleButtonSource extends EventSourceImpl {
-
-    public static boolean handlesBinding(Binding2 bind) {
-        return bind.getSrc() instanceof JToggleButton &&
-                "isSelected".equals(bind.getSrcMethod().getName());
-    }
+public class JToggleButtonSource extends EventSourceImpl<JToggleButton> {
     
-    /**
-     * @param binding
-     */
-    public JToggleButtonSource(Binding2 binding) {
-        super(binding, binding.getSrc());
+    public JToggleButtonSource(JToggleButton source) {
+        super(source);
     }
 
     /* (non-Javadoc)
@@ -48,18 +34,13 @@ public class JToggleButtonSource extends EventSourceImpl {
      */
     @Override
     protected void init() {
-        
-        if (obj instanceof JToggleButton) {
-            JToggleButton jtb = (JToggleButton) obj;
-            
-            jtb.addItemListener(new ItemListener() {
+        obj.addItemListener(new ItemListener() {
 
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    if (e.getStateChange() == ItemEvent.SELECTED)
-                        fireBindingEvent(e);
-                } });
-        }
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED)
+                    fireBindingEvent(e);
+            } });
 
     }
 

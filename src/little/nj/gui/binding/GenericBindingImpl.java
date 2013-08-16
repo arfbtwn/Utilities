@@ -1,9 +1,5 @@
 package little.nj.gui.binding;
 
-import little.nj.gui.binding.events.BindingEvent;
-import little.nj.gui.binding.events.BindingEventSource;
-import little.nj.gui.binding.events.BindingListener;
-
 
 public class GenericBindingImpl<X, Y> implements Binding {
     
@@ -25,8 +21,6 @@ public class GenericBindingImpl<X, Y> implements Binding {
     protected Setter<Y> set;
     
     protected Marshal<X, Y> marshal;
-    
-    protected BindingEventSource events;
     
     protected GenericBindingImpl() 
     { 
@@ -76,23 +70,4 @@ public class GenericBindingImpl<X, Y> implements Binding {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-    
-    public void setEventSource(BindingEventSource events) {
-        if (this.events != null)
-            events.removeBindingListener(listener);
-        
-        this.events = events;
-        
-        if (this.events != null)
-            events.addBindingListener(listener);
-    }
-    
-    private BindingListener listener = new BindingListener() {
-
-        @Override
-        public void handleBindingEvent(BindingEvent x) {
-            bind();
-        }
-        
-    };
 }

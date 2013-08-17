@@ -18,12 +18,12 @@
 package little.nj.expressions.predicates.finals;
 
 import little.nj.expressions.predicates.BinaryPredicate;
-import little.nj.expressions.predicates.IPredicate;
+import little.nj.expressions.predicates.Predicate;
 
 
 public final class AndPredicate<T> extends BinaryPredicate<T> {
     
-    public AndPredicate(IPredicate<T> lhs, IPredicate<T> rhs) {
+    public AndPredicate(Predicate<T> lhs, Predicate<T> rhs) {
         super(lhs, rhs);
     }
     

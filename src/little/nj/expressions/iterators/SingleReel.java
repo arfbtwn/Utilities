@@ -23,7 +23,7 @@ import little.nj.exceptions.NotImplementedException;
 
 
 public abstract class SingleReel<A, B> 
-    implements IExpressionIterator<A, B> {
+    implements ExpressionIterator<A, B> {
 
     protected final Iterator<A> iterator;
     

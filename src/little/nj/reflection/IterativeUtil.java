@@ -19,7 +19,7 @@ package little.nj.reflection;
 
 import java.lang.reflect.Method;
 
-import little.nj.expressions.predicates.IPredicate;
+import little.nj.expressions.predicates.Predicate;
 
 
 /**
@@ -33,12 +33,12 @@ public class IterativeUtil extends ReflectionUtil {
         super();
     }
     
-    public IterativeUtil(IMethodMatcherFactory factory) {
+    public IterativeUtil(MethodMatcherFactory factory) {
         super(factory);
     }
     
     @Override 
-    protected Method getMethodImpl(Class<?> claz, IPredicate<Method> matcher) {
+    protected Method getMethodImpl(Class<?> claz, Predicate<Method> matcher) {
         do {
             try {
                 if (claz == null)

@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import little.nj.core.tests.MockObjects.ObGeneric;
+import little.nj.expressions.ExpressionEngineImpl;
 import little.nj.expressions.ExpressionEngine;
-import little.nj.expressions.IExpressionEngine;
-import little.nj.expressions.predicates.Predicate;
+import little.nj.expressions.predicates.FluentPredicateImpl;
 
 import org.junit.Test;
 
@@ -43,7 +43,7 @@ public class PredicateTest {
                                                               : "World, Hello"));
         }
         
-        Predicate<ObGeneric<String>> pred = new Predicate<ObGeneric<String>>() {
+        FluentPredicate<ObGeneric<String>> pred = new FluentPredicateImpl<ObGeneric<String>>() {
 
             @Override
             public boolean evaluate(ObGeneric<String> obj) {
@@ -51,7 +51,7 @@ public class PredicateTest {
             }
         };
         
-        Predicate<ObGeneric<String>> pred2 = new Predicate<ObGeneric<String>>() {
+        FluentPredicate<ObGeneric<String>> pred2 = new FluentPredicateImpl<ObGeneric<String>>() {
 
             @Override
             public boolean evaluate(ObGeneric<String> obj) {
@@ -59,11 +59,11 @@ public class PredicateTest {
             }
         };
         
-        Predicate<ObGeneric<String>> pred3 = pred.or(pred2);
+        FluentPredicate<ObGeneric<String>> pred3 = pred.or(pred2);
         
-        Predicate<ObGeneric<String>> pred4 = pred3.not();
+        FluentPredicate<ObGeneric<String>> pred4 = pred3.not();
         
-        IExpressionEngine<ObGeneric<String>> start = new ExpressionEngine<>(obs);
+        ExpressionEngine<ObGeneric<String>> start = new ExpressionEngineImpl<>(obs);
         
         assertEquals(100, start.count());
         
@@ -84,9 +84,9 @@ public class PredicateTest {
         assertEquals(100, start.toList().size());
     }
     
-    private class BoxedPredicate<T> extends Predicate<T> {
+    private class BoxedPredicate<T> extends FluentPredicateImpl<T> {
 
-        IPredicate<T> misbehaved = new IPredicate<T>() {
+        Predicate<T> misbehaved = new Predicate<T>() {
 
             @SuppressWarnings("null")
             @Override
@@ -115,7 +115,7 @@ public class PredicateTest {
         BoxedPredicate<String> pred = new BoxedPredicate<>();
         
         try {
-            pred.evaluate(null);
+            pred.evaluate("Hello, World");
             fail();
         } catch (NullPointerException ex) {
             assertNotNull(ex);

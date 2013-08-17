@@ -17,11 +17,11 @@
  */
 package little.nj.expressions.predicates;
 
-public abstract class UnaryPredicate<T> extends Predicate<T> {
+public abstract class UnaryPredicate<T> extends FluentPredicateImpl<T> {
 
-    protected final IPredicate<T> predicate;
+    protected final Predicate<T> predicate;
     
-    public UnaryPredicate(IPredicate<T> predicate) {
+    public UnaryPredicate(Predicate<T> predicate) {
         this.predicate = predicate;
     }
 

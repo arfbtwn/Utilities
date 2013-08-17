@@ -17,16 +17,16 @@
  */
 package little.nj.expressions.predicates.finals;
 
-import little.nj.expressions.predicates.Predicate;
+import little.nj.expressions.predicates.FluentPredicateImpl;
 
 
-public final class FalsePredicate<T> extends Predicate<T> {
+public final class FalsePredicate extends FluentPredicateImpl<Object> {
 
     /* (non-Javadoc)
      * @see little.nj.expressions.IExpression#evaluate(java.lang.Object)
      */
     @Override
-    public boolean evaluate(T obj) {
+    public boolean evaluate(Object obj) {
         return false;
     }
 

@@ -18,17 +18,18 @@
 package little.nj.expressions.collections;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-import little.nj.expressions.iterators.PredicateIterator;
-import little.nj.expressions.predicates.IPredicate;
+import little.nj.expressions.iterators.SingleReel;
+import little.nj.expressions.predicates.Predicate;
 
 
 public class PredicateCollection<T> implements Iterable<T> {
 
     private final Iterable<T> backing;
-    private final IPredicate<T> predicate;
+    private final Predicate<? super T> predicate;
     
-    public PredicateCollection(Iterable<T> backing, IPredicate<T> predicate) {        
+    public PredicateCollection(Iterable<T> backing, Predicate<? super T> predicate) {        
         this.backing = backing;
         this.predicate = predicate;
     }
@@ -38,7 +39,53 @@ public class PredicateCollection<T> implements Iterable<T> {
      */
     @Override
     public Iterator<T> iterator() {
-        return new PredicateIterator<>(backing.iterator(), predicate);
+        return new PredicateIterator(backing.iterator());
     }
 
+    private class PredicateIterator extends SingleReel<T, T> {
+        
+        private transient T next;
+        
+        public PredicateIterator(Iterator<T> iterator) {
+            super(iterator);
+        }
+
+        /* (non-Javadoc)
+         * @see java.util.Iterator#hasNext()
+         */
+        @Override
+        public boolean hasNext() {
+            if (next == null) { 
+                T poss;
+                Iterator<T> it = getIterator();
+            
+                while(it.hasNext()) {
+                    poss = it.next();
+                
+                    if (predicate.evaluate(poss)) {
+                        next = poss;
+                        break;
+                    }
+                }
+            }
+            
+            return next != null;
+        }
+
+        /* (non-Javadoc)
+         * @see java.util.Iterator#next()
+         */
+        @Override
+        public T next() {
+            if (!hasNext())
+                throw new NoSuchElementException();                
+            
+            T that = next;
+            
+            next = null;
+            
+            return that;
+        }
+    }
+    
 }

@@ -16,164 +16,112 @@
  */
 package little.nj.expressions;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import little.nj.expressions.collections.PredicateCollection;
-import little.nj.expressions.collections.SelectCollection;
-import little.nj.expressions.collections.UnionCollection;
-import little.nj.expressions.predicates.IPredicate;
+import little.nj.expressions.predicates.Predicate;
 
-public class ExpressionEngine<T> implements IExpressionEngine<T> {
+public interface ExpressionEngine<T> extends Iterable<T> {
 
-    protected final Iterable<T> backing;
-
-    public ExpressionEngine(Iterable<T> backing) {
-        this.backing = backing;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Iterable#iterator()
+    /**
+     * Does this collection contain elements satisfying the predicate
+     * 
+     * @param predicate
+     * @return
      */
-    @Override
-    public Iterator<T> iterator() {
-        return backing.iterator();
-    }
+    boolean contains(Predicate<? super T> predicate);
 
-    /*
-     * (non-Javadoc)
-     * @see little.nj.expressions.IExpressionEngine#contains(little.nj.expressions.predicates.IPredicate)
+    /**
+     * Count the elements in this iterable
+     * 
+     * @return
      */
-    @Override
-    public boolean contains(IPredicate<T> predicate) {
-        return first(predicate) != null;
-    }
+    int count();
 
-    /*
-     * (non-Javadoc)
-     * @see little.nj.expressions.IExpressionEngine#count()
+    /**
+     * Count the elements satisfying the predicate
+     * 
+     * @param predicate
+     * @return
      */
-    @Override
-    public int count() {
-        int rv = 0;
-        for (Iterator<T> it = iterator(); it.hasNext(); ++rv, it.next())
-            ;
-        return rv;
-    }
+    int count(Predicate<? super T> predicate);
 
-    /*
-     * (non-Javadoc)
-     * @see little.nj.expressions.IExpressionEngine#count(little.nj.expressions.predicates.IPredicate)
+    /**
+     * Get the first element
+     * 
+     * @return
      */
-    @Override
-    public int count(IPredicate<T> predicate) {
-        int rv = 0;
-        for (Iterator<T> it = new PredicateCollection<>(backing, predicate)
-                .iterator(); it.hasNext(); ++rv, it.next())
-            ;
-        return rv;
-    }
+    T first();
 
-    /*
-     * (non-Javadoc)
-     * @see little.nj.expressions.IExpressionEngine#first()
+    /**
+     * Get the first element satisfying the predicate
+     * 
+     * @param predicate
+     * @return element, or null if none present
      */
-    @Override
-    public T first() {
-        Iterator<T> it = iterator();
-        return it.hasNext() ? it.next() : null;
-    }
+    T first(Predicate<? super T> predicate);
 
-    /*
-     * (non-Javadoc)
-     * @see little.nj.expressions.IExpressionEngine#first(little.nj.expressions.predicates.IPredicate)
+    /**
+     * Get the last element
+     * 
+     * @return
      */
-    @Override
-    public T first(IPredicate<T> predicate) {
-        Iterator<T> it = new PredicateCollection<>(backing, predicate)
-                .iterator();
+    T last();
 
-        if (it.hasNext())
-            return it.next();
-
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see little.nj.expressions.IExpressionEngine#last()
+    /**
+     * Get the last element satisfying the predicate
+     * 
+     * @param predicate
+     * @return element, or null if none present
      */
-    @Override
-    public T last() {
-        Iterator<T> it = iterator();
+    T last(Predicate<? super T> predicate);
 
-        T rv = null;
-
-        while (it.hasNext())
-            rv = it.next();
-
-        return rv;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see little.nj.expressions.IExpressionEngine#last(little.nj.expressions.predicates.IPredicate)
+    /**
+     * Get a deferred iterator, filtering on the predicate
+     * 
+     * @param predicate
+     * @return
      */
-    @Override
-    public T last(IPredicate<T> predicate) {
-        T rv = null;
+    ExpressionEngine<T> where(Predicate<? super T> predicate);
 
-        Iterator<T> it = new PredicateCollection<>(backing, predicate)
-                .iterator();
-
-        while (it.hasNext())
-            rv = it.next();
-
-        return rv;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see little.nj.expressions.IExpressionEngine#where(little.nj.expressions.predicates.IPredicate)
+    /**
+     * Perform the specified transformation expression on each element in the
+     * sequence
+     * 
+     * @param expression
+     * @return
      */
-    @Override
-    public IExpressionEngine<T> where(IPredicate<T> predicate) {
-        return new ExpressionEngine<>(new PredicateCollection<>(backing,
-                predicate));
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see little.nj.expressions.IExpressionEngine#union(java.lang.Iterable)
-     */
-    @Override
-    public IExpressionEngine<T> union(Iterable<T> union) {
-        return new ExpressionEngine<>(new UnionCollection<>(backing, union));
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see little.nj.expressions.IExpressionEngine#select(little.nj.expressions.IExpression)
-     */
-    @Override
-    public <E> IExpressionEngine<E> select(IExpression<T, E> expression) {
-        return new ExpressionEngine<>(new SelectCollection<>(backing,
-                expression));
-    }
+    <E> ExpressionEngine<E> select(Expression<T, E> expression);
     
-    /* (non-Javadoc)
-     * @see little.nj.expressions.IExpressionEngine#toList()
+    /**
+     * Get an iterator on the union
+     * 
+     * @param union
+     * @return
      */
-    @Override
-    public List<T> toList() {
-        List<T> rv = new ArrayList<>();
-        Iterator<T> it = iterator();
-        
-        while(it.hasNext())
-            rv.add(it.next());
-        
-        return rv;
-    }
+    ExpressionEngine<T> union(Iterable<T> union);
+    
+    /**
+     * Get an iterator on the union
+     * 
+     * @param union
+     * @return
+     */
+    ExpressionEngine<T> minus(Iterable<T> minus);
+    
+    /**
+     * Get an iterator on the union
+     * 
+     * @param union
+     * @return
+     */
+    ExpressionEngine<T> intersect(Iterable<T> intersect);
+
+    /**
+     * Convert the current query result to a list
+     * format
+     * 
+     * @return
+     */
+    List<T> toList();
+    
 }

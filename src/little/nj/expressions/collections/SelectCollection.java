@@ -19,16 +19,16 @@ package little.nj.expressions.collections;
 
 import java.util.Iterator;
 
-import little.nj.expressions.IExpression;
-import little.nj.expressions.iterators.SelectIterator;
+import little.nj.expressions.Expression;
+import little.nj.expressions.iterators.SingleReel;
 
 
 public class SelectCollection<A, B> implements Iterable<B> {
 
     private final Iterable<A> backing;
-    private final IExpression<A, B> expression;
+    private final Expression<A, B> expression;
     
-    public SelectCollection(Iterable<A> backing, IExpression<A, B> expression) {
+    public SelectCollection(Iterable<A> backing, Expression<A, B> expression) {
         this.backing = backing;
         this.expression = expression;
     }
@@ -38,7 +38,24 @@ public class SelectCollection<A, B> implements Iterable<B> {
      */
     @Override
     public Iterator<B> iterator() {
-        return new SelectIterator<>(backing.iterator(), expression);
+        return new SelectIterator(backing.iterator());
     }
 
+    public class SelectIterator extends SingleReel<A, B> {
+        
+        public SelectIterator(Iterator<A> iterator) {
+            super(iterator);
+        }
+
+        /* (non-Javadoc)
+         * @see java.util.Iterator#next()
+         */
+        @Override
+        public B next() {
+            A next = getIterator().next();
+            
+            return expression.evaluate(next);
+        }
+    }
+    
 }

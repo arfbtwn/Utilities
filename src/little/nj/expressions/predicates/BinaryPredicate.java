@@ -17,12 +17,12 @@
  */
 package little.nj.expressions.predicates;
 
-public abstract class BinaryPredicate<T> extends Predicate<T> {
+public abstract class BinaryPredicate<T> extends FluentPredicateImpl<T> {
 
-    protected final IPredicate<T> lhs;
-    protected final IPredicate<T> rhs;
+    protected final Predicate<T> lhs;
+    protected final Predicate<T> rhs;
     
-    public BinaryPredicate(IPredicate<T> lhs, IPredicate<T> rhs) {
+    public BinaryPredicate(Predicate<T> lhs, Predicate<T> rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
     }

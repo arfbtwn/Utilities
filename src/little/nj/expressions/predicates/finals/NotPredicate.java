@@ -17,12 +17,12 @@
  */
 package little.nj.expressions.predicates.finals;
 
-import little.nj.expressions.predicates.IPredicate;
+import little.nj.expressions.predicates.Predicate;
 import little.nj.expressions.predicates.UnaryPredicate;
 
 public final class NotPredicate<T> extends UnaryPredicate<T> {
 
-    public NotPredicate(IPredicate<T> predicate) {
+    public NotPredicate(Predicate<T> predicate) {
         super(predicate);
     }
 

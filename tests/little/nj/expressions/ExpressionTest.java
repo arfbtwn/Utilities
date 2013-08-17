@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import little.nj.core.tests.MockObjects.Ob;
-import little.nj.expressions.predicates.IPredicate;
+import little.nj.expressions.predicates.Predicate;
 import little.nj.util.StringUtil;
 
 import org.junit.Before;
@@ -33,9 +33,9 @@ public class ExpressionTest {
     
     @Test
     public void test_First() {
-        IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
+        ExpressionEngine<Ob> ext = new ExpressionEngineImpl<>(obs);
         
-        Ob result = ext.first(new IPredicate<Ob>() {
+        Ob result = ext.first(new Predicate<Ob>() {
 
             @Override
             public boolean evaluate(Ob obj) {
@@ -49,9 +49,9 @@ public class ExpressionTest {
     
     @Test
     public void test_Last() {
-        IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
+        ExpressionEngine<Ob> ext = new ExpressionEngineImpl<>(obs);
         
-        Ob result = ext.last(new IPredicate<Ob>() {
+        Ob result = ext.last(new Predicate<Ob>() {
 
             @Override
             public boolean evaluate(Ob obj) {
@@ -66,9 +66,9 @@ public class ExpressionTest {
     @Test
     public void test_Where() {
         
-        IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
+        ExpressionEngine<Ob> ext = new ExpressionEngineImpl<>(obs);
                 
-        IExpressionEngine<Ob> result = ext.where(new IPredicate<Ob>() {
+        ExpressionEngine<Ob> result = ext.where(new Predicate<Ob>() {
 
             @Override
             public boolean evaluate(Ob obj) {
@@ -85,9 +85,9 @@ public class ExpressionTest {
     @Test
     public void test_Select() {
         
-        IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
+        ExpressionEngine<Ob> ext = new ExpressionEngineImpl<>(obs);
         
-        IExpressionEngine<String> result = ext.select(new IExpression<Ob, String>() {
+        ExpressionEngine<String> result = ext.select(new Expression<Ob, String>() {
 
             @Override
             public String evaluate(Ob obj) {
@@ -109,9 +109,9 @@ public class ExpressionTest {
     @Test
     public void test_Count() {
         
-        IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
+        ExpressionEngine<Ob> ext = new ExpressionEngineImpl<>(obs);
                 
-        assertEquals(ONES, ext.count(new IPredicate<Ob>() {
+        assertEquals(ONES, ext.count(new Predicate<Ob>() {
 
             @Override
             public boolean evaluate(Ob obj) {
@@ -121,9 +121,9 @@ public class ExpressionTest {
     
     @Test
     public void test_Contains() {
-        IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
+        ExpressionEngine<Ob> ext = new ExpressionEngineImpl<>(obs);
         
-        assertEquals(true, ext.contains(new IPredicate<Ob>() {
+        assertEquals(true, ext.contains(new Predicate<Ob>() {
 
             @Override
             public boolean evaluate(Ob obj) {
@@ -133,13 +133,34 @@ public class ExpressionTest {
     
     @Test
     public void test_Union() {
-        IExpressionEngine<Ob> ext = new ExpressionEngine<>(obs);
+        ExpressionEngine<Ob> ext = new ExpressionEngineImpl<>(obs);
         
         List<Ob> rv = ext.union(obs).toList();
         
         assertEquals(obs.size(), rv.size());
         
         assertEquals(obs, rv);
+    }
+    
+    @Test
+    public void test_Minus() {
+        
+        ExpressionEngine<Ob> ext = new ExpressionEngineImpl<>(obs);
+        
+        List<Ob> rv = ext.minus(obs).toList();
+        
+        assertEquals(0, rv.size());
+        
+    }
+    
+    @Test
+    public void test_Intersect() {
+        
+        ExpressionEngine<Ob> ext = new ExpressionEngineImpl<>(obs);
+        
+        List<Ob> rv = ext.intersect(obs).toList();
+        
+        assertEquals(obs.size(), rv.size());
     }
 
 }

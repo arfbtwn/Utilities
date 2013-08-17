@@ -19,7 +19,7 @@ package little.nj.reflection;
 
 import java.lang.reflect.Method;
 
-import little.nj.expressions.predicates.IPredicate;
+import little.nj.expressions.predicates.Predicate;
 
 
 /**
@@ -34,7 +34,7 @@ public class RecursiveUtil extends ReflectionUtil {
         super();
     }
     
-    public RecursiveUtil(IMethodMatcherFactory factory) {
+    public RecursiveUtil(MethodMatcherFactory factory) {
         super(factory);
     }
     
@@ -42,7 +42,7 @@ public class RecursiveUtil extends ReflectionUtil {
      * @see little.nj.reflection.ReflectionUtil#getMethodImpl(java.lang.Class, little.nj.reflection.ReflectionUtil.IMethodMatcher)
      */
     @Override
-    protected Method getMethodImpl(Class<?> claz, IPredicate<Method> matcher) {
+    protected Method getMethodImpl(Class<?> claz, Predicate<Method> matcher) {
         if (claz == null)
             return null;
         

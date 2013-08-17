@@ -18,12 +18,12 @@
 package little.nj.expressions.predicates.finals;
 
 import little.nj.expressions.predicates.BinaryPredicate;
-import little.nj.expressions.predicates.IPredicate;
+import little.nj.expressions.predicates.Predicate;
 
 
 public final class XorPredicate<T> extends BinaryPredicate<T> {
 
-    public XorPredicate(IPredicate<T> lhs, IPredicate<T> rhs) {
+    public XorPredicate(Predicate<T> lhs, Predicate<T> rhs) {
         super(lhs, rhs);
     }
     

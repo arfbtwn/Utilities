@@ -20,9 +20,9 @@ package little.nj.reflection;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import little.nj.expressions.ExpressionEngineImpl;
 import little.nj.expressions.ExpressionEngine;
-import little.nj.expressions.IExpressionEngine;
-import little.nj.expressions.predicates.IPredicate;
+import little.nj.expressions.predicates.Predicate;
 
 /**
  * @author Nicholas Little
@@ -30,13 +30,13 @@ import little.nj.expressions.predicates.IPredicate;
  */
 public abstract class ReflectionUtil {
     
-    private final IMethodMatcherFactory factory;
+    private final MethodMatcherFactory factory;
     
     public ReflectionUtil() {
-        this(new MethodMatcherFactory());
+        this(new MethodMatcherFactoryImpl());
     }
     
-    public ReflectionUtil(IMethodMatcherFactory factory) {
+    public ReflectionUtil(MethodMatcherFactory factory) {
         this.factory = factory;
     }
     
@@ -47,7 +47,7 @@ public abstract class ReflectionUtil {
      * @param matcher
      * @return 
      */
-    public final Method getMethod(Object obj, IPredicate<Method> matcher) {
+    public final Method getMethod(Object obj, Predicate<Method> matcher) {
         if (obj == null)
             return null;
         
@@ -61,7 +61,7 @@ public abstract class ReflectionUtil {
      * @param matcher
      * @return
      */
-    public final Method getMethod(Class<?> clz, IPredicate<Method> matcher) {
+    public final Method getMethod(Class<?> clz, Predicate<Method> matcher) {
         return getMethodImpl(clz, matcher);
     }
     
@@ -74,7 +74,7 @@ public abstract class ReflectionUtil {
      * @param matcher
      * @return null if clz is null or the method was not found
      */
-    protected abstract Method getMethodImpl(Class<?> clz, IPredicate<Method> matcher);
+    protected abstract Method getMethodImpl(Class<?> clz, Predicate<Method> matcher);
     
     /**
      * Performs the match against a list of possible methods
@@ -83,9 +83,9 @@ public abstract class ReflectionUtil {
      * @param matcher
      * @return
      */
-    protected Method matchImpl(Method[] poss, IPredicate<Method> matcher) {
-        IExpressionEngine<Method> ext
-            = new ExpressionEngine<>(Arrays.asList(poss));
+    protected Method matchImpl(Method[] poss, Predicate<Method> matcher) {
+        ExpressionEngine<Method> ext
+            = new ExpressionEngineImpl<>(Arrays.asList(poss));
     
         return ext.first(matcher);
     }

@@ -25,11 +25,11 @@ import java.util.Set;
 import little.nj.expressions.iterators.DualReel;
 
 
-public class UnionCollection<T> implements Iterable<T> {
+public class MinusCollection<T> implements Iterable<T> {
 
     private final Iterable<T> lhs, rhs;
     
-    public UnionCollection(Iterable<T> lhs, Iterable<T> rhs) {
+    public MinusCollection(Iterable<T> lhs, Iterable<T> rhs) {
         this.lhs = lhs; 
         this.rhs = rhs;
     }
@@ -39,15 +39,15 @@ public class UnionCollection<T> implements Iterable<T> {
      */
     @Override
     public Iterator<T> iterator() {
-        return new UnionIterator(lhs.iterator(), rhs.iterator());
+        return new MinusIterator(lhs.iterator(), rhs.iterator());
     }
-
-    private class UnionIterator extends DualReel<T, T>{
+    
+    private class MinusIterator extends DualReel<T, T> {
 
         private final Set<T> set;
-        private T next;    
+        private transient T next;
         
-        public UnionIterator(Iterator<T> lhs, Iterator<T> rhs) {
+        public MinusIterator(Iterator<T> lhs, Iterator<T> rhs) {
             super(lhs, rhs);
             
             set = new HashSet<>();
@@ -58,19 +58,18 @@ public class UnionCollection<T> implements Iterable<T> {
          */
         @Override
         public boolean hasNext() {
-            
-            if (next == null && super.hasNext()) {
-                next = getCurrentIterator().next();
-            
-                if (!set.add(next)) {
+            while(rhs.hasNext())
+                set.add(rhs.next());
+        
+            while(next == null && lhs.hasNext()) {
+                next = lhs.next();
+                if (!set.add(next))
                     next = null;
-                    return hasNext();
-                }
             }
             
             return next != null;
         }
-
+        
         /* (non-Javadoc)
          * @see java.util.Iterator#next()
          */
@@ -86,5 +85,4 @@ public class UnionCollection<T> implements Iterable<T> {
             return that;
         }
     }
-    
 }

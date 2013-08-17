@@ -1,105 +1,34 @@
+/**
+ * Copyright (C) 2013 Nicholas J. Little <arealityfarbetween@googlemail.com>
+ * 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package little.nj.reflection;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 import little.nj.expressions.predicates.Predicate;
-import little.nj.expressions.predicates.IPredicate;
 
-public class MethodMatcherFactory 
-    implements IMethodMatcherFactory {
-    
-    /* (non-Javadoc)
-     * @see little.nj.reflection.IMethodMatcherFactory#getNameMatcher(java.lang.String)
-     */
-    @Override
-    public IPredicate<Method> getNameMatcher(String pattern) {
-        return new NameMatcher(pattern);
-    }
-    
-    /* (non-Javadoc)
-     * @see little.nj.reflection.IMethodMatcherFactory#getArgumentMatcher(java.lang.Class)
-     */
-    @Override
-    public IPredicate<Method> getArgumentMatcher(Class<?>...clz) {
-        return new ArgumentMatcher(clz);
-    }
-    
-    /* (non-Javadoc)
-     * @see little.nj.reflection.IMethodMatcherFactory#getSignatureMatcher(java.lang.String, java.lang.Class)
-     */
-    @Override
-    public IPredicate<Method> getSignatureMatcher(String pattern, Class<?>...clz) {
-        return new NameMatcher(pattern).and(new ArgumentMatcher(clz));
-    }
-    
-    /* (non-Javadoc)
-     * @see little.nj.reflection.IMethodMatcherFactory#getReturnMatcher(java.lang.Class)
-     */
-    @Override
-    public IPredicate<Method> getReturnMatcher(Class<?> clz) {
-        return new ReturnMatcher(clz);
-    }
-    
-    public abstract class MethodMatcher
-        extends Predicate<Method> { }
-    
-    /**
-     * Matches method names against a regular expression
-     */
-    class NameMatcher extends MethodMatcher {
-        
-        final String pattern;
-        
-        NameMatcher(String pattern) {
-            this.pattern = pattern;
-        }
-        
-        /* (non-Javadoc)
-         * @see little.nj.util.IMatcher#matches(java.lang.Object)
-         */
-        @Override
-        public boolean evaluate(Method m) {
-            return m.getName().matches(pattern);
-        }
-    }
-    
-    /**
-     * Matches on parameter types
-     */
-    class ArgumentMatcher extends MethodMatcher {
-        final Class<?>[] args;
-        
-        ArgumentMatcher(Class<?>...args) {
-            this.args = args;
-        }
-        
-        /* (non-Javadoc)
-         * @see little.nj.util.IMatcher#matches(java.lang.Object)
-         */
-        @Override
-        public boolean evaluate(Method m) {
-            return Arrays.equals(m.getParameterTypes(), args);
-        }
-    }
-    
-    /**
-     * Matches based on return type
-     */
-    class ReturnMatcher extends MethodMatcher {
 
-        final Class<?> rv;
-        
-        ReturnMatcher(Class<?> rv) {
-            this.rv = rv;
-        }
-        
-        /* (non-Javadoc)
-         * @see little.nj.util.IMatcher#matches(java.lang.Object)
-         */
-        @Override
-        public boolean evaluate(Method obj) {
-            return rv.equals(obj.getReturnType());
-        }   
-    }
+public interface MethodMatcherFactory {
+    
+    Predicate<Method> getNameMatcher(String pattern);
+
+    Predicate<Method> getArgumentMatcher(Class<?>... clz);
+
+    Predicate<Method> getSignatureMatcher(String pattern, Class<?>... clz);
+
+    Predicate<Method> getReturnMatcher(Class<?> clz);
+
 }

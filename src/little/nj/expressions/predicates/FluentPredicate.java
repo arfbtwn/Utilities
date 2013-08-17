@@ -14,21 +14,40 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.reflection;
-
-import java.lang.reflect.Method;
-
-import little.nj.expressions.predicates.IPredicate;
+package little.nj.expressions.predicates;
 
 
-public interface IMethodMatcherFactory {
-    
-    IPredicate<Method> getNameMatcher(String pattern);
+public interface FluentPredicate<T> extends Predicate<T> {
 
-    IPredicate<Method> getArgumentMatcher(Class<?>... clz);
+    /**
+     * Returns a new predicate expressing the binary AND operation
+     * 
+     * @param rhs
+     * @return
+     */
+    FluentPredicate<T> and(Predicate<T> rhs);
 
-    IPredicate<Method> getSignatureMatcher(String pattern, Class<?>... clz);
+    /**
+     * Returns a new predicate expressing the binary OR operation
+     * 
+     * @param rhs
+     * @return
+     */
+    FluentPredicate<T> or(Predicate<T> rhs);
 
-    IPredicate<Method> getReturnMatcher(Class<?> clz);
+    /**
+     * Returns a new predicate expressing the binary XOR operation
+     * 
+     * @param rhs
+     * @return
+     */
+    FluentPredicate<T> xor(Predicate<T> rhs);
+
+    /**
+     * Returns a new predicate expressing the NOT operation
+     * 
+     * @return
+     */
+    FluentPredicate<T> not();
 
 }

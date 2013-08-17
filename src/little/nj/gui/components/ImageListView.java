@@ -47,6 +47,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 
+import little.nj.gui.events.EventSupport;
 import little.nj.util.ImageUtil;
 
 /**
@@ -65,17 +66,17 @@ public class ImageListView extends JPanel implements ItemSelectable {
      * @author Nicholas Little
      * 
      */
-    public class ImagePanel extends JPanel {
+    private class ImagePanel extends JPanel {
 
         JCheckBox check;
 
-        JButton down;
+        JButton up, down;
 
         BufferedImage image;
 
         JLabel label;
 
-        JLabel text;
+        JLabel text, usertext;
 
         private ActionListener transpose = new ActionListener() {
 
@@ -88,21 +89,20 @@ public class ImageListView extends JPanel implements ItemSelectable {
              */
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                BufferedImage i = getImage();
-                int index1 = images.indexOf(i);
+                
+                BufferedImage tmp = image;
+                
+                int index1 = images.indexOf(tmp);
                 int index2 = index1;
                 
-                switch (arg0.getSource() == up ? 0 : 1) {
-                case 0:
+                if (arg0.getSource() == up)
                     index2 = switchUp(content, ImagePanel.this);
-                    break;
-                case 1:
+                else
                     index2 = switchDown(content, ImagePanel.this);
-                }
                 
                 if (index2 != index1) {
                     images.set(index1, images.get(index2));
-                    images.set(index2, i);
+                    images.set(index2, tmp);
                     
                     up.setEnabled(index2 > 0);
                     down.setEnabled(index2 < images.size() - 1);
@@ -115,11 +115,7 @@ public class ImageListView extends JPanel implements ItemSelectable {
             }
         };
 
-        JButton up;
-
-        JLabel usertext;
-
-        public ImagePanel(BufferedImage i) {
+        private ImagePanel(BufferedImage i) {
             image = i;
             check = new JCheckBox();
             label = new JLabel();
@@ -130,10 +126,6 @@ public class ImageListView extends JPanel implements ItemSelectable {
             down = new JButton(ImageUtil.getImageIcon("images/Down24.gif"));
             down.addActionListener(transpose);
             init();
-        }
-
-        public BufferedImage getImage() {
-            return image;
         }
 
         private void init() {
@@ -208,25 +200,31 @@ public class ImageListView extends JPanel implements ItemSelectable {
         return transpose(i, j, -1);
     }
 
-    static int transpose(JComponent i, JComponent j, int k) {        
-        List<Component> comps = Arrays.asList(i.getComponents());
-        int index = comps.indexOf(j) + k;
+    static int transpose(JComponent container, JComponent j, int k) {
+        Object lock = container.getTreeLock();
         
-        if (index >= comps.size())
-            index = comps.size() - 1;
-        else if (index < 0)
-            index = 0;
+        int index = -1;
         
-        i.add(j, index);
-        i.validate();
+        synchronized(lock) {
         
+            List<Component> comps = Arrays.asList(container.getComponents());
+            index = comps.indexOf(j) + k;
+            
+            if (index >= comps.size())
+                index = comps.size() - 1;
+            else if (index < 0)
+                index = 0;
+            
+            container.add(j, index);
+            container.validate();
+        
+        }
         return index;
     }
 
     private JButton add = new JButton(ImageUtil.getImageIcon("images/Add24.gif"));
 
-    private JButton rem = new JButton(
-            ImageUtil.getImageIcon("images/Delete24.gif"));
+    private JButton rem = new JButton(ImageUtil.getImageIcon("images/Delete24.gif"));
 
     private ActionListener button_listener = new ActionListener() {
 
@@ -240,9 +238,6 @@ public class ImageListView extends JPanel implements ItemSelectable {
         @Override
         public void actionPerformed(ActionEvent arg0) {
             if (arg0.getSource() == add) {
-                JFileChooser jfc = new JFileChooser(
-                        System.getProperty("user.dir"));
-                jfc.setMultiSelectionEnabled(true);
                 if (jfc.showOpenDialog(ImageListView.this) == JFileChooser.APPROVE_OPTION)
                     for (File i : jfc.getSelectedFiles())
                         try {
@@ -263,6 +258,8 @@ public class ImageListView extends JPanel implements ItemSelectable {
         }
     };
 
+    private JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
+    
     private JPanel content = new JPanel();
 
     private Dimension dimension = DIMENSION;
@@ -287,9 +284,9 @@ public class ImageListView extends JPanel implements ItemSelectable {
             if (state == ItemEvent.SELECTED) {
                 if (mode == ImageListView.Mode.RADIO && selected.size() > 0)
                     panel_map.get(selected.get(0)).check.setSelected(false);
-                selected.add(panel.getImage());
+                selected.add(panel.image);
             } else {
-                selected.remove(panel.getImage());
+                selected.remove(panel.image);
             }
 
             ImageListView.this.fireListeners(new ItemEvent(ImageListView.this,
@@ -299,7 +296,7 @@ public class ImageListView extends JPanel implements ItemSelectable {
 
     private JScrollPane list = new JScrollPane(content);
 
-    private List<ItemListener> listeners = new LinkedList<ItemListener>();
+    private EventSupport<ItemListener, ItemEvent> support = new EventSupport<>();
 
     private Mode mode = Mode.RADIO;
 
@@ -310,11 +307,14 @@ public class ImageListView extends JPanel implements ItemSelectable {
     private List<BufferedImage> selected = new LinkedList<BufferedImage>();
 
     public ImageListView() {
-        init();
+        this(true);
     }
 
     public ImageListView(boolean isDoubleBuffered) {
         super(isDoubleBuffered);
+        
+        jfc.setMultiSelectionEnabled(true);
+        
         init();
     }
 
@@ -362,8 +362,8 @@ public class ImageListView extends JPanel implements ItemSelectable {
      * @see java.awt.ItemSelectable#addItemListener(java.awt.event.ItemListener)
      */
     @Override
-    public void addItemListener(ItemListener l) {
-        listeners.add(l);
+    public void addItemListener(ItemListener aListener) {
+        support.addEventListener(aListener);
     }
 
     /*
@@ -373,13 +373,12 @@ public class ImageListView extends JPanel implements ItemSelectable {
      * java.awt.ItemSelectable#removeItemListener(java.awt.event.ItemListener)
      */
     @Override
-    public void removeItemListener(ItemListener l) {
-        listeners.remove(l);
+    public void removeItemListener(ItemListener aListener) {
+        support.addEventListener(aListener);
     }
 
-    private void fireListeners(ItemEvent e) {
-        for (ItemListener i : listeners)
-            i.itemStateChanged(e);
+    private void fireListeners(ItemEvent event) {
+        support.fireEvent(event);
     }
 
     private void init() {
@@ -450,8 +449,6 @@ public class ImageListView extends JPanel implements ItemSelectable {
      */
     public void setModifiable(boolean m) {
         modifiable = m;
-        // add.setEnabled(modifiable);
-        // rem.setEnabled(modifiable);
         add.setVisible(modifiable);
         rem.setVisible(modifiable);
     }

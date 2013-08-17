@@ -16,7 +16,7 @@
  */
 package little.nj.expressions;
 
-public interface IExpression<TFrom, TTo> {
+public interface Expression<TFrom, TTo> {
 
     TTo evaluate(TFrom obj);
 }

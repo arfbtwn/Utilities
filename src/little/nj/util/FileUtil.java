@@ -25,11 +25,11 @@ import java.io.IOException;
 
 public class FileUtil extends StreamUtil {
     
-    public boolean writeFile(File file, OutputAction user) {
+    public synchronized boolean write(File file, OutputAction user) {
         FileOutputStream stream = null;
         try {
             stream = new FileOutputStream(file);
-            useOutputStream(stream, user);
+            useOutput(stream, user);
         } catch (IOException ex) {
             _last = ex;
         }
@@ -37,19 +37,17 @@ public class FileUtil extends StreamUtil {
         return _last == null;
     }
     
-    public boolean readFile(File file, InputAction user) {
+    public synchronized boolean read(File file, InputAction user) {
         FileInputStream stream = null;
         try {
             stream = new FileInputStream(file);
-            useInputStream(stream, user);
+            useInput(stream, user);
         } catch (IOException ex) {
             _last = ex;
         }
         
         return _last == null;
     }
-    
-    protected FileUtil() { }
     
     public static synchronized FileUtil getInstance() {
         if (_instance == null)

@@ -27,11 +27,10 @@ public class StreamUtil {
     
     protected IOException _last;
     
-    protected StreamUtil() { }
-    
     public IOException getLastException() { return _last; }
         
-    public boolean close(Closeable stream) {        
+    public synchronized boolean close(Closeable stream) 
+    {
         try {
             stream.close();
             return true;
@@ -41,7 +40,9 @@ public class StreamUtil {
         }
     }
     
-    public boolean useInputStream(InputStream stream, InputAction user) {
+    public synchronized boolean useInput(InputStream stream, 
+                                         InputAction user) 
+    {
         try {
             user.act(stream);
             _last = null;
@@ -54,7 +55,9 @@ public class StreamUtil {
         return _last == null;
     }
     
-    public boolean useOutputStream(OutputStream stream, OutputAction user) {
+    public synchronized boolean useOutput(OutputStream stream, 
+                                          OutputAction user) 
+    {
         try {
             user.act(stream);
             _last = null;
@@ -76,7 +79,7 @@ public class StreamUtil {
     
     private static StreamUtil _instance;
     
-    private interface StreamAction { }
+    protected interface StreamAction { }
     
     public interface InputAction extends StreamAction {
         void act(InputStream stream) throws IOException;

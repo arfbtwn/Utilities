@@ -24,12 +24,7 @@ import java.io.OutputStream;
 import little.nj.util.StreamUtil.InputAction;
 import little.nj.util.StreamUtil.OutputAction;
 
-/**
- * Useful static functions and variables
- * 
- * @author Nicholas
- * 
- */
+
 public final class Statics {
     
     private Statics() { }
@@ -66,7 +61,7 @@ public final class Statics {
         
         final byte[] raw = new byte[(int) len];
         
-        util.readFile(file, new InputAction() {
+        util.read(file, new InputAction() {
 
             @Override
             public void act(InputStream stream) throws IOException {
@@ -86,7 +81,7 @@ public final class Statics {
     public final static boolean writeFile(File file, final byte[] bytes) {
         FileUtil util = FileUtil.getInstance();
         
-        return util.writeFile(file, new OutputAction() {
+        return util.write(file, new OutputAction() {
 
             @Override
             public void act(OutputStream stream) throws IOException {

@@ -32,6 +32,23 @@ public class StringUtil {
     }
     
     /**
+     * Test if two strings are equal, after trimming both
+     * 
+     * @param x
+     * @param y
+     * @return
+     */
+    public final static boolean equalsIgnoreWhiteSpace(String x, String y) {
+        if (x == null && y == null)
+            return true;
+        
+        if (x == null || y == null)
+            return false;
+        
+        return x.trim().equals(y.trim());
+    }
+    
+    /**
      * The empty string, for semantic effect
      */
     public final static String EMPTY_STRING = "";

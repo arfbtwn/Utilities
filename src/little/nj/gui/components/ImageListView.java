@@ -66,7 +66,7 @@ public class ImageListView extends JPanel implements ItemSelectable {
      * @author Nicholas Little
      * 
      */
-    public class ImagePanel extends JPanel {
+    private class ImagePanel extends JPanel {
 
         JCheckBox check;
 
@@ -113,7 +113,7 @@ public class ImageListView extends JPanel implements ItemSelectable {
             }
         };
 
-        public ImagePanel(BufferedImage i) {
+        private ImagePanel(BufferedImage i) {
             image = i;
             check = new JCheckBox();
             label = new JLabel();
@@ -286,7 +286,7 @@ public class ImageListView extends JPanel implements ItemSelectable {
             }
 
             ImageListView.this.fireListeners(new ItemEvent(ImageListView.this,
-                    ItemEvent.ITEM_STATE_CHANGED, panel, state));
+                    ItemEvent.ITEM_STATE_CHANGED, panel.image, state));
         }
     };
 

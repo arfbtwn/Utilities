@@ -27,6 +27,7 @@ import little.nj.core.tests.MockObjects.ObGeneric;
 import little.nj.expressions.ExpressionEngineImpl;
 import little.nj.expressions.ExpressionEngine;
 import little.nj.expressions.predicates.FluentPredicateImpl;
+
 import org.junit.Test;
 
 
@@ -131,7 +132,7 @@ public class PredicateTest {
                 return obj.getField() > 0;
             }
         }.and(new Predicate<Object>() {
-
+            
             @Override
             public boolean evaluate(Object obj) {
                 return true;

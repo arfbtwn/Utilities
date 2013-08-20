@@ -25,7 +25,7 @@ public interface FluentPredicate<T> extends Predicate<T> {
      * @param rhs
      * @return
      */
-    FluentPredicate<T> and(Predicate<T> rhs);
+    FluentPredicate<T> and(Predicate<? super T> rhs);
 
     /**
      * Returns a new predicate expressing the binary OR operation
@@ -33,7 +33,7 @@ public interface FluentPredicate<T> extends Predicate<T> {
      * @param rhs
      * @return
      */
-    FluentPredicate<T> or(Predicate<T> rhs);
+    FluentPredicate<T> or(Predicate<? super T> rhs);
 
     /**
      * Returns a new predicate expressing the binary XOR operation
@@ -41,7 +41,7 @@ public interface FluentPredicate<T> extends Predicate<T> {
      * @param rhs
      * @return
      */
-    FluentPredicate<T> xor(Predicate<T> rhs);
+    FluentPredicate<T> xor(Predicate<? super T> rhs);
 
     /**
      * Returns a new predicate expressing the NOT operation

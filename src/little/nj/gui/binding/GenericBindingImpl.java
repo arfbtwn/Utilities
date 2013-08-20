@@ -17,10 +17,10 @@ public class GenericBindingImpl<X, Y> implements Binding {
     
     private boolean enabled;
     
-    protected Getter<X> get;
-    protected Setter<Y> set;
+    protected Getter<? extends X> get;
+    protected Setter<? super Y> set;
     
-    protected Marshal<X, Y> marshal;
+    protected Marshal<? super X, ? extends Y> marshal;
     
     protected GenericBindingImpl() 
     { 
@@ -28,9 +28,9 @@ public class GenericBindingImpl<X, Y> implements Binding {
     }
     
     public GenericBindingImpl(
-            Getter<X> get, 
-            Setter<Y> set, 
-            Marshal<X, Y> marshal
+            Getter<? extends X> get, 
+            Setter<? super Y> set, 
+            Marshal<? super X, ? extends Y> marshal
             ) 
     {
         this();

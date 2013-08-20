@@ -23,7 +23,7 @@ import little.nj.expressions.predicates.Predicate;
 
 public final class XorPredicate<T> extends BinaryPredicate<T> {
 
-    public XorPredicate(Predicate<T> lhs, Predicate<T> rhs) {
+    public XorPredicate(Predicate<? super T> lhs, Predicate<? super T> rhs) {
         super(lhs, rhs);
     }
     

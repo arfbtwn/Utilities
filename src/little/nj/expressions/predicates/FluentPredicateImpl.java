@@ -29,7 +29,7 @@ public abstract class FluentPredicateImpl<T> implements FluentPredicate<T> {
      * @see little.nj.expressions.predicates.FluentPredicate#and(little.nj.expressions.predicates.Predicate)
      */
     @Override
-    public final FluentPredicate<T> and(Predicate<T> rhs) {
+    public final FluentPredicate<T> and(Predicate<? super T> rhs) {
         return new AndPredicate<>(this, rhs);
     }
 
@@ -37,7 +37,7 @@ public abstract class FluentPredicateImpl<T> implements FluentPredicate<T> {
      * @see little.nj.expressions.predicates.FluentPredicate#or(little.nj.expressions.predicates.Predicate)
      */
     @Override
-    public final FluentPredicate<T> or(Predicate<T> rhs) {
+    public final FluentPredicate<T> or(Predicate<? super T> rhs) {
         return new OrPredicate<>(this, rhs);
     }
 
@@ -45,7 +45,7 @@ public abstract class FluentPredicateImpl<T> implements FluentPredicate<T> {
      * @see little.nj.expressions.predicates.FluentPredicate#xor(little.nj.expressions.predicates.Predicate)
      */
     @Override
-    public final FluentPredicate<T> xor(Predicate<T> rhs) {
+    public final FluentPredicate<T> xor(Predicate<? super T> rhs) {
         return new XorPredicate<>(this, rhs);
     }
 

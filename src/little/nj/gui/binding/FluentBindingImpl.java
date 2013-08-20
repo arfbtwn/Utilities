@@ -22,9 +22,12 @@ import little.nj.gui.binding.events.BindingEventSource;
 import little.nj.gui.binding.events.BindingListener;
 
 
-public class FluentBindingImpl<X, Y> extends GenericBindingImpl<X, Y> implements FluentBinding<X, Y> {
+public class FluentBindingImpl<X, Y> 
+    extends GenericBindingImpl<X, Y> 
+    implements FluentBinding<X, Y> {
 
-    public final static <X, Y> FluentBindingImpl<X, Y> bind(Class<X> sample1, Class<Y> sample2) 
+    public final static <X, Y> FluentBindingImpl<X, Y> bind(Class<X> sample1, 
+                                                            Class<Y> sample2) 
     {
         return new FluentBindingImpl<>();
     }
@@ -36,17 +39,17 @@ public class FluentBindingImpl<X, Y> extends GenericBindingImpl<X, Y> implements
     
     public FluentBindingImpl(Class<X> sample1, Class<Y> sample2) { }
     
-    public FluentBindingImpl<X, Y> from(Getter<X> get) {
+    public FluentBindingImpl<X, Y> from(Getter<? extends X> get) {
         this.get = get;
         return this;
     }
     
-    public FluentBindingImpl<X, Y> to(Setter<Y> set) {
+    public FluentBindingImpl<X, Y> to(Setter<? super Y> set) {
         this.set = set;
         return this;
     }
     
-    public FluentBindingImpl<X, Y> via(Marshal<X, Y> marshal) {
+    public FluentBindingImpl<X, Y> via(Marshal<? super X, ? extends Y> marshal) {
         this.marshal = marshal;
         return this;
     }

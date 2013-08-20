@@ -23,7 +23,7 @@ import little.nj.expressions.predicates.Predicate;
 
 public final class AndPredicate<T> extends BinaryPredicate<T> {
     
-    public AndPredicate(Predicate<T> lhs, Predicate<T> rhs) {
+    public AndPredicate(Predicate<? super T> lhs, Predicate<? super T> rhs) {
         super(lhs, rhs);
     }
     

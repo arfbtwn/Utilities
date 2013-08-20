@@ -22,7 +22,7 @@ import little.nj.expressions.predicates.Predicate;
 
 public final class OrPredicate<T> extends BinaryPredicate<T> {
     
-    public OrPredicate(Predicate<T> lhs, Predicate<T> rhs) {
+    public OrPredicate(Predicate<? super T> lhs, Predicate<? super T> rhs) {
         super(lhs, rhs);
     }
     

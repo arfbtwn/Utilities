@@ -22,7 +22,7 @@ import little.nj.expressions.predicates.UnaryPredicate;
 
 public final class NotPredicate<T> extends UnaryPredicate<T> {
 
-    public NotPredicate(Predicate<T> predicate) {
+    public NotPredicate(Predicate<? super T> predicate) {
         super(predicate);
     }
 

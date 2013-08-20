@@ -25,15 +25,13 @@ import little.nj.gui.binding.events.BindingEventSource;
 
 public interface FluentBinding<X, Y> extends Binding {
     
-    // TODO: Assess type parameters
-    
     /**
      * The get accessor
      * 
      * @param get
      * @return
      */
-    FluentBinding<X, Y> from(Getter<X> get);
+    FluentBinding<X, Y> from(Getter<? extends X> get);
     
     /**
      * The set mutator
@@ -41,7 +39,7 @@ public interface FluentBinding<X, Y> extends Binding {
      * @param set
      * @return
      */
-    FluentBinding<X, Y> to(Setter<Y> set);
+    FluentBinding<X, Y> to(Setter<? super Y> set);
     
     /**
      * The marshaling component
@@ -49,7 +47,7 @@ public interface FluentBinding<X, Y> extends Binding {
      * @param marshal
      * @return
      */
-    FluentBinding<X, Y> via(Marshal<X, Y> marshal);
+    FluentBinding<X, Y> via(Marshal<? super X, ? extends Y> marshal);
     
     /**
      * The event source

@@ -22,10 +22,12 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import little.nj.core.tests.MockObjects.Ob;
 import little.nj.core.tests.MockObjects.ObGeneric;
 import little.nj.expressions.ExpressionEngineImpl;
 import little.nj.expressions.ExpressionEngine;
 import little.nj.expressions.predicates.FluentPredicateImpl;
+import little.nj.expressions.predicates.finals.TruePredicate;
 
 import org.junit.Test;
 
@@ -120,6 +122,24 @@ public class PredicateTest {
         } catch (NullPointerException ex) {
             assertNotNull(ex);
         }
+    }
+    
+    @Test
+    public void test_Contravariance() {
+        FluentPredicate<Ob> pred = new FluentPredicateImpl<Ob>() {
+
+            @Override
+            public boolean evaluate(Ob obj) {
+                return obj.getField() > 0;
+            }
+        };
+        
+        pred.and(new Predicate<Object>() {
+
+            @Override
+            public boolean evaluate(Object obj) {
+                return true;
+            } });
     }
 
 }

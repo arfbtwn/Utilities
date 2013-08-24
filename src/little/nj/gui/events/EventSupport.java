@@ -21,7 +21,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.EventListener;
-import java.util.EventObject;
 import java.util.List;
 
 import little.nj.reflection.ReflectionUtil;
@@ -32,7 +31,7 @@ import little.nj.reflection.ReflectionUtil;
  * @author Nicholas Little
  *
  */
-public class EventSupport<T extends EventListener, E extends EventObject> 
+public class EventSupport<T extends EventListener, E> 
     implements IEventSupport<T> {
 
     private Method event = null;
@@ -96,7 +95,7 @@ public class EventSupport<T extends EventListener, E extends EventObject>
             if (event == null)
                 throw new IllegalArgumentException(
                         String.format(
-                                "No method on listener '%s' receiving parameter type '%s'",
+                                "No method on '%s' receiving parameter '%s'",
                                 listener.getClass(), t
                                 ));
             

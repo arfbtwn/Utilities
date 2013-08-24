@@ -18,56 +18,159 @@
 package little.nj.util;
 
 import java.io.Closeable;
+import java.io.Flushable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Stack;
 
 
 public class StreamUtil {
     
-    protected IOException _last;
+    public static interface InputAction {
+        void act(InputStream stream) throws IOException;
+    }
     
-    public IOException getLastException() { return _last; }
-        
-    public synchronized boolean close(Closeable stream) 
+    public static interface OutputAction {
+        void act(OutputStream stream) throws IOException;
+    }
+    
+    private Stack<IOException> exceptions = new Stack<>();
+    
+    /**
+     * An atomic operation on an InputStream
+     * 
+     * @param stream
+     * @param user
+     * @return
+     */
+    public synchronized boolean read(InputStream stream, 
+                                     InputAction user) 
     {
+        clear();
+        
         try {
-            stream.close();
+            user.act(stream);
+        } catch (IOException ex) {
+            push(ex);
+        } finally {
+            closeImpl(stream);
+        }
+        
+        return _return();
+    }
+    
+    /**
+     * An atomic operation on an OutputStream
+     * 
+     * @param stream
+     * @param user
+     * @return
+     */
+    public synchronized boolean write(OutputStream stream, 
+                                      OutputAction user) 
+    {
+        clear();
+        
+        try {
+            user.act(stream);
+        } catch (IOException ex) {
+            push(ex);
+        } finally {
+            flushImpl(stream);
+            closeImpl(stream);
+        }
+        
+        return _return();
+    }
+    
+
+    /**
+     * A return value subclasses can use
+     * 
+     * @return
+     */
+    protected boolean _return() {
+        return exceptions.isEmpty();
+    }
+    
+    /**
+     * Clears the stack for a new operation
+     */
+    protected void clear() {
+        exceptions.clear();
+    }
+    
+    /**
+     * Pushes an exception onto the stack
+     * 
+     * @param ex
+     */
+    protected void push(IOException ex) {
+        exceptions.push(ex);
+    }
+    
+    /**
+     * Pops the last exception off the stack
+     * 
+     * @return
+     */
+    public IOException getLastException() { return exceptions.pop(); }
+       
+    /**
+     * Flushes a Flushable, clearing the exception stack first
+     * 
+     * @param flushable
+     * @return
+     */
+    public synchronized boolean flush(Flushable flushable) {
+        clear();
+        return flushImpl(flushable);
+    }
+    
+    /**
+     * Flushes a flushable
+     * 
+     * @param flushable
+     * @return
+     */
+    protected synchronized boolean flushImpl(Flushable flushable) {
+        try {
+            flushable.flush();
             return true;
         } catch (IOException ex) {
-            _last = ex;
+            push(ex);
             return false;
         }
     }
     
-    public synchronized boolean useInput(InputStream stream, 
-                                         InputAction user) 
+    /**
+     * Closes a Closeable, clearing the exception stack first
+     *  
+     * @param closeable
+     * @return
+     */
+    public synchronized boolean close(Closeable closeable) 
     {
-        try {
-            user.act(stream);
-            _last = null;
-        } catch (IOException ex) {
-            _last = ex;
-        } finally {
-            close(stream);
-        }
-
-        return _last == null;
+        clear();
+        return closeImpl(closeable);
     }
     
-    public synchronized boolean useOutput(OutputStream stream, 
-                                          OutputAction user) 
+    /**
+     * Closes a Closeable
+     * 
+     * @param closeable
+     * @return
+     */
+    protected boolean closeImpl(Closeable closeable) 
     {
         try {
-            user.act(stream);
-            _last = null;
+            closeable.close();
+            return true;
         } catch (IOException ex) {
-            _last = ex;
-        } finally {
-            close(stream);
+            push(ex);
+            return false;
         }
-        
-        return _last == null;
     }
 
     public static synchronized StreamUtil getInstance() {
@@ -78,14 +181,4 @@ public class StreamUtil {
     }
     
     private static StreamUtil _instance;
-    
-    protected interface StreamAction { }
-    
-    public interface InputAction extends StreamAction {
-        void act(InputStream stream) throws IOException;
-    }
-    
-    public interface OutputAction extends StreamAction {
-        void act(OutputStream stream) throws IOException;
-    }
 }

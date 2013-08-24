@@ -25,28 +25,46 @@ import java.io.IOException;
 
 public class FileUtil extends StreamUtil {
     
-    public synchronized boolean write(File file, OutputAction user) {
-        FileOutputStream stream = null;
-        try {
-            stream = new FileOutputStream(file);
-            useOutput(stream, user);
-        } catch (IOException ex) {
-            _last = ex;
-        }
-        
-        return _last == null;
-    }
-    
+    /**
+     * Atomic read operation
+     * 
+     * @param file
+     * @param user
+     * @return
+     */
     public synchronized boolean read(File file, InputAction user) {
+        clear();
+        
         FileInputStream stream = null;
         try {
             stream = new FileInputStream(file);
-            useInput(stream, user);
+            read(stream, user);
         } catch (IOException ex) {
-            _last = ex;
+            push(ex);
         }
         
-        return _last == null;
+        return _return();
+    }
+    
+    /**
+     * Atomic write operation
+     * 
+     * @param file
+     * @param user
+     * @return
+     */
+    public synchronized boolean write(File file, OutputAction user) {
+        clear();
+        
+        FileOutputStream stream = null;
+        try {
+            stream = new FileOutputStream(file);
+            write(stream, user);
+        } catch (IOException ex) {
+            push(ex);
+        }
+        
+        return _return();
     }
     
     public static synchronized FileUtil getInstance() {

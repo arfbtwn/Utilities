@@ -15,12 +15,19 @@
  *  You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.gui.binding.events;
+package little.nj.gui.binding;
+
+import little.nj.gui.binding.GenericBindingImpl.Marshal;
 
 
-public interface BindingEventSource {
-    
-    void addBindingListener(BindingListener listener);
-    void removeBindingListener(BindingListener listener);
-    
+public class ThroughMarshal<T> implements Marshal<T, T> {
+
+    /* (non-Javadoc)
+     * @see little.nj.gui.binding.GenericBindingImpl.Marshal#marshal(java.lang.Object)
+     */
+    @Override
+    public T marshal(T value) {
+        return value;
+    }
+
 }

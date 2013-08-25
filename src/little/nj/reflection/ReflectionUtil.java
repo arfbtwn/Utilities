@@ -18,16 +18,9 @@
 package little.nj.reflection;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-
-import little.nj.expressions.ExpressionEngineImpl;
-import little.nj.expressions.ExpressionEngine;
 import little.nj.expressions.predicates.Predicate;
 
-/**
- * @author Nicholas Little
- *
- */
+
 public abstract class ReflectionUtil {
     
     private final MethodMatcherFactory factory;
@@ -84,10 +77,13 @@ public abstract class ReflectionUtil {
      * @return
      */
     protected Method matchImpl(Method[] poss, Predicate<Method> matcher) {
-        ExpressionEngine<Method> ext
-            = new ExpressionEngineImpl<>(Arrays.asList(poss));
+
+        for(Method i : poss) {
+            if (matcher.evaluate(i))
+                return i;
+        }
     
-        return ext.first(matcher);
+        return null;
     }
     
     /**

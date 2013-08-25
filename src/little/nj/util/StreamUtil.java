@@ -36,7 +36,7 @@ public class StreamUtil {
         void act(OutputStream stream) throws IOException;
     }
     
-    private Queue<Exception> exceptions = new LinkedList<>();
+    private Queue<IOException> exceptions = new LinkedList<>();
     private int transactions;
     
     /**
@@ -144,19 +144,19 @@ public class StreamUtil {
     }
     
     /**
-     * Records an Exception
+     * Records an IOException
      * 
      * @param ex
      */
-    protected void record(Exception ex) {
+    protected void record(IOException ex) {
         ex.printStackTrace();
         exceptions.add(ex);
     }
     
     /**
-     * Retrieves the first Exception
+     * Retrieves the first IOException
      * 
      * @return
      */
-    public Exception getFirstException() { return exceptions.poll(); }
+    public IOException getFirstException() { return exceptions.poll(); }
 }

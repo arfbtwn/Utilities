@@ -27,6 +27,8 @@ import little.nj.util.StreamUtil.OutputAction;
 
 public final class Statics {
     
+    private static final FileUtil FUTIL = new FileUtil(); 
+    
     private Statics() { }
     
     /**
@@ -54,14 +56,12 @@ public final class Statics {
      * @param file
      * @return byte[]
      */
-    public final static byte[] readFile(File file) {
-        FileUtil util = FileUtil.getInstance();
-        
+    public final static byte[] readFile(File file) {        
         long len = file.length();
         
         final byte[] raw = new byte[(int) len];
         
-        util.read(file, new InputAction() {
+        FUTIL.read(file, new InputAction() {
 
             @Override
             public void act(InputStream stream) throws IOException {
@@ -79,9 +79,8 @@ public final class Statics {
      * @throws IOException
      */
     public final static boolean writeFile(File file, final byte[] bytes) {
-        FileUtil util = FileUtil.getInstance();
         
-        return util.write(file, new OutputAction() {
+        return FUTIL.write(file, new OutputAction() {
 
             @Override
             public void act(OutputStream stream) throws IOException {

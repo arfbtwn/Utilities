@@ -26,6 +26,41 @@ import java.io.IOException;
 public class FileUtil extends StreamUtil {
     
     /**
+     * Retrieves the file name part of the path
+     * 
+     * @param file_path
+     * @return
+     */
+    public String getFilename(String file_path) {        
+        String[] path = file_path.split(File.separator);
+        
+        String name = path[path.length - 1];
+        
+        int idx = name.lastIndexOf(".");
+        
+        if (idx > -1)
+            return name.substring(0, idx);
+        
+        return name;
+    }
+    
+    /**
+     * Retrieves the extension of the path. If there is no extension
+     * returns {@link StringUtil.EMPTY_STRING}
+     * 
+     * @param file_path
+     * @return
+     */
+    public String getExtension(String file_path) {
+        int idx = file_path.indexOf(".");
+        
+        if (idx > -1)
+            return file_path.substring(idx + 1);
+        
+        return StringUtil.EMPTY_STRING;
+    }
+    
+    /**
      * Atomic read operation
      * 
      * @param file
@@ -33,17 +68,17 @@ public class FileUtil extends StreamUtil {
      * @return
      */
     public synchronized boolean read(File file, InputAction user) {
-        clear();
+        start();
         
         FileInputStream stream = null;
         try {
             stream = new FileInputStream(file);
             read(stream, user);
         } catch (IOException ex) {
-            push(ex);
+            record(ex);
         }
         
-        return _return();
+        return end();
     }
     
     /**
@@ -54,25 +89,16 @@ public class FileUtil extends StreamUtil {
      * @return
      */
     public synchronized boolean write(File file, OutputAction user) {
-        clear();
+        start();
         
         FileOutputStream stream = null;
         try {
             stream = new FileOutputStream(file);
             write(stream, user);
         } catch (IOException ex) {
-            push(ex);
+            record(ex);
         }
         
-        return _return();
+        return end();
     }
-    
-    public static synchronized FileUtil getInstance() {
-        if (_instance == null)
-            _instance = new FileUtil();
-        
-        return _instance;
-    }
-    
-    private static FileUtil _instance;
 }

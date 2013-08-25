@@ -22,7 +22,8 @@ import java.io.Flushable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Queue;
 
 
 public class StreamUtil {
@@ -35,7 +36,8 @@ public class StreamUtil {
         void act(OutputStream stream) throws IOException;
     }
     
-    private Stack<IOException> exceptions = new Stack<>();
+    private Queue<Exception> exceptions = new LinkedList<>();
+    private int transactions;
     
     /**
      * An atomic operation on an InputStream
@@ -47,17 +49,17 @@ public class StreamUtil {
     public synchronized boolean read(InputStream stream, 
                                      InputAction user) 
     {
-        clear();
+        start();
         
         try {
             user.act(stream);
         } catch (IOException ex) {
-            push(ex);
+            record(ex);
         } finally {
-            closeImpl(stream);
+            close(stream);
         }
         
-        return _return();
+        return end();
     }
     
     /**
@@ -70,115 +72,91 @@ public class StreamUtil {
     public synchronized boolean write(OutputStream stream, 
                                       OutputAction user) 
     {
-        clear();
+        start();
         
         try {
             user.act(stream);
         } catch (IOException ex) {
-            push(ex);
+            record(ex);
         } finally {
-            flushImpl(stream);
-            closeImpl(stream);
+            flush(stream);
+            close(stream);
         }
         
-        return _return();
-    }
-    
-
-    /**
-     * A return value subclasses can use
-     * 
-     * @return
-     */
-    protected boolean _return() {
-        return exceptions.isEmpty();
+        return end();
     }
     
     /**
-     * Clears the stack for a new operation
-     */
-    protected void clear() {
-        exceptions.clear();
-    }
-    
-    /**
-     * Pushes an exception onto the stack
-     * 
-     * @param ex
-     */
-    protected void push(IOException ex) {
-        exceptions.push(ex);
-    }
-    
-    /**
-     * Pops the last exception off the stack
-     * 
-     * @return
-     */
-    public IOException getLastException() { return exceptions.pop(); }
-       
-    /**
-     * Flushes a Flushable, clearing the exception stack first
+     * Flushes a Flushable
      * 
      * @param flushable
      * @return
      */
     public synchronized boolean flush(Flushable flushable) {
-        clear();
-        return flushImpl(flushable);
-    }
-    
-    /**
-     * Flushes a flushable
-     * 
-     * @param flushable
-     * @return
-     */
-    protected synchronized boolean flushImpl(Flushable flushable) {
+        start();
+        
         try {
             flushable.flush();
-            return true;
         } catch (IOException ex) {
-            push(ex);
-            return false;
+            record(ex);
         }
+        
+        return end();
     }
     
     /**
-     * Closes a Closeable, clearing the exception stack first
+     * Closes a Closeable
      *  
      * @param closeable
      * @return
      */
     public synchronized boolean close(Closeable closeable) 
     {
-        clear();
-        return closeImpl(closeable);
+        start();
+        
+        try {
+            closeable.close();
+        } catch (IOException ex) {
+            record(ex);
+        }
+        
+        return end(); 
+    }    
+
+    /**
+     * Signals the end of an atomic operation
+     * 
+     * @return true if there are no Exceptions recorded
+     */
+    protected boolean end() {
+        transactions = transactions > 0 ? transactions - 1 : 0;
+        return exceptions.isEmpty();
     }
     
     /**
-     * Closes a Closeable
-     * 
-     * @param closeable
-     * @return
+     * Signals the start of an atomic operation
      */
-    protected boolean closeImpl(Closeable closeable) 
-    {
-        try {
-            closeable.close();
-            return true;
-        } catch (IOException ex) {
-            push(ex);
-            return false;
-        }
-    }
-
-    public static synchronized StreamUtil getInstance() {
-        if (_instance == null)
-            _instance = new StreamUtil();
+    protected void start() {
+        if (transactions < 1)
+            exceptions.clear();
         
-        return _instance;
+        ++transactions;
     }
     
-    private static StreamUtil _instance;
+    /**
+     * Records an Exception
+     * 
+     * @param ex
+     */
+    protected void record(Exception ex) {
+        ex.printStackTrace();
+        exceptions.add(ex);
+    }
+    
+    /**
+     * Retrieves the first Exception
+     * 
+     * @return
+     */
+    public Exception getFirstException() { return exceptions.poll(); }
 }

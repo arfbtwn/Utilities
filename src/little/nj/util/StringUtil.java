@@ -17,63 +17,8 @@
  */
 package little.nj.util;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
 
-
-public class StringUtil extends StreamUtil {
-    
-    public static interface ReaderAction {
-        void act(Reader reader) throws IOException;
-    }
-    
-    public static interface WriterAction {
-        void act(Writer writer) throws IOException;
-    }
-    
-    /**
-     * Atomic Reader operation
-     * 
-     * @param reader
-     * @param action
-     * @return
-     */
-    public synchronized boolean read(Reader reader, ReaderAction action) {
-        clear();
-        
-        try {
-            action.act(reader);
-        } catch (IOException ex) {
-            push(ex);
-        } finally {
-            closeImpl(reader);
-        }
-        
-        return _return();
-    }
-    
-    /**
-     * Atomic Writer operation
-     * 
-     * @param writer
-     * @param action
-     * @return
-     */
-    public synchronized boolean write(Writer writer, WriterAction action) {
-        clear();
-        
-        try {
-            action.act(writer);
-        } catch (IOException ex) {
-            push(ex);
-        } finally {
-            flushImpl(writer);
-            closeImpl(writer);
-        }
-        
-        return _return();
-    }
+public class StringUtil {
     
     /**
      * Test if a string is null or the empty string (after trimming)

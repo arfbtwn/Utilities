@@ -20,6 +20,8 @@ package little.nj.util;
 
 public class StringUtil {
     
+    private StringUtil() { }
+    
     /**
      * Test if a string is null or the empty string (after trimming)
      * 

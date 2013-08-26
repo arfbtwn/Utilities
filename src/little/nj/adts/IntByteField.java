@@ -20,10 +20,6 @@ import java.nio.ByteBuffer;
 
 public class IntByteField extends ByteField {
 
-    protected IntByteField(IntByteField x) {
-        super(x);
-    }
-
     public IntByteField(String n) {
         super(4, ByteField.FieldType.INT, n);
     }
@@ -35,11 +31,6 @@ public class IntByteField extends ByteField {
     public IntByteField(String n, int d) {
         this(n);
         setValue(d);
-    }
-
-    @Override
-    protected ByteField clone() {
-        return new IntByteField(this);
     }
 
     public int getValue() {

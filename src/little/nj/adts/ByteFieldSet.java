@@ -22,7 +22,7 @@ import java.util.TreeSet;
 
 public class ByteFieldSet implements Cloneable,Iterable<ByteField> {
 
-    private final TreeSet<ByteField>   backing;
+    private TreeSet<ByteField>         backing;
 
     private int                        size_actual;
 
@@ -32,20 +32,38 @@ public class ByteFieldSet implements Cloneable,Iterable<ByteField> {
         backing = new TreeSet<ByteField>();
     }
 
+    /**
+     * Adds a ByteField to the set, set's its offset
+     * 
+     * @param i
+     */
     public void add(ByteField i) {
         i.setOffset(size_possible);
         size_possible += i.getLength();
+
+        addImpl(i);
+    }
+    
+    protected void addImpl(ByteField i) {
         backing.add(i);
     }
-
+    
     @Override
     public ByteFieldSet clone() {
-        ByteFieldSet rtn = new ByteFieldSet();
-        for (ByteField i : backing) {
-            ByteField tmp = i.clone();
-            rtn.add(tmp);
+        try {
+            ByteFieldSet that = (ByteFieldSet) super.clone();
+            
+            that.backing = new TreeSet<>();
+            
+            for(ByteField x : backing)
+                that.backing.add(x.clone());
+            
+            return that;
+        } catch (CloneNotSupportedException ex) {
+            ex.printStackTrace();
+            // FIXME: Obviously this is bad form, but we should not get here
+            throw new RuntimeException(ex);
         }
-        return rtn;
     }
 
     public ByteField get(int offset) {

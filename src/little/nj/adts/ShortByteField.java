@@ -20,10 +20,6 @@ import java.nio.ByteBuffer;
 
 public class ShortByteField extends ByteField {
 
-    protected ShortByteField(ShortByteField x) {
-        super(x);
-    }
-
     public ShortByteField(String n) {
         super(2, ByteField.FieldType.SHORT, n);
     }
@@ -35,11 +31,6 @@ public class ShortByteField extends ByteField {
     public ShortByteField(String n, short d) {
         this(n);
         setValue(d);
-    }
-
-    @Override
-    protected ByteField clone() {
-        return new ShortByteField(this);
     }
 
     public short getValue() {

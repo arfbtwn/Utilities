@@ -18,23 +18,21 @@
 package little.nj.adts;
 
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class ByteFieldMapSet extends ByteFieldSet {
 
-    private final HashMap<String, ByteField> hash_backing;
+    private HashMap<String, ByteField> hash_backing;
 
     public ByteFieldMapSet()
     {
         hash_backing = new HashMap<String, ByteField>();
     }
     
-    /* (non-Javadoc)
-     * @see little.nj.adts.ByteFieldSet#add(little.nj.adts.ByteField)
-     */
     @Override
-    public void add(ByteField i) {
-        super.add(i);
+    protected void addImpl(ByteField i) {
+        super.addImpl(i);
 
         if (!hash_backing.containsKey(i.getName()))
             hash_backing.put(i.getName(), i);
@@ -62,10 +60,13 @@ public class ByteFieldMapSet extends ByteFieldSet {
      */
     @Override
     public ByteFieldMapSet clone() {
-        ByteFieldMapSet rv = new ByteFieldMapSet();
-        for(ByteField i : this)
-            rv.add(i);
+        ByteFieldMapSet that = (ByteFieldMapSet)super.clone();
         
-        return rv;
+        that.hash_backing = new HashMap<>();
+        
+        for(Map.Entry<String, ByteField> i : hash_backing.entrySet())
+            that.hash_backing.put(i.getKey(), i.getValue());
+            
+        return that;
     }
 }

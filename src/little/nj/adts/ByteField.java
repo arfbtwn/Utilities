@@ -46,14 +46,6 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
 
     private FieldType    type;
 
-    protected ByteField(ByteField x) {
-        offset = x.offset;
-        type = x.type;
-        name = x.name;
-        raw = ByteBuffer.allocate(x.getLength());
-        setBytes(x.raw.array());
-    }
-
     ByteField(int o) {
         offset = Integer.valueOf(o);
     }
@@ -80,8 +72,20 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
      * @see java.lang.Object#clone()
      */
     @Override
-    protected ByteField clone() {
-        return new ByteField(this);
+    public ByteField clone() {
+        ByteField that;
+        try {
+            that = (ByteField) super.clone();
+            
+            that.offset = new Integer(offset);
+            that.raw = ByteBuffer.allocate(raw.capacity());
+            that.setBytes(getBytes());
+         
+            return that;
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     /*
@@ -107,9 +111,13 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ByteField)
-            return compareTo((ByteField) obj) == 0;
-        return false;
+        if (this == obj)
+            return true;
+        
+        if (!(obj instanceof ByteField))
+            return false;
+            
+        return compareTo((ByteField) obj) == 0;
     }
 
     public ByteBuffer getBuffer() {

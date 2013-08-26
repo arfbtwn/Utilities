@@ -20,20 +20,10 @@ import java.nio.ByteBuffer;
 
 import javax.xml.bind.DatatypeConverter;
 
-/**
- * A class to represent a field mapped to a set of bytes
- * 
- * @author Nicholas Little
- *
- */
+
 public class ByteField implements Comparable<ByteField>, Cloneable {
 
-    /**
-     * 4 different field types are supported
-     * 
-     * @author Nicholas Little
-     *
-     */
+    @Deprecated
     public static enum FieldType {
         BYTE, INT, SHORT, STRING;
     }
@@ -50,6 +40,7 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
         offset = Integer.valueOf(o);
     }
 
+    @Deprecated
     public ByteField(int l, FieldType t, String n) {
         type = t;
         name = n;
@@ -57,11 +48,13 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
         offset = Integer.valueOf(-1);
     }
 
+    @Deprecated
     public ByteField(int l, FieldType t, String n, byte[] d) {
         this(l, t, n);
         setBytes(d);
     }
 
+    @Deprecated
     public ByteField(int o, int l, FieldType t, String n, ByteBuffer r) {
         this(l, t, n);
         parse(r);
@@ -77,7 +70,7 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
         try {
             that = (ByteField) super.clone();
             
-            that.offset = new Integer(offset);
+            that.offset = Integer.valueOf(offset);
             that.raw = ByteBuffer.allocate(raw.capacity());
             that.setBytes(getBytes());
          
@@ -141,6 +134,7 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
         return offset.intValue();
     }
 
+    @Deprecated
     public FieldType getType() {
         return type;
     }
@@ -161,11 +155,7 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
             raw.put((byte)0x0);
     }
 
-    public void setName(String n) {
-        name = n;
-    }
-
-    public void setOffset(int i) {
+    void setOffset(int i) {
         offset = Integer.valueOf(i);
     }
 
@@ -178,31 +168,6 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
         
         sb.append(String.format("Data: %s", DatatypeConverter.printHexBinary(getBytes())));
         
-        if (type != FieldType.BYTE)
-            sb.append(String.format(", As %s: %s", 
-                    type,
-                    type == FieldType.STRING 
-                        ? getAsString() 
-                        : type == FieldType.INT 
-                            ? getAsInt()
-                            : type == FieldType.SHORT 
-                                ? getAsShort() 
-                                : null));
-        
         return sb.toString();
-    }
-    
-    private int getAsInt() {
-        raw.rewind();
-        return raw.getInt();
-    }
-
-    private short getAsShort() {
-        raw.rewind();
-        return raw.getShort();
-    }
-
-    private String getAsString() {
-        return new String(raw.array());
     }
 }

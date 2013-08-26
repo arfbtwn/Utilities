@@ -19,7 +19,7 @@ package little.nj.adts;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-public class StringByteField extends ByteField {
+public final class StringByteField extends ByteField {
 
     private Charset charset;
 

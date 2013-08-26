@@ -59,12 +59,11 @@ public class UnionCollection<T> implements Iterable<T> {
         @Override
         public boolean hasNext() {
             
-            if (next == null && super.hasNext()) {
+            while (next == null && super.hasNext()) {
                 next = getCurrentIterator().next();
             
                 if (!set.add(next)) {
                     next = null;
-                    return hasNext();
                 }
             }
             

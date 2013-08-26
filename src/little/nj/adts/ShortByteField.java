@@ -18,7 +18,7 @@ package little.nj.adts;
 
 import java.nio.ByteBuffer;
 
-public class ShortByteField extends ByteField {
+public final class ShortByteField extends ByteField {
 
     public ShortByteField(String n) {
         super(2, ByteField.FieldType.SHORT, n);

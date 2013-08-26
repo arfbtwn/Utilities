@@ -50,7 +50,7 @@ public abstract class DualReel<A, B>
      * @see java.util.Iterator#remove()
      */
     @Override
-    public void remove() {
+    public final void remove() {
         throw new NotImplementedException();
     }
 }

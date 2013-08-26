@@ -16,18 +16,14 @@
  */
 package little.nj.adts;
 
-import java.nio.ByteBuffer;
-
 public final class IntByteField extends ByteField {
 
+    public static final int LENGTH = 4;
+    
     public IntByteField(String n) {
-        super(4, ByteField.FieldType.INT, n);
+        super(LENGTH, n);
     }
-
-    public IntByteField(int o, String n, ByteBuffer r) {
-        super(o, 4, ByteField.FieldType.INT, n, r);
-    }
-
+    
     public IntByteField(String n, int d) {
         this(n);
         setValue(d);

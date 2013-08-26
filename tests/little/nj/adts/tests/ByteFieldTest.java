@@ -65,7 +65,6 @@ public class ByteFieldTest {
         
         assertEquals(x.getOffset(), y.getOffset());
         assertEquals(x.getName(), y.getName());
-        assertEquals(x.getType(), y.getType());
         
         assertArrayEquals(x.getBytes(), y.getBytes());
         

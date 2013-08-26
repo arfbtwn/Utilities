@@ -23,41 +23,35 @@ import javax.xml.bind.DatatypeConverter;
 
 public class ByteField implements Comparable<ByteField>, Cloneable {
 
-    @Deprecated
-    public static enum FieldType {
-        BYTE, INT, SHORT, STRING;
-    }
-
     private String       name;
 
     private Integer      offset;
 
     protected ByteBuffer raw;
 
-    private FieldType    type;
-
     ByteField(int o) {
-        offset = Integer.valueOf(o);
+        setOffset(o);
     }
 
-    @Deprecated
-    public ByteField(int l, FieldType t, String n) {
-        type = t;
+    public ByteField(int l, String n) {
+        this(0);
         name = n;
         raw = ByteBuffer.allocate(l);
-        offset = Integer.valueOf(-1);
     }
-
-    @Deprecated
-    public ByteField(int l, FieldType t, String n, byte[] d) {
-        this(l, t, n);
+    
+    public ByteField(int o, int l, String n) {
+        this(l, n);
+        setOffset(o);
+    }
+    
+    public ByteField(int l, String n, byte[] d) {
+        this(l, n);
         setBytes(d);
     }
-
-    @Deprecated
-    public ByteField(int o, int l, FieldType t, String n, ByteBuffer r) {
-        this(l, t, n);
-        parse(r);
+    
+    public ByteField(int o, int l, String n, byte[] d) {
+        this(l, n, d);
+        setOffset(o);
     }
     
     /*
@@ -134,11 +128,6 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
         return offset.intValue();
     }
 
-    @Deprecated
-    public FieldType getType() {
-        return type;
-    }
-
     public void parse(ByteBuffer r) {
         r.position(offset.intValue());
         byte[] tmp = new byte[raw.capacity()];
@@ -163,8 +152,8 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         
-        sb.append(String.format("Name: %s, Offset: %d, Length: %d, Type: %s\n", 
-                name, offset, getLength(), type));
+        sb.append(String.format("Name: %s, Offset: %d, Length: %d\n", 
+                name, offset, getLength()));
         
         sb.append(String.format("Data: %s", DatatypeConverter.printHexBinary(getBytes())));
         

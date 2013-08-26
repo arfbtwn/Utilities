@@ -108,7 +108,7 @@ public class ByteFieldSet implements Cloneable,Iterable<ByteField> {
                 break;
         if (in.position() < end) {
             ByteField ubf = new ByteField(end - in.position(),
-                    ByteField.FieldType.BYTE, "Unknown Block");
+                    "Unknown Block");
             add(ubf);
             ubf.parse(in);
         }

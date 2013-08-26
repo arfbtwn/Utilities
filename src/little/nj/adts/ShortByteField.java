@@ -16,16 +16,12 @@
  */
 package little.nj.adts;
 
-import java.nio.ByteBuffer;
-
 public final class ShortByteField extends ByteField {
 
+    public static final int LENGTH = 2;
+    
     public ShortByteField(String n) {
-        super(2, ByteField.FieldType.SHORT, n);
-    }
-
-    public ShortByteField(int o, String n, ByteBuffer r) {
-        super(o, 2, ByteField.FieldType.SHORT, n, r);
+        super(LENGTH, n);
     }
 
     public ShortByteField(String n, short d) {

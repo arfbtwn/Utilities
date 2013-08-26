@@ -16,7 +16,6 @@
  */
 package little.nj.adts;
 
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 public final class StringByteField extends ByteField {
@@ -24,12 +23,7 @@ public final class StringByteField extends ByteField {
     private Charset charset;
 
     public StringByteField(int l, String n, Charset c) {
-        super(l, ByteField.FieldType.STRING, n);
-        charset = c;
-    }
-
-    public StringByteField(int o, int l, String n, Charset c, ByteBuffer r) {
-        super(o, l, ByteField.FieldType.STRING, n, r);
+        super(l, n);
         charset = c;
     }
 

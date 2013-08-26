@@ -28,7 +28,7 @@ public class StringByteField extends ByteField {
         charset = c;
     }
 
-    public StringByteField(int o, int l, String n, ByteBuffer r, Charset c) {
+    public StringByteField(int o, int l, String n, Charset c, ByteBuffer r) {
         super(o, l, ByteField.FieldType.STRING, n, r);
         charset = c;
     }
@@ -36,16 +36,6 @@ public class StringByteField extends ByteField {
     public StringByteField(int l, String n, Charset c, String d) {
         this(l, n, c);
         setValue(d);
-    }
-
-    protected StringByteField(StringByteField x) {
-        super(x);
-        charset = x.charset;
-    }
-
-    @Override
-    protected ByteField clone() {
-        return new StringByteField(this);
     }
 
     public String getValue() {

@@ -61,10 +61,16 @@ public class MinusCollection<T> implements Iterable<T> {
             while(rhs.hasNext())
                 set.add(rhs.next());
         
-            while(next == null && lhs.hasNext()) {
-                next = lhs.next();
-                if (!set.add(next))
-                    next = null;
+            if (next == null) {
+                T that;
+                
+                while(lhs.hasNext()) {
+                    that = lhs.next();
+                    if (set.add(that)) {
+                        next = that;
+                        break;
+                    }
+                }
             }
             
             return next != null;

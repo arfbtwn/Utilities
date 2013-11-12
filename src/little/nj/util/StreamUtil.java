@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  * Nicholas J. Little <arealityfarbetween@googlemail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,30 +27,30 @@ import java.util.Queue;
 
 
 public class StreamUtil {
-    
+
     public static interface InputAction {
         void act(InputStream stream) throws IOException;
     }
-    
+
     public static interface OutputAction {
         void act(OutputStream stream) throws IOException;
     }
-    
+
     private Queue<IOException> exceptions = new LinkedList<>();
     private int transactions;
-    
+
     /**
      * An atomic operation on an InputStream
-     * 
+     *
      * @param stream
      * @param user
      * @return
      */
-    public synchronized boolean read(InputStream stream, 
-                                     InputAction user) 
+    public synchronized boolean read(InputStream stream,
+                                     InputAction user)
     {
         start();
-        
+
         try {
             user.act(stream);
         } catch (IOException ex) {
@@ -58,22 +58,22 @@ public class StreamUtil {
         } finally {
             close(stream);
         }
-        
+
         return end();
     }
-    
+
     /**
      * An atomic operation on an OutputStream
-     * 
+     *
      * @param stream
      * @param user
      * @return
      */
-    public synchronized boolean write(OutputStream stream, 
-                                      OutputAction user) 
+    public synchronized boolean write(OutputStream stream,
+                                      OutputAction user)
     {
         start();
-        
+
         try {
             user.act(stream);
         } catch (IOException ex) {
@@ -82,80 +82,80 @@ public class StreamUtil {
             flush(stream);
             close(stream);
         }
-        
+
         return end();
     }
-    
+
     /**
      * Flushes a Flushable
-     * 
+     *
      * @param flushable
      * @return
      */
     public synchronized boolean flush(Flushable flushable) {
         start();
-        
+
         try {
             flushable.flush();
         } catch (IOException ex) {
             record(ex);
         }
-        
+
         return end();
     }
-    
+
     /**
      * Closes a Closeable
-     *  
+     *
      * @param closeable
      * @return
      */
-    public synchronized boolean close(Closeable closeable) 
+    public synchronized boolean close(Closeable closeable)
     {
         start();
-        
+
         try {
             closeable.close();
         } catch (IOException ex) {
             record(ex);
         }
-        
-        return end(); 
-    }    
+
+        return end();
+    }
 
     /**
      * Signals the end of an atomic operation
-     * 
+     *
      * @return true if there are no Exceptions recorded
      */
     protected boolean end() {
         transactions = transactions > 0 ? transactions - 1 : 0;
         return exceptions.isEmpty();
     }
-    
+
     /**
      * Signals the start of an atomic operation
      */
     protected void start() {
         if (transactions < 1)
             exceptions.clear();
-        
+
         ++transactions;
     }
-    
+
     /**
      * Records an IOException
-     * 
+     *
      * @param ex
      */
     protected void record(IOException ex) {
         ex.printStackTrace();
         exceptions.add(ex);
     }
-    
+
     /**
      * Retrieves the first IOException
-     * 
+     *
      * @return
      */
     public IOException getFirstException() { return exceptions.poll(); }

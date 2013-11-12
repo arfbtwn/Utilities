@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  * Nicholas J. Little <arealityfarbetween@googlemail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,32 +21,32 @@ import little.nj.gui.events.EventSupport;
 
 
 public abstract class EventSourceImpl<T> implements BindingEventSource {
-    
+
     private final EventSupport<BindingListener, BindingEvent> support;
     protected final T obj;
-    
+
     public EventSourceImpl(T src) {
         support = new EventSupport<>();
-        
+
         obj = src;
-        
+
         init();
     }
-    
+
     protected abstract void init();
-    
+
     public void addBindingListener(BindingListener listener) {
-        support.addEventListener(listener);
+        support.addListener(listener);
     }
-    
+
     public void removeBindingListener(BindingListener listener) {
-        support.removeEventListener(listener);
+        support.removeListener(listener);
     }
-    
+
     /**
      * FIXME: I'd like to narrow this to EventObject, but the concrete
      * class is trouble with interface typed events
-     * 
+     *
      * @param event
      */
     protected void fireBindingEvent(Object event) {

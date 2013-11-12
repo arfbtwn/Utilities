@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  * Nicholas J. Little <arealityfarbetween@googlemail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,15 +27,15 @@ import javax.xml.bind.DatatypeConverter;
 public class ConversionUtil {
 
     private ConversionUtil() { }
-    
+
     /**
-     * A mask to remove sign bits from a single byte.
+     * A mask to removeListener sign bits from a single byte.
      */
     public final static int MASK_BYTE_UNSIGN = 0xff;
 
     /**
      * Convert an unsigned byte to an int.
-     * 
+     *
      * @param i
      *            byte to convert
      * @return int Unsigned value
@@ -43,10 +43,10 @@ public class ConversionUtil {
     public final static int unsign(byte i) {
         return i & MASK_BYTE_UNSIGN;
     }
-    
+
     /**
      * IIRC, these two object types don't autobox/unbox.
-     * 
+     *
      * @param abPrim
      *            Primitive byte[]
      * @return Byte[]
@@ -61,7 +61,7 @@ public class ConversionUtil {
 
     /**
      * IIRC, these two object types don't autobox/unbox.
-     * 
+     *
      * @param abObjs
      *            Object Byte[]
      * @return byte[]
@@ -73,11 +73,11 @@ public class ConversionUtil {
             abPrim[j++] = i;
         return abPrim;
     }
-    
+
     /**
      * Wrapper around {@link DatatypeConverter#printHexBinary(byte[])} to
      * prevent {@link NullPointerException}
-     * 
+     *
      * @param in
      *            byte[] to format as a string
      * @return Hexadecimal output string, or &quot;null&quot;

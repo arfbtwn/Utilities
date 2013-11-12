@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  * Nicholas J. Little <arealityfarbetween@googlemail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,11 +22,11 @@ import java.util.Iterator;
 import little.nj.exceptions.NotImplementedException;
 
 
-public abstract class SingleReel<A, B> 
+public abstract class SingleReel<A, B>
     implements ExpressionIterator<A, B> {
 
     protected final Iterator<A> iterator;
-    
+
     public SingleReel(Iterator<A> iterator) {
         this.iterator = iterator;
     }
@@ -42,9 +42,9 @@ public abstract class SingleReel<A, B>
     public boolean hasNext() {
         return getIterator().hasNext();
     }
-    
+
     /* (non-Javadoc)
-     * @see java.util.Iterator#remove()
+     * @see java.util.Iterator#removeListener()
      */
     @Override
     public final void remove() {

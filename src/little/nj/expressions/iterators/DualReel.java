@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  * Nicholas J. Little <arealityfarbetween@googlemail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,22 +22,22 @@ import java.util.Iterator;
 import little.nj.exceptions.NotImplementedException;
 
 
-public abstract class DualReel<A, B> 
+public abstract class DualReel<A, B>
     implements ExpressionIterator<A, B> {
-    
+
     protected final Iterator<A> rhs, lhs;
-    
+
     public DualReel(Iterator<A> lhs, Iterator<A> rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
     }
-    
+
     protected Iterator<A> getCurrentIterator() {
         return lhs.hasNext() ? lhs
                              : rhs.hasNext() ? rhs
                                              : null;
     }
-    
+
     /* (non-Javadoc)
      * @see java.util.Iterator#hasNext()
      */
@@ -45,9 +45,9 @@ public abstract class DualReel<A, B>
     public boolean hasNext() {
         return getCurrentIterator() != null;
     }
-    
+
     /* (non-Javadoc)
-     * @see java.util.Iterator#remove()
+     * @see java.util.Iterator#removeListener()
      */
     @Override
     public final void remove() {

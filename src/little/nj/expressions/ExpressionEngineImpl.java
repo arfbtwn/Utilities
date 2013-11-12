@@ -28,7 +28,7 @@ import little.nj.expressions.predicates.Predicate;
 
 public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
 
-    protected final Iterable<T> backing;
+    protected Iterable<T> backing;
 
     public ExpressionEngineImpl(Iterable<T> backing) {
         this.backing = backing;
@@ -141,8 +141,7 @@ public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
      */
     @Override
     public ExpressionEngine<T> where(Predicate<? super T> predicate) {
-        return new ExpressionEngineImpl<>(new PredicateCollection<>(backing,
-                predicate));
+        return getEngine(new PredicateCollection<>(backing, predicate));
     }
 
     /*
@@ -161,7 +160,7 @@ public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
      */
     @Override
     public ExpressionEngine<T> union(Iterable<T> union) {
-        return new ExpressionEngineImpl<>(new UnionCollection<>(backing, union));
+        return getEngine(new UnionCollection<>(backing, union));
     }
     
     /* (non-Javadoc)
@@ -169,7 +168,7 @@ public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
      */
     @Override
     public ExpressionEngine<T> minus(Iterable<T> minus) {
-        return new ExpressionEngineImpl<>(new MinusCollection<>(backing, minus));
+        return getEngine(new MinusCollection<>(backing, minus));
     }
     
     /* (non-Javadoc)
@@ -186,7 +185,11 @@ public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
         
         UnionCollection<T> unionMinus = new UnionCollection<>(minusAB, minusBA);
         
-        return new ExpressionEngineImpl<>(new MinusCollection<>(union, unionMinus));
+        return getEngine(new MinusCollection<>(union, unionMinus));
+    }
+    
+    protected ExpressionEngine<T> getEngine(Iterable<T> iterable) {
+        return new ExpressionEngineImpl<>(iterable);
     }
     
     /* (non-Javadoc)

@@ -1,16 +1,16 @@
 /**
  * Copyright (C) 2013 Nicholas J. Little <arealityfarbetween@googlemail.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -53,18 +53,18 @@ import little.nj.util.ImageUtil;
 /**
  * A panel to display a list of images, and allow addition, removal and
  * re-ordering of the underlying list
- * 
+ *
  * @author Nicholas Little
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class ImageListView extends JPanel implements ItemSelectable {
 
     /**
      * A panel to contain a single image
-     * 
+     *
      * @author Nicholas Little
-     * 
+     *
      */
     private class ImagePanel extends JPanel {
 
@@ -82,7 +82,7 @@ public class ImageListView extends JPanel implements ItemSelectable {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see
              * java.awt.event.ActionListener#actionPerformed(java.awt.event.
              * ActionEvent)
@@ -92,21 +92,21 @@ public class ImageListView extends JPanel implements ItemSelectable {
                 BufferedImage i = getImage();
                 int index1 = images.indexOf(i);
                 int index2 = index1;
-                
+
                 if (arg0.getSource() == up)
                     index2 = switchUp(content, ImagePanel.this);
                 else
                     index2 = switchDown(content, ImagePanel.this);
-                
+
                 if (index2 != index1) {
                     images.set(index1, images.get(index2));
                     images.set(index2, i);
-                    
+
                     up.setEnabled(index2 > 0);
                     down.setEnabled(index2 < images.size() - 1);
-                    
+
                     ImagePanel moved = panel_map.get(images.get(index1));
-                    
+
                     moved.up.setEnabled(index1 > 0);
                     moved.down.setEnabled(index1 < images.size() - 1);
                 }
@@ -175,9 +175,9 @@ public class ImageListView extends JPanel implements ItemSelectable {
 
     /**
      * The selection mode of the ImageListView
-     * 
+     *
      * @author Nicholas Little
-     * 
+     *
      */
     public static enum Mode {
         MULTI, RADIO;
@@ -202,18 +202,18 @@ public class ImageListView extends JPanel implements ItemSelectable {
         return transpose(i, j, -1);
     }
 
-    static int transpose(JComponent i, JComponent j, int k) {        
+    static int transpose(JComponent i, JComponent j, int k) {
         List<Component> comps = Arrays.asList(i.getComponents());
         int index = comps.indexOf(j) + k;
-        
+
         if (index >= comps.size())
             index = comps.size() - 1;
         else if (index < 0)
             index = 0;
-        
+
         i.add(j, index);
         i.validate();
-        
+
         return index;
     }
 
@@ -225,7 +225,7 @@ public class ImageListView extends JPanel implements ItemSelectable {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent
          * )
@@ -323,7 +323,7 @@ public class ImageListView extends JPanel implements ItemSelectable {
     /**
      * Allows users of the class to get a reference to the internal list header
      * panel
-     * 
+     *
      * @return Header Panel
      */
     public JPanel getHeader() {
@@ -332,7 +332,7 @@ public class ImageListView extends JPanel implements ItemSelectable {
 
     /**
      * Gets an array of selected images
-     * 
+     *
      * @return BufferedImage[]
      */
     public BufferedImage[] getSelectedItems() {
@@ -341,7 +341,7 @@ public class ImageListView extends JPanel implements ItemSelectable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.awt.ItemSelectable#getSelectedObjects()
      */
     @Override
@@ -351,23 +351,23 @@ public class ImageListView extends JPanel implements ItemSelectable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.awt.ItemSelectable#addItemListener(java.awt.event.ItemListener)
      */
     @Override
     public void addItemListener(ItemListener aListener) {
-        support.addEventListener(aListener);
+        support.addListener(aListener);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * java.awt.ItemSelectable#removeItemListener(java.awt.event.ItemListener)
      */
     @Override
     public void removeItemListener(ItemListener aListener) {
-        support.removeEventListener(aListener);
+        support.removeListener(aListener);
     }
 
     private void fireListeners(ItemEvent event) {
@@ -377,45 +377,45 @@ public class ImageListView extends JPanel implements ItemSelectable {
     private void init() {
         removeAll();
         setLayout(new BorderLayout());
-        
+
         panel_map.clear();
         add(header, "First");
         add(list, "Center");
-        
+
         list.setViewportView(content);
         content.removeAll();
-        
+
         content.setLayout(new BoxLayout(content, BoxLayout.PAGE_AXIS));
         for (BufferedImage i : images)
             addPanel(i);
         list.setPreferredSize(dimension);
         list.setMinimumSize(dimension);
-        
+
         setMode(mode);
         setModifiable(modifiable);
-        
+
         footer.removeAll();
         footer_label = new JLabel();
-        
+
         footer.add(add);
         footer.add(rem);
-        
+
         add.removeActionListener(button_listener);
         rem.removeActionListener(button_listener);
-        
+
         add.addActionListener(button_listener);
         rem.addActionListener(button_listener);
-        
+
         footer.add(footer_label);
         add(footer, "Last");
-        
+
         setMinimumSize(dimension);
         validate();
     }
 
     /**
      * Allows users to set a list of buffered images
-     * 
+     *
      * @param in
      */
     public void setList(List<BufferedImage> in) {
@@ -426,7 +426,7 @@ public class ImageListView extends JPanel implements ItemSelectable {
 
     /**
      * Set the selection mode.
-     * 
+     *
      * @param m
      *            {@link Mode}
      */
@@ -437,7 +437,7 @@ public class ImageListView extends JPanel implements ItemSelectable {
 
     /**
      * Whether the list is modifyable.
-     * 
+     *
      * @param m
      */
     public void setModifiable(boolean m) {
@@ -448,8 +448,8 @@ public class ImageListView extends JPanel implements ItemSelectable {
 
     /**
      * A convenience method to initialise the selected items. This method will
-     * add the items if they are not already present.
-     * 
+     * addListener the items if they are not already present.
+     *
      * @param sel
      */
     public void setSelectedItems(BufferedImage[] sel) {
@@ -469,7 +469,7 @@ public class ImageListView extends JPanel implements ItemSelectable {
 
     /**
      * Sets the associated text on a given buffered image
-     * 
+     *
      * @param x
      * @param y
      */

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  * Nicholas J. Little <arealityfarbetween@googlemail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ import java.util.EventListener;
 
 /**
  * A decoration interface, used to standardise {@link EventSupport}
- * 
+ *
  * @author Nicholas Little
  *
  */
@@ -31,12 +31,12 @@ public interface IEventSupport<T extends EventListener> {
      * Register a listener
      * @param aListener
      */
-    void addEventListener(T aListener);
-    
+    void addListener(T aListener);
+
     /**
      * Remove a registered listener
      * @param aListener
      */
-    void removeEventListener(T aListener);
-    
+    void removeListener(T aListener);
+
 }

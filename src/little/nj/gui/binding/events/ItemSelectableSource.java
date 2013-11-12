@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  * Nicholas J. Little <arealityfarbetween@googlemail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,12 +21,9 @@ import java.awt.ItemSelectable;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-
+@SuppressWarnings("unused")
 public class ItemSelectableSource extends EventSourceImpl<ItemSelectable> {
 
-    /**
-     * @param binding
-     */
     public ItemSelectableSource(ItemSelectable source) {
         super(source);
     }
@@ -35,23 +32,20 @@ public class ItemSelectableSource extends EventSourceImpl<ItemSelectable> {
      * @see little.nj.gui.binding.events.BindingEventSource#init()
      */
     @Override
-    protected void init() {        
-        if (obj instanceof ItemSelectable) {
-            ItemSelectable is = (ItemSelectable)obj;
-            
-            is.addItemListener(new ItemListener() {
+    protected void init() {
+        obj.addItemListener(new ItemListener()
+        {
+            @Override
+            public void itemStateChanged(ItemEvent e)
+            {
 
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    
-                    if (e.getStateChange() == ItemEvent.SELECTED)
-                        fireBindingEvent(e);
-                    
-                }
-                
-                
-            });
-        }
+                if (e.getStateChange() == ItemEvent.SELECTED)
+                    fireBindingEvent(e);
+
+            }
+
+
+        });
     }
 
 }

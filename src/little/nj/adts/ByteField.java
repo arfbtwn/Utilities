@@ -128,6 +128,11 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
         return offset.intValue();
     }
 
+    /**
+     * Extracts data for this ByteField from the ByteBuffer, r.
+     * 
+     * @param r ByteBuffer to extract from
+     */
     public void parse(ByteBuffer r) {
         r.position(offset.intValue());
         byte[] tmp = new byte[raw.capacity()];
@@ -135,7 +140,13 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
         setBytes(tmp);
     }
 
-    public void setBytes(byte[] bytes) {
+    /**
+     * Fills the buffer with the specified bytes, excluding
+     * any overflow.
+     *  
+     * @param bytes
+     */
+    public final void setBytes(byte[] bytes) {
         raw.rewind();
         raw.put(bytes, 0, raw.capacity() < bytes.length ? raw.capacity()
                 : bytes.length);

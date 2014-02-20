@@ -17,90 +17,26 @@
  */
 package little.nj.gui.events;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.EventListener;
-import java.util.List;
-
-import little.nj.reflection.ReflectionUtil;
 
 /**
- * Grand Unified Event Support
+ * A decoration interface, used to standardise {@link EventSupportImpl}
  *
  * @author Nicholas Little
  *
  */
-public class EventSupport<T extends EventListener, E>
-    implements IEventSupport<T> {
-
-    private Method event = null;
-
-    private final List<T> listeners = new ArrayList<>();
-
-    /* (non-Javadoc)
-     * @see little.nj.gui.events.IEventSupport#addListener(java.lang.Object)
-     */
-    @Override
-    public final synchronized void addListener(T aListener) {
-        listeners.add(aListener);
-    }
-
-    /* (non-Javadoc)
-     * @see little.nj.gui.events.IEventSupport#removeListener(java.lang.Object)
-     */
-    @Override
-    public final synchronized void removeListener(T aListener) {
-        listeners.remove(aListener);
-    }
+public interface EventSupport<T extends EventListener> {
 
     /**
-     * Fires the appropriate event method, based on
-     * event argument type
-     *
-     * @param args
+     * Register a listener
+     * @param aListener
      */
-    public final synchronized void fireEvent(E args) {
-        Method m = getMethod(args);
-        if (m != null) {
-            for(T i : listeners) {
-
-                try {
-                    m.invoke(i, args);
-                } catch (IllegalAccessException | IllegalArgumentException
-                        | InvocationTargetException e) {
-
-                    e.printStackTrace();
-                }
-
-            }
-        }
-    }
+    void addListener(T aListener);
 
     /**
-     * Gets the Method to execute on the listeners
-     *
-     * @param args
-     * @return
-     * @throws IllegalArgumentException if no method taking parameter E is found
+     * Remove a registered listener
+     * @param aListener
      */
-    protected Method getMethod(E args) {
-        if (event == null && listeners.size() > 0) {
+    void removeListener(T aListener);
 
-            Class<?> t = args.getClass();
-            T listener = listeners.get(0);
-
-            event = ReflectionUtil.getInstance().getMethodByArgs(listener, t);
-
-            if (event == null)
-                throw new IllegalArgumentException(
-                        String.format(
-                                "No method on '%s' receiving parameter '%s'",
-                                listener.getClass(), t
-                                ));
-
-            event.setAccessible(true);
-        }
-        return event;
-    }
 }

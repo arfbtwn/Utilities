@@ -36,7 +36,7 @@ public class StreamUtil {
         void act(OutputStream stream) throws IOException;
     }
 
-    private Queue<IOException> exceptions = new LinkedList<>();
+    private Queue<IOException> exceptions = new LinkedList<IOException>();
     private int transactions;
 
     /**

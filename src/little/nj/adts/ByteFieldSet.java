@@ -53,7 +53,7 @@ public class ByteFieldSet implements Cloneable,Iterable<ByteField> {
         try {
             ByteFieldSet that = (ByteFieldSet) super.clone();
             
-            that.backing = new TreeSet<>();
+            that.backing = new TreeSet<ByteField>();
             
             for(ByteField x : backing)
                 that._add(x.clone());

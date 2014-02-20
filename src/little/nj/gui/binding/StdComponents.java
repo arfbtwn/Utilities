@@ -10,6 +10,8 @@ import java.lang.reflect.Method;
 
 public class StdComponents
 {
+	private StdComponents() { }
+	
     public abstract static class ReflectingImpl {
         protected final Object obj;
         protected final String mth;
@@ -52,9 +54,12 @@ public class StdComponents
         public V get() {
             try {
                 return (V) mth_inf.invoke(obj, (Object[]) null);
-            } catch (IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException e) {
-                throw new RuntimeException(e);
+            } catch (IllegalAccessException e1) {
+            	throw new RuntimeException(e1);
+            } catch (IllegalArgumentException e2) {
+            	throw new RuntimeException(e2);
+            } catch (InvocationTargetException e3) {
+                throw new RuntimeException(e3);
             }
         }
 
@@ -77,9 +82,12 @@ public class StdComponents
         public void set(V value) {
             try {
                 mth_inf.invoke(obj, value);
-            } catch (IllegalAccessException | IllegalArgumentException
-                    | InvocationTargetException e) {
-                throw new RuntimeException(e);
+            } catch (IllegalAccessException e1) {
+            	throw new RuntimeException(e1);
+            } catch (IllegalArgumentException e2) {
+            	throw new RuntimeException(e2);
+            } catch (InvocationTargetException e3) {
+                throw new RuntimeException(e3);
             }
         }
 

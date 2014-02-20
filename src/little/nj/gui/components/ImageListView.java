@@ -47,7 +47,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 
-import little.nj.gui.events.EventSupport;
+import little.nj.gui.events.EventSupportImpl;
 import little.nj.util.ImageUtil;
 
 /**
@@ -266,7 +266,7 @@ public class ImageListView extends JPanel implements ItemSelectable {
 
     private JPanel header = new JPanel();
 
-    private List<BufferedImage> images = new LinkedList<>();
+    private List<BufferedImage> images = new LinkedList<BufferedImage>();
 
     private ItemListener item_listener = new ItemListener() {
 
@@ -292,15 +292,16 @@ public class ImageListView extends JPanel implements ItemSelectable {
 
     private JScrollPane list = new JScrollPane(content);
 
-    private EventSupport<ItemListener, ItemEvent> support = new EventSupport<>();
+    private EventSupportImpl<ItemListener, ItemEvent> support = 
+    		new EventSupportImpl<ItemListener, ItemEvent>();
 
     private Mode mode = Mode.RADIO;
 
     private boolean modifiable = false;
 
-    private Map<BufferedImage, ImagePanel> panel_map = new HashMap<>();
+    private Map<BufferedImage, ImagePanel> panel_map = new HashMap<BufferedImage, ImagePanel>();
 
-    private List<BufferedImage> selected = new LinkedList<>();
+    private List<BufferedImage> selected = new LinkedList<BufferedImage>();
 
     public ImageListView() {
         init();

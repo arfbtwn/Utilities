@@ -6,6 +6,7 @@ import static junit.framework.Assert.*;
 import little.nj.util.FileInfo;
 import org.junit.Test;
 
+@SuppressWarnings("deprecation")
 public class FileInfoTest
 {
     @Test

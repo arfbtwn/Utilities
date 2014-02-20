@@ -30,7 +30,7 @@ public abstract class FluentPredicateImpl<T> implements FluentPredicate<T> {
      */
     @Override
     public final FluentPredicate<T> and(Predicate<? super T> rhs) {
-        return new AndPredicate<>(this, rhs);
+        return new AndPredicate<T>(this, rhs);
     }
 
     /* (non-Javadoc)
@@ -38,7 +38,7 @@ public abstract class FluentPredicateImpl<T> implements FluentPredicate<T> {
      */
     @Override
     public final FluentPredicate<T> or(Predicate<? super T> rhs) {
-        return new OrPredicate<>(this, rhs);
+        return new OrPredicate<T>(this, rhs);
     }
 
     /* (non-Javadoc)
@@ -46,7 +46,7 @@ public abstract class FluentPredicateImpl<T> implements FluentPredicate<T> {
      */
     @Override
     public final FluentPredicate<T> xor(Predicate<? super T> rhs) {
-        return new XorPredicate<>(this, rhs);
+        return new XorPredicate<T>(this, rhs);
     }
 
     /* (non-Javadoc)
@@ -54,6 +54,6 @@ public abstract class FluentPredicateImpl<T> implements FluentPredicate<T> {
      */
     @Override
     public final FluentPredicate<T> not() {
-        return new NotPredicate<>(this);
+        return new NotPredicate<T>(this);
     }
 }

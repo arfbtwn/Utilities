@@ -64,7 +64,7 @@ public class ByteFieldMapSet extends ByteFieldSet {
     public ByteFieldMapSet clone() {
         ByteFieldMapSet that = (ByteFieldMapSet)super.clone();
         
-        that.hash_backing = new HashMap<>();
+        that.hash_backing = new HashMap<String, ByteField>();
         
         for(ByteField i : that)
             that._add(i);

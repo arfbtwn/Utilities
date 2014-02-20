@@ -71,7 +71,7 @@ public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
     @Override
     public int count(Predicate<? super T> predicate) {
         int rv = 0;
-        for (Iterator<T> it = new PredicateCollection<>(backing, predicate)
+        for (Iterator<T> it = new PredicateCollection<T>(backing, predicate)
                 .iterator(); it.hasNext(); ++rv, it.next())
             ;
         return rv;
@@ -93,7 +93,7 @@ public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
      */
     @Override
     public T first(Predicate<? super T> predicate) {
-        Iterator<T> it = new PredicateCollection<>(backing, predicate)
+        Iterator<T> it = new PredicateCollection<T>(backing, predicate)
                 .iterator();
 
         if (it.hasNext())
@@ -126,7 +126,7 @@ public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
     public T last(Predicate<? super T> predicate) {
         T rv = null;
 
-        Iterator<T> it = new PredicateCollection<>(backing, predicate)
+        Iterator<T> it = new PredicateCollection<T>(backing, predicate)
                 .iterator();
 
         while (it.hasNext())
@@ -141,7 +141,7 @@ public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
      */
     @Override
     public ExpressionEngine<T> where(Predicate<? super T> predicate) {
-        return getEngine(new PredicateCollection<>(backing, predicate));
+        return getEngine(new PredicateCollection<T>(backing, predicate));
     }
 
     /*
@@ -150,7 +150,7 @@ public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
      */
     @Override
     public <E> ExpressionEngine<E> select(Expression<T, E> expression) {
-        return new ExpressionEngineImpl<>(new SelectCollection<>(backing,
+        return new ExpressionEngineImpl<E>(new SelectCollection<T, E>(backing,
                 expression));
     }
     
@@ -160,7 +160,7 @@ public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
      */
     @Override
     public ExpressionEngine<T> union(Iterable<T> union) {
-        return getEngine(new UnionCollection<>(backing, union));
+        return getEngine(new UnionCollection<T>(backing, union));
     }
     
     /* (non-Javadoc)
@@ -168,7 +168,7 @@ public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
      */
     @Override
     public ExpressionEngine<T> minus(Iterable<T> minus) {
-        return getEngine(new MinusCollection<>(backing, minus));
+        return getEngine(new MinusCollection<T>(backing, minus));
     }
     
     /* (non-Javadoc)
@@ -177,19 +177,19 @@ public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
     @Override
     public ExpressionEngine<T> intersect(Iterable<T> intersect) {
         
-        UnionCollection<T> union = new UnionCollection<>(backing, intersect);
+        UnionCollection<T> union = new UnionCollection<T>(backing, intersect);
         
-        MinusCollection<T> minusAB = new MinusCollection<>(backing, intersect);
+        MinusCollection<T> minusAB = new MinusCollection<T>(backing, intersect);
         
-        MinusCollection<T> minusBA = new MinusCollection<>(intersect, backing);
+        MinusCollection<T> minusBA = new MinusCollection<T>(intersect, backing);
         
-        UnionCollection<T> unionMinus = new UnionCollection<>(minusAB, minusBA);
+        UnionCollection<T> unionMinus = new UnionCollection<T>(minusAB, minusBA);
         
-        return getEngine(new MinusCollection<>(union, unionMinus));
+        return getEngine(new MinusCollection<T>(union, unionMinus));
     }
     
     protected ExpressionEngine<T> getEngine(Iterable<T> iterable) {
-        return new ExpressionEngineImpl<>(iterable);
+        return new ExpressionEngineImpl<T>(iterable);
     }
     
     /* (non-Javadoc)
@@ -197,7 +197,7 @@ public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
      */
     @Override
     public List<T> toList() {
-        List<T> rv = new ArrayList<>();
+        List<T> rv = new ArrayList<T>();
         Iterator<T> it = iterator();
         
         while(it.hasNext())

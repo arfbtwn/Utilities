@@ -81,7 +81,7 @@ public class MockObjects {
             for(PropertyChangeListener i : list)
                 i.propertyChange(evt);
         }
-        List<PropertyChangeListener> list = new ArrayList<>();
+        private List<PropertyChangeListener> list = new ArrayList<PropertyChangeListener>();
     }
     
     /**
@@ -109,6 +109,6 @@ public class MockObjects {
             for(PropertyChangeListener i : list)
                 i.propertyChange(evt);
         }
-        List<PropertyChangeListener> list = new ArrayList<>();
+        private List<PropertyChangeListener> list = new ArrayList<PropertyChangeListener>();
     }
 }

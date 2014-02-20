@@ -27,7 +27,7 @@ import little.nj.gui.binding.StdComponents.StringToIntMarshal;
 
 import org.junit.Test;
 
-
+@SuppressWarnings("deprecation")
 public class FluentBindingTest {
 
     private static Marshal<Integer, String> intToString = new IntToStringMarshal();
@@ -37,9 +37,9 @@ public class FluentBindingTest {
     @Test
     public void test_Prototype() {
         final Ob ob1 = new Ob(10);
-        final ObGeneric<String> ob2 = new ObGeneric<>("Hello, World");
+        final ObGeneric<String> ob2 = new ObGeneric<String>("Hello, World");
 
-        GenericBindingImpl<Integer, String> bind = new GenericBindingImpl<>(
+        GenericBindingImpl<Integer, String> bind = new GenericBindingImpl<Integer, String>(
                 new Getter<Integer>() {
                     @Override
                     public Integer get() {
@@ -61,7 +61,7 @@ public class FluentBindingTest {
     @Test
     public void test_Fluent() {
         final Ob ob1 = new Ob(10);
-        final ObGeneric<String> ob2 = new ObGeneric<>("Hello, World");
+        final ObGeneric<String> ob2 = new ObGeneric<String>("Hello, World");
 
         FluentBindingImpl<Integer, String> bind =
                 FluentBindingImpl.bind(int.class, String.class)
@@ -87,7 +87,7 @@ public class FluentBindingTest {
     @Test
     public void test_Fluent2() {
         Ob ob1 = new Ob(10);
-        ObGeneric<String> ob2 = new ObGeneric<>("Hello, World");
+        ObGeneric<String> ob2 = new ObGeneric<String>("Hello, World");
 
         FluentBindingFactory fac = new FluentBindingFactoryImpl();
 
@@ -115,7 +115,7 @@ public class FluentBindingTest {
     @Test
     public void test_Fluent3() {
         final Ob ob1 = new Ob(10);
-        final ObGeneric<String> ob2 = new ObGeneric<>("Hello, World");
+        final ObGeneric<String> ob2 = new ObGeneric<String>("Hello, World");
 
         FluentBindingFactory fac = new FluentBindingFactoryImpl();
 
@@ -133,12 +133,12 @@ public class FluentBindingTest {
     public void test_Fluent4() {
 
         final Ob ob1 = new Ob(10);
-        final ObGeneric<String> ob2 = new ObGeneric<>("Hello, World");
+        final ObGeneric<String> ob2 = new ObGeneric<String>("Hello, World");
 
-        FluentBindingImpl<Integer, String> bind = new FluentBindingImpl<>();
+        FluentBindingImpl<Integer, String> bind = new FluentBindingImpl<Integer, String>();
 
-        bind.from(new GetterImpl<>(ob1, "getField", int.class))
-            .to(new SetterImpl<>(ob2, "setField", String.class))
+        bind.from(new GetterImpl<Integer>(ob1, "getField", int.class))
+            .to(new SetterImpl<String>(ob2, "setField", String.class))
             .via(intToString);
 
         bind.bind();
@@ -149,13 +149,13 @@ public class FluentBindingTest {
     @Test
     public void test_Fluent_Bind_Event()
     {
-        ObGenericChangeNotify<String> ob1 = new ObGenericChangeNotify<>("Hello, World");
+        ObGenericChangeNotify<String> ob1 = new ObGenericChangeNotify<String>("Hello, World");
         Ob ob2 = new Ob(10);
 
 
-        FluentBindingImpl<String, Integer> bind = new FluentBindingImpl<>();
-        bind.from(new GetterImpl<>(ob1, "getField", String.class))
-            .to(new SetterImpl<>(ob2, "setField", int.class))
+        FluentBindingImpl<String, Integer> bind = new FluentBindingImpl<String, Integer>();
+        bind.from(new GetterImpl<String>(ob1, "getField", String.class))
+            .to(new SetterImpl<Integer>(ob2, "setField", int.class))
             .via(stringToInt)
             .when(new EventSourceImpl<ObGenericChangeNotify<String>>(ob1) {
 
@@ -195,7 +195,7 @@ public class FluentBindingTest {
         ob1.setField(field1);
         ob2.setField(field2);
 
-        FluentBinding<byte[], byte[]> bind = new FluentBindingImpl<>();
+        FluentBinding<byte[], byte[]> bind = new FluentBindingImpl<byte[], byte[]>();
 
         bind.from(new Getter<byte[]>() {
             @Override

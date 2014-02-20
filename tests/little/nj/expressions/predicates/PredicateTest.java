@@ -36,10 +36,10 @@ public class PredicateTest {
     @Test
     public void test() {
         
-        List<ObGeneric<String>> obs = new ArrayList<>();
+        List<ObGeneric<String>> obs = new ArrayList<ObGeneric<String>>();
         
         for(int i=0; i<100; ++i) {
-            obs.add(new ObGeneric<>(i % 20 == 0 ? "Hello World" 
+            obs.add(new ObGeneric<String>(i % 20 == 0 ? "Hello World" 
                                                 : i % 10 == 0 ? "Hello, World" 
                                                               : "World, Hello"));
         }
@@ -64,7 +64,7 @@ public class PredicateTest {
         
         FluentPredicate<ObGeneric<String>> pred4 = pred3.not();
         
-        ExpressionEngine<ObGeneric<String>> start = new ExpressionEngineImpl<>(obs);
+        ExpressionEngine<ObGeneric<String>> start = new ExpressionEngineImpl<ObGeneric<String>>(obs);
         
         assertEquals(100, start.count());
         
@@ -113,7 +113,7 @@ public class PredicateTest {
     
     @Test
     public void test_Boxed_Protect_Fails() {
-        BoxedPredicate<String> pred = new BoxedPredicate<>();
+        BoxedPredicate<String> pred = new BoxedPredicate<String>();
         
         try {
             pred.evaluate("Hello, World");

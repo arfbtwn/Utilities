@@ -17,16 +17,16 @@
  */
 package little.nj.gui.binding.events;
 
-import little.nj.gui.events.EventSupport;
+import little.nj.gui.events.EventSupportImpl;
 
 
 public abstract class EventSourceImpl<T> implements BindingEventSource {
 
-    private final EventSupport<BindingListener, BindingEvent> support;
+    private final EventSupportImpl<BindingListener, BindingEvent> support;
     protected final T obj;
 
     public EventSourceImpl(T src) {
-        support = new EventSupport<>();
+        support = new EventSupportImpl<BindingListener, BindingEvent>();
 
         obj = src;
 

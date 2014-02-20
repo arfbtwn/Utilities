@@ -21,7 +21,6 @@ import java.awt.ItemSelectable;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-@SuppressWarnings("unused")
 public class ItemSelectableSource extends EventSourceImpl<ItemSelectable> {
 
     public ItemSelectableSource(ItemSelectable source) {

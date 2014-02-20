@@ -16,13 +16,13 @@ import org.junit.Test;
 
 public class ExpressionTest {
 
-    static final int TOTAL = 1_000_000;
+    static final int TOTAL = 1000000;
     static final int ONES = TOTAL / 10;
 
     private static List<Ob> obs;
 
     private ExpressionEngine<Ob> createEngine() {
-        return new ExpressionEngineImpl<>(obs);
+        return new ExpressionEngineImpl<Ob>(obs);
     }
 
     @BeforeClass
@@ -30,7 +30,7 @@ public class ExpressionTest {
         startTime(String.format("setUp: Total='%d', Ones='%d', Twos='%d'",
                 TOTAL, getOnes(), getTwos()));
 
-        obs = new ArrayList<>(TOTAL);
+        obs = new ArrayList<Ob>(TOTAL);
 
         int i;
         for(i = 0; i < TOTAL ; ++i) {

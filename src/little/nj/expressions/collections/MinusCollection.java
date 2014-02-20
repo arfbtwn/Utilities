@@ -50,7 +50,7 @@ public class MinusCollection<T> implements Iterable<T> {
         public MinusIterator(Iterator<T> lhs, Iterator<T> rhs) {
             super(lhs, rhs);
             
-            set = new HashSet<>();
+            set = new HashSet<T>();
         }
         
         /* (non-Javadoc)

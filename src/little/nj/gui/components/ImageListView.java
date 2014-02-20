@@ -47,7 +47,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 
-import little.nj.gui.events.EventSupport;
+import little.nj.gui.events.EventSupportImpl;
 import little.nj.util.ImageUtil;
 
 /**
@@ -292,7 +292,7 @@ public class ImageListView extends JPanel implements ItemSelectable {
 
     private JScrollPane list = new JScrollPane(content);
 
-    private EventSupport<ItemListener, ItemEvent> support = new EventSupport<>();
+    private EventSupportImpl<ItemListener, ItemEvent> support = new EventSupportImpl<>();
 
     private Mode mode = Mode.RADIO;
 

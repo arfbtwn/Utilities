@@ -70,17 +70,23 @@ public class ByteFieldSet implements Cloneable,Iterable<ByteField> {
 
     public void parseBetween(ByteBuffer in, int start, int end) {
         size_actual = end > size_actual ? end : size_actual;
-        for (ByteField i : backing)
+        for (ByteField i : backing) {
+        	if (in.position() > end)
+                break;
+        	
             if (i.getOffset() >= start && i.getOffset() < end)
                 i.parse(in);
-            else if (in.position() > end)
-                break;
-        if (in.position() < end) {
-            ByteField ubf = new ByteField(end - in.position(),
-                    "Unknown Block");
-            add(ubf);
-            ubf.parse(in);
         }
+    }
+    
+    public ByteBuffer getBuffer() {
+    	ByteBuffer rv = ByteBuffer.allocate(length());
+    	
+    	for(ByteField i : backing) {
+    		rv.put(i.getBuffer());
+    	}
+    	
+    	return rv;
     }
 
     public int write(ByteBuffer out) {

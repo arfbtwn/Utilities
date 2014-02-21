@@ -30,9 +30,10 @@ public class ByteFieldMapSet extends ByteFieldSet {
     }
     
     @Override
-    public void add(ByteField i) {
+    public boolean add(ByteField i) {
         super.add(i);
         _add(i);
+        return true;
     }
     
     private void _add(ByteField i) {

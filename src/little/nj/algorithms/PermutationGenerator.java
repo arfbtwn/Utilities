@@ -39,8 +39,7 @@ public class PermutationGenerator<T>
     final T[] sym;
     boolean stop;
 
-    @SuppressWarnings("unchecked")
-	PermutationGenerator(Callback<T> callback, T... symbols)
+    PermutationGenerator(Callback<T> callback, T... symbols)
     {
         if (symbols.length == 0)
             throw new IllegalArgumentException("No Symbols");

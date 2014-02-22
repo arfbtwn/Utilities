@@ -37,7 +37,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
-@SuppressWarnings({ "serial", "rawtypes", "unchecked" })
+@SuppressWarnings("serial")
 public class LookAndFeelDialog extends JDialog {
 
     public static final Map<String, LookAndFeelInfo> LOOK_AND_FEELS;

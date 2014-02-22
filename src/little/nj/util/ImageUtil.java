@@ -19,6 +19,7 @@ package little.nj.util;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
@@ -37,10 +38,23 @@ public class ImageUtil {
      * @param max_h
      * @return Resized BufferedImage
      */
-    public final static BufferedImage resizeImage(BufferedImage in, int max_w,
-            int max_h) {
+    public final static Image resizeImage(
+    		Image image, 
+    		int max_w,
+            int max_h
+            ) {
+    	
+    	if (!(image instanceof BufferedImage))
+    		return image.getScaledInstance(max_w, max_h, Image.SCALE_SMOOTH);
+    	
+    	BufferedImage in = (BufferedImage) image;
+    	
         int height = in.getHeight();
         int width = in.getWidth();
+        
+        if (height < 0 || width < 0)
+        	return in;
+        
         double h_factor = (double) max_h / height;
         double w_factor = (double) max_w / width;
         switch (h_factor < w_factor ? 0 : 1) {
@@ -53,6 +67,7 @@ public class ImageUtil {
             width = (int) (w_factor * width);
             break;
         }
+        
         BufferedImage out = new BufferedImage(width, height, 2);
         Graphics2D g = out.createGraphics();
         g.drawImage(in, 0, 0, width, height, null);
@@ -67,7 +82,7 @@ public class ImageUtil {
      * @param d
      * @return Resized BufferedImage
      */
-    public final static BufferedImage resizeImage(BufferedImage in, Dimension d) {
+    public final static Image resizeImage(Image in, Dimension d) {
         return resizeImage(in, (int) d.getWidth(), (int) d.getHeight());
     }
     

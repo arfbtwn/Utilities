@@ -16,7 +16,7 @@ import javax.swing.event.ListSelectionListener;
 import little.nj.util.ImageUtil;
 import little.nj.util.StringUtil;
 
-@SuppressWarnings({ "serial", "rawtypes", "unchecked" })
+@SuppressWarnings("serial")
 public class ListPanel extends JPanel {
     
     private final DefaultListModel model;
@@ -139,7 +139,7 @@ public class ListPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("RemoveAction.actionPerformed");
-			for(Object i : list.getSelectedValuesList())
+			for(Object i : list.getSelectedValues())
 				model.removeElement(i);
 		}
 		

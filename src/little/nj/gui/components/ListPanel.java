@@ -16,7 +16,7 @@ import javax.swing.event.ListSelectionListener;
 import little.nj.util.ImageUtil;
 import little.nj.util.StringUtil;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "rawtypes", "unchecked", "deprecation" })
 public class ListPanel extends JPanel {
     
     private final DefaultListModel model;

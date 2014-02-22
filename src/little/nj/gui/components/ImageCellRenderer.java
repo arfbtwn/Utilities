@@ -1,6 +1,5 @@
 package little.nj.gui.components;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
 import java.util.HashMap;
@@ -16,6 +15,7 @@ import javax.swing.border.Border;
 
 import little.nj.util.ImageUtil;
 
+@SuppressWarnings("rawtypes")
 public class ImageCellRenderer implements ListCellRenderer {
 	
 	public static final int DEFAULT_BOX = 200;
@@ -62,7 +62,7 @@ public class ImageCellRenderer implements ListCellRenderer {
 		}
 		
 		if (cellHasFocus) {
-			stamp.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+			stamp.setBorder(BorderFactory.createDashedBorder(null, 2f, 8f, 1f, true));
 		} else {
 			stamp.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		}

@@ -127,6 +127,10 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
     public int getOffset() {
         return offset.intValue();
     }
+    
+    void setOffset(int i) {
+        offset = Integer.valueOf(i);
+    }
 
     /**
      * Extracts data for this ByteField from the ByteBuffer, r.
@@ -153,10 +157,6 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
         
         while(raw.position() < raw.capacity())
             raw.put((byte)0x0);
-    }
-
-    void setOffset(int i) {
-        offset = Integer.valueOf(i);
     }
 
     @Override

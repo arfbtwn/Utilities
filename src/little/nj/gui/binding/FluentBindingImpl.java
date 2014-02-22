@@ -29,7 +29,7 @@ public class FluentBindingImpl<X, Y>
     public final static <X, Y> FluentBindingImpl<X, Y> bind(Class<X> sample1, 
                                                             Class<Y> sample2) 
     {
-        return new FluentBindingImpl<>();
+        return new FluentBindingImpl<X, Y>();
     }
 
     protected BindingEventSource events;

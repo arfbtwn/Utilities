@@ -26,7 +26,7 @@ public abstract class EventSourceImpl<T> implements BindingEventSource {
     protected final T obj;
 
     public EventSourceImpl(T src) {
-        support = new EventSupportImpl<>();
+        support = new EventSupportImpl<BindingListener, BindingEvent>();
 
         obj = src;
 

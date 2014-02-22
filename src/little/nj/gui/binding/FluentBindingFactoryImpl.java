@@ -8,12 +8,12 @@ public class FluentBindingFactoryImpl implements FluentBindingFactory {
 
     protected <V> Getter<V> createGet(Object x, Class<V> sample, String method)
     {
-        return new GetterImpl<>(x, method, sample);
+        return new GetterImpl<V>(x, method, sample);
     }
 
     protected <V> Setter<V> createSet(Object x, Class<V> sample, String method)
     {
-        return new SetterImpl<>(x, method, sample);
+        return new SetterImpl<V>(x, method, sample);
     }
 
     /* (non-Javadoc)

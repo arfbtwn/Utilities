@@ -77,9 +77,8 @@ public class ByteTableModel extends AbstractTableModel {
     public String getColumnName(int column) {
         if (column == 0)
             return "Offset";
-        if (column > BYTES_PER_ROW)
+        else if (column > BYTES_PER_ROW)
             column -= BYTES_PER_ROW;
-        // return String.format("%X", column - 1);
         return Character.toString(COLUMNS[column - 1]);
     }
 
@@ -90,7 +89,7 @@ public class ByteTableModel extends AbstractTableModel {
      */
     @Override
     public int getRowCount() {
-        return data.length / 16 + (data.length % 16 == 0 ? 0 : 1);
+        return data.length / BYTES_PER_ROW + (data.length % BYTES_PER_ROW == 0 ? 0 : 1);
     }
 
     /*
@@ -109,19 +108,20 @@ public class ByteTableModel extends AbstractTableModel {
         }
         int idx = rowIndex * BYTES_PER_ROW + columnIndex - 1;
         byte cell = data[idx];
-        switch (asString ? 0 : 1) {
-        case 0:
-            if (cell > 0x20 && cell < 0x7F)
+        
+        if (asString) {
+            if (cell > ' ' && cell < '~')
                 return Character.toString((char) cell);
             return ".";
         }
-        return String.format("%2X", data[idx]);
+        return String.format("%2X", cell);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * The default model is not editable
      * 
-     * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
+     * @see {@link AbstractTableModel#isCellEditable(int, int)}
+     * @return false
      */
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {

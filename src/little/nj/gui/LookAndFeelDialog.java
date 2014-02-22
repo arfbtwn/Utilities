@@ -37,7 +37,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "rawtypes", "unchecked" })
 public class LookAndFeelDialog extends JDialog {
 
     public static final Map<String, LookAndFeelInfo> LOOK_AND_FEELS;
@@ -97,8 +97,8 @@ public class LookAndFeelDialog extends JDialog {
     private JButton           close;
 
     private JLabel            label;
-
-    private JComboBox<String> list;
+    
+	private JComboBox 		  list;
 
     private JPanel            panel;
 
@@ -115,9 +115,7 @@ public class LookAndFeelDialog extends JDialog {
     protected void init() {
         panel = new JPanel();
         label = new JLabel("Select Look 'n' Feel");
-        list = new JComboBox<String>(
-                LOOK_AND_FEELS.keySet().toArray(new String[0])
-                );
+        list = new JComboBox(LOOK_AND_FEELS.keySet().toArray(new String[0]));
         close = new JButton("Close");
         
         setContentPane(panel);

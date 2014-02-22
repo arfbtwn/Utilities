@@ -46,15 +46,14 @@ public class StringUtil {
      */
     public static String join(char sep, int start, int end, Object...array)
     {
-        if ((start > array.length || start < 0) ||
-                (end > array.length || end < 0))
+        if (start >= end || start < 0 || end >= array.length)
             throw new IllegalArgumentException();
 
         StringBuilder sb = new StringBuilder();
 
         for(int i=start; i<end; ++i)
         {
-            sb.append(array[i] == null ? StringUtil.EMPTY_STRING : array[i].toString());
+            sb.append(array[i] == null ? EMPTY_STRING : array[i].toString());
 
             if (i < end - 1)
                 sb.append(sep);
@@ -81,7 +80,6 @@ public class StringUtil {
      * @param y
      * @return
      */
-    @SuppressWarnings("unused")
     public static boolean equalsIgnoreWhiteSpace(String x, String y) {
         if (x == null && y == null)
             return true;

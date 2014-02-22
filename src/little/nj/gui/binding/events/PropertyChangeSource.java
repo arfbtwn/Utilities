@@ -55,9 +55,12 @@ public class PropertyChangeSource extends EventSourceImpl<Object> {
                 } 
               
             });
-        } catch (IllegalAccessException | IllegalArgumentException
-          | InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException e1) {
+        	throw new RuntimeException(e1);
+        } catch (IllegalArgumentException e2) {
+        	throw new RuntimeException(e2);
+        } catch (InvocationTargetException e3) {
+            throw new RuntimeException(e3);
         } 
     }
 

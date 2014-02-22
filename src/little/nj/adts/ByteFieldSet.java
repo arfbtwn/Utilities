@@ -17,6 +17,7 @@
 package little.nj.adts;
 
 import java.nio.ByteBuffer;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.TreeSet;
 
@@ -36,54 +37,22 @@ public class ByteFieldSet implements Cloneable,Iterable<ByteField> {
      * Adds a ByteField to the set, set's its offset
      * 
      * @param i
+     * @return 
      */
-    public void add(ByteField i) {
+    public boolean add(ByteField i) {
         i.setOffset(size_possible);
         size_possible += i.getLength();
 
-        _add(i);
+        return _add(i);
     }
     
-    private void _add(ByteField i) {
-        backing.add(i);
-    }
-    
-    @Override
-    public ByteFieldSet clone() {
-        try {
-            ByteFieldSet that = (ByteFieldSet) super.clone();
-            
-            that.backing = new TreeSet<>();
-            
-            for(ByteField x : backing)
-                that._add(x.clone());
-            
-            return that;
-        } catch (CloneNotSupportedException ex) {
-            ex.printStackTrace();
-            // FIXME: Obviously this is bad form, but we should not get here
-            throw new RuntimeException(ex);
-        }
+    private boolean _add(ByteField i) {
+        return backing.add(i);
     }
 
     public ByteField get(int offset) {
         ByteField bf = new ByteField(offset);
         return backing.ceiling(bf);
-    }
-
-    public ByteBuffer getBuffer() {
-        ByteBuffer rtn = ByteBuffer.allocate(length());
-        for (ByteField i : backing) {
-            if (i.getLength() > rtn.remaining())
-                break;
-            rtn.put(i.getBytes());
-        }
-        rtn.rewind();
-        return rtn;
-    }
-
-    public byte[] getBytes() {
-        return getBuffer().array();
     }
 
     public int length() {
@@ -101,19 +70,43 @@ public class ByteFieldSet implements Cloneable,Iterable<ByteField> {
 
     public void parseBetween(ByteBuffer in, int start, int end) {
         size_actual = end > size_actual ? end : size_actual;
-        for (ByteField i : backing)
+        for (ByteField i : backing) {
+        	if (in.position() > end)
+                break;
+        	
             if (i.getOffset() >= start && i.getOffset() < end)
                 i.parse(in);
-            else if (in.position() > end)
-                break;
-        if (in.position() < end) {
-            ByteField ubf = new ByteField(end - in.position(),
-                    "Unknown Block");
-            add(ubf);
-            ubf.parse(in);
         }
     }
+    
+    public ByteBuffer getBuffer() {
+    	ByteBuffer rv = ByteBuffer.allocate(length());
+    	
+    	for(ByteField i : backing) {
+    		rv.put(i.getBuffer());
+    	}
+    	
+    	return rv;
+    }
 
+    public int write(ByteBuffer out) {
+    	int start = out.position();
+        for (ByteField i : backing) {
+            if (size_actual > 0 && i.getOffset() > size_actual)
+                break;
+            out.put(i.getBuffer());
+        }
+        return out.position() - start;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Iterable#iterator()
+     */
+    @Override
+    public Iterator<ByteField> iterator() {
+        return Collections.unmodifiableSet(backing).iterator();
+    }
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -122,21 +115,22 @@ public class ByteFieldSet implements Cloneable,Iterable<ByteField> {
             sb.append(it.next() + "\n");
         return sb.toString();
     }
-
-    public int write(ByteBuffer out) {
-        for (ByteField i : backing) {
-            if (size_actual > 0 && i.getOffset() > size_actual)
-                break;
-            out.put(i.getBuffer());
-        }
-        return out.position();
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Iterable#iterator()
-     */
+    
     @Override
-    public Iterator<ByteField> iterator() {
-        return backing.iterator();
+    public ByteFieldSet clone() {
+        try {
+            ByteFieldSet that = (ByteFieldSet) super.clone();
+            
+            that.backing = new TreeSet<ByteField>();
+            
+            for(ByteField x : backing)
+                that._add(x.clone());
+            
+            return that;
+        } catch (CloneNotSupportedException ex) {
+            ex.printStackTrace();
+            // FIXME: Obviously this is bad form, but we should not get here
+            throw new RuntimeException(ex);
+        }
     }
 }

@@ -66,7 +66,7 @@ public class EventSupportTest {
     @Test
     public void test_Fires_ActionListener_ActionEvent() {
 
-        EventSupportImpl<ActionListener, ActionEvent> es = new EventSupportImpl<>();
+        EventSupportImpl<ActionListener, ActionEvent> es = new EventSupportImpl<ActionListener, ActionEvent>();
 
         MockListener ml = new MockListener();
 

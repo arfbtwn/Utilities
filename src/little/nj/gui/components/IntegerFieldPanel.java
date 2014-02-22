@@ -61,9 +61,9 @@ public class IntegerFieldPanel extends ByteFieldPanel {
                     ByteField f = getField();
                     
                     if (f instanceof IntByteField)
-                        ((IntByteField)f).setValue((int)spinner.getValue());
+                        ((IntByteField)f).setValue((Integer)spinner.getValue());
                     else if (f instanceof ShortByteField)
-                        ((ShortByteField)f).setValue((short)spinner.getValue());
+                        ((ShortByteField)f).setValue((Short)spinner.getValue());
                     
                     refresh();
                 }

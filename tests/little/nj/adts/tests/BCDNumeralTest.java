@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.util.tests;
+package little.nj.adts.tests;
 
 import static little.nj.adts.BCDNumeral.PAD_RIGHT;
 import static little.nj.adts.BCDNumeral.ZERO;
@@ -77,8 +77,9 @@ public class BCDNumeralTest {
 
     @Test
     public void test_compression() {
-        int origin = data.toArray().length, half = origin % 2 == 0 ? origin / 2
-                : origin / 2 + 1;
+        int origin = data.toArray().length, 
+            half = origin / 2 + origin % 2;
+        
         System.out.println("---- Compress");
         data.getConfig().setCompress(true);
         System.out.println(data.toByteString());

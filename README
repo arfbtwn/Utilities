@@ -3,8 +3,20 @@ Utilities
 A collection of (mostly) static utility classes and methods. Crafted
 for function and fun.
 
-- Reflection
-- Conversion
-- Logging
+- Reflection (Recursive and Iterative implementations)
+- Conversion (byte => unsigned, Byte[] <=> byte[], byte[] => String)
+- Logging (TextFileHandler)
 - Byte array search (Knuth-Morris-Pratt)
-- Property binding
+- Abstract data types
+  > Binary Coded Decimal
+  > Byte Field Mapping
+- Linq style generic Expression and Predicate support
+- GUI toolkit
+  > Property Binding (Basic, Generic and Fluent)
+  > JTable Generic EditableTableModel (wraps List<T>)
+  > JList panel wrapper (Add/Remove/Up/Down controls)
+  > FieldPanelRenderer for JTables containing ByteFields
+  > ImageCellRenderer for JLists containing Images
+  > TableModel for viewing byte[]s
+  > Look and Feel dialog
+  > NotificationListAdapter for observable List<T>

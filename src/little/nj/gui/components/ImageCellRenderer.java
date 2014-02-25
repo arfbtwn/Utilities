@@ -33,7 +33,7 @@ import javax.swing.border.Border;
 
 import little.nj.util.ImageUtil;
 
-@SuppressWarnings({ "serial", "rawtypes" })
+@SuppressWarnings("serial")
 public class ImageCellRenderer extends JPanel
                                implements ListCellRenderer {
     
@@ -87,7 +87,7 @@ public class ImageCellRenderer extends JPanel
 		}
 		
 		if (cellHasFocus) {
-			stamp.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+			setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 		} else {
 			setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		}

@@ -17,6 +17,7 @@
  */
 package little.nj.gui.components;
 
+import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.AbstractCellEditor;
@@ -52,7 +53,7 @@ public class FieldPanelEditor extends AbstractCellEditor
         ByteFieldPanel cell = FieldPanelFactory.create((ByteField)value);
         
         if (hasFocus) {
-            cell.setBorder(BorderFactory.createDashedBorder(null, 2f, 5f, 1f, true));
+            cell.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         } else {
             cell.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         }

@@ -45,6 +45,7 @@ public class ByteFieldPanel extends JPanel {
         name = new JLabel();
         bytes = new JLabel();
         dummy = new JPanel();
+        dummy.setOpaque(false);
         
         init();
     }

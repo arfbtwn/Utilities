@@ -30,13 +30,19 @@ import little.nj.adts.StringByteField;
 public class FieldPanelFactory {
 
     public static ByteFieldPanel create(ByteField field) {
+        
+        ByteFieldPanel panel = new ByteFieldPanel(field);
+        
         if (field instanceof StringByteField)
-            return  new StringFieldPanel((StringByteField)field);
+            panel.setRenderer(render_str);
         else if (field instanceof IntByteField)
-            return new IntegerFieldPanel((IntByteField)field);
+            panel.setRenderer(render_int);
         else if (field instanceof ShortByteField)
-            return new IntegerFieldPanel((ShortByteField)field);
-        else
-            return new ByteFieldPanel(field);
+            panel.setRenderer(render_int);
+        
+        return panel;
     }
+    
+    private static IntegerFieldRenderer render_int = new IntegerFieldRenderer();
+    private static StringFieldRenderer render_str = new StringFieldRenderer();
 }

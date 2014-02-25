@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2013 Nicholas J. Little <arealityfarbetween@googlemail.com>
+ * Copyright (C) 2013 
+ * Nicholas J. Little <arealityfarbetween@googlemail.com>
  * 
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -29,13 +30,15 @@ public final class IntByteField extends ByteField {
         setValue(d);
     }
 
-    public int getValue() {
+    @Override
+    public Integer getValue() {
         raw.rewind();
         return raw.getInt();
     }
 
-    public void setValue(int x) {
+    @Override
+    public void setValue(Object x) {
         raw.rewind();
-        raw.putInt(x);
+        raw.putInt((Integer)x);
     }
 }

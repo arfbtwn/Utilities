@@ -1,6 +1,5 @@
 package little.nj.gui.components;
 
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 
@@ -10,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -34,7 +34,7 @@ public class ListPanel extends JPanel {
     	super(new BorderLayout());
     	
     	this.model = model;
-    	this.list = new JList(model);
+    	this.list = new RestrictedList(model);
     	this.scroller = new JScrollPane(list);
     	
     	addAction = new AddAction();
@@ -80,6 +80,14 @@ public class ListPanel extends JPanel {
 			add(down);
 		}
 	}
+    
+    private class RestrictedList extends JList {
+    	RestrictedList(DefaultListModel model) { super(model); }
+    	@Override
+    	public void setModel(ListModel model) {
+			throw new UnsupportedOperationException();
+    	}
+    }
 
     private ListSelectionListener listListener = new ListSelectionListener() {
 		
@@ -87,8 +95,6 @@ public class ListPanel extends JPanel {
 		public void valueChanged(ListSelectionEvent e) {			
 			if (e.getValueIsAdjusting())
 				return;
-			
-			System.out.println("listListener.valueChanged");
 			
 			boolean add = addAction.testEnabled(),
 					rem = removeAction.testEnabled(),
@@ -111,7 +117,6 @@ public class ListPanel extends JPanel {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("AddAction.actionPerformed");
 			/*
 			 * Delegate to a user provided object?
 			 */
@@ -138,7 +143,6 @@ public class ListPanel extends JPanel {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("RemoveAction.actionPerformed");
 			for(Object i : list.getSelectedValues())
 				model.removeElement(i);
 		}
@@ -158,7 +162,6 @@ public class ListPanel extends JPanel {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("UpAction.actionPerformed");
 			int idx = list.getSelectedIndex();
 			Object safe = model.get(idx - 1);
 			model.set(idx - 1, list.getSelectedValue());
@@ -179,7 +182,6 @@ public class ListPanel extends JPanel {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("DownAction.actionPerformed");
 			int idx = list.getSelectedIndex();
 			Object safe = model.get(idx + 1);
 			model.set(idx + 1, list.getSelectedValue());

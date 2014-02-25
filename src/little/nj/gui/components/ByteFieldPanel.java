@@ -39,15 +39,18 @@ public class ByteFieldPanel extends JPanel {
     
     private FieldRenderer renderer;
     
-    public ByteFieldPanel(ByteField field) {
-        this.field = field;
-        
+    public ByteFieldPanel() {
         name = new JLabel();
         bytes = new JLabel();
         dummy = new JPanel();
         dummy.setOpaque(false);
         
         init();
+    }
+    
+    public ByteFieldPanel(ByteField field) {
+        this();
+        setField(field);
     }
     
     protected void init() {
@@ -70,24 +73,39 @@ public class ByteFieldPanel extends JPanel {
                         .addComponent(dummy))
                 .addGap(10)
                 .addComponent(bytes));
-        
-        name.setText(field.getName());
-        refresh();
     }
     
-    protected void refresh() {
-        bytes.setText(DatatypeConverter.printHexBinary(field.getBytes()));
+    public void setField(ByteField field) { 
+        this.field = field;
         
-        if (null != renderer) {
-            renderer.render(field);
-        }
+        register();
+        refresh();
     }
     
     public void setRenderer(FieldRenderer renderer) {
         this.renderer = renderer;
         
+        register();
+        refresh();
+    }
+    
+    protected void register() {
+        if (null == renderer || null == field)
+            return;
+        
         dummy.removeAll();
         dummy.add(renderer.register(field, listener));
+    }
+    
+    protected void refresh() {
+        if (null == field)
+            return;
+        
+        name.setText(field.getName());
+        bytes.setText(DatatypeConverter.printHexBinary(field.getBytes()));
+        
+        if (null == renderer)
+            return;
         
         renderer.render(field);
     }

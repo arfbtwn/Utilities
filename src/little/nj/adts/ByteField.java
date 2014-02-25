@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2013 Nicholas J. Little <arealityfarbetween@googlemail.com>
+ * Copyright (C) 2013 
+ * Nicholas J. Little <arealityfarbetween@googlemail.com>
  * 
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -54,27 +55,66 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
         setOffset(o);
     }
     
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#clone()
+    /**
+     * Extracts data for this ByteField from the ByteBuffer, r.
+     * 
+     * @param r ByteBuffer to extract from
      */
-    @Override
-    public ByteField clone() {
-        ByteField that;
-        try {
-            that = (ByteField) super.clone();
-            
-            that.offset = Integer.valueOf(offset);
-            that.raw = ByteBuffer.allocate(raw.capacity());
-            that.setBytes(getBytes());
-         
-            return that;
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+    public void parse(ByteBuffer r) {
+        r.position(offset.intValue());
+        byte[] tmp = new byte[raw.capacity()];
+        r.get(tmp);
+        setBytes(tmp);
     }
 
+    public int getLength() {
+        return raw.capacity();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getOffset() {
+        return offset.intValue();
+    }
+    
+    public void setOffset(int i) {
+        offset = Integer.valueOf(i);
+    }
+
+    public byte[] getBytes() {
+        return raw.array();
+    }
+
+    /**
+     * Fills the buffer with the specified bytes, excluding
+     * any overflow.
+     *  
+     * @param bytes
+     */
+    public final void setBytes(byte[] bytes) {
+        raw.rewind();
+        raw.put(bytes, 0, raw.capacity() < bytes.length ? raw.capacity()
+                : bytes.length);
+        
+        while(raw.position() < raw.capacity())
+            raw.put((byte)0x0);
+    }
+
+    public ByteBuffer getBuffer() {
+        raw.rewind();
+        return raw.duplicate();
+    }
+    
+    public Object getValue() {
+        return DatatypeConverter.printHexBinary(raw.array());
+    }
+    
+    public void setValue(Object x) {
+        setBytes(DatatypeConverter.parseHexBinary(x.toString()));
+    }
+    
     /*
      * (non-Javadoc)
      * @see java.lang.Comparable#compareTo(java.lang.Object)
@@ -107,56 +147,25 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
         return compareTo((ByteField) obj) == 0;
     }
 
-    public ByteBuffer getBuffer() {
-        raw.rewind();
-        return raw.duplicate();
-    }
-
-    public byte[] getBytes() {
-        return raw.array();
-    }
-
-    public int getLength() {
-        return raw.capacity();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getOffset() {
-        return offset.intValue();
-    }
-    
-    void setOffset(int i) {
-        offset = Integer.valueOf(i);
-    }
-
-    /**
-     * Extracts data for this ByteField from the ByteBuffer, r.
-     * 
-     * @param r ByteBuffer to extract from
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#clone()
      */
-    public void parse(ByteBuffer r) {
-        r.position(offset.intValue());
-        byte[] tmp = new byte[raw.capacity()];
-        r.get(tmp);
-        setBytes(tmp);
-    }
-
-    /**
-     * Fills the buffer with the specified bytes, excluding
-     * any overflow.
-     *  
-     * @param bytes
-     */
-    public final void setBytes(byte[] bytes) {
-        raw.rewind();
-        raw.put(bytes, 0, raw.capacity() < bytes.length ? raw.capacity()
-                : bytes.length);
-        
-        while(raw.position() < raw.capacity())
-            raw.put((byte)0x0);
+    @Override
+    public ByteField clone() {
+        ByteField that;
+        try {
+            that = (ByteField) super.clone();
+            
+            that.offset = Integer.valueOf(offset);
+            that.raw = ByteBuffer.allocate(raw.capacity());
+            that.setBytes(getBytes());
+         
+            return that;
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

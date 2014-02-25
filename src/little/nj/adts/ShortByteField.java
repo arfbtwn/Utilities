@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2013 Nicholas J. Little <arealityfarbetween@googlemail.com>
+ * Copyright (C) 2013 
+ * Nicholas J. Little <arealityfarbetween@googlemail.com>
  * 
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -29,13 +30,15 @@ public final class ShortByteField extends ByteField {
         setValue(d);
     }
 
-    public short getValue() {
+    @Override
+    public Short getValue() {
         raw.rewind();
         return raw.getShort();
     }
 
-    public void setValue(short x) {
+    @Override
+    public void setValue(Object x) {
         raw.rewind();
-        raw.putShort(x);
+        raw.putShort((Short)x);
     }
 }

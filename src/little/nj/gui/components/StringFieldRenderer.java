@@ -17,13 +17,17 @@
  */
 package little.nj.gui.components;
 
+import java.nio.charset.Charset;
+
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
+
 import little.nj.adts.ByteField;
+import little.nj.adts.StringByteField;
 
 public class StringFieldRenderer extends AbstractFieldRenderer {
 
@@ -81,7 +85,15 @@ public class StringFieldRenderer extends AbstractFieldRenderer {
     protected void render(ByteField field, JComponent component) {
         JTextField comp = (JTextField)component;
         
-        comp.setText(new String(field.getBytes()));
+        Charset ch;
+        
+        if (field instanceof StringByteField) {
+            ch = ((StringByteField)field).getCharset();
+        } else {
+            ch = Charset.defaultCharset();
+        }
+        
+        comp.setText(new String(field.getBytes(), ch));
     }
 
 }

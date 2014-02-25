@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2013 Nicholas J. Little <arealityfarbetween@googlemail.com>
+ * Copyright (C) 2013 
+ * Nicholas J. Little <arealityfarbetween@googlemail.com>
  * 
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -32,6 +33,7 @@ public final class StringByteField extends ByteField {
         setValue(d);
     }
 
+    @Override
     public String getValue() {
         return new String(getBytes(), charset).trim();
     }
@@ -40,8 +42,23 @@ public final class StringByteField extends ByteField {
      * Sets the string value, but will not overflow the field
      * @param x
      */
-    public void setValue(String x) {
-        byte[] in = x.trim().getBytes(charset);
+    @Override
+    public void setValue(Object x) {
+        byte[] in = x.toString().trim().getBytes(charset);
         setBytes(in);
+    }
+    
+    public Charset getCharset() { return charset; }
+    
+    /* (non-Javadoc)
+     * @see little.nj.adts.ByteField#clone()
+     */
+    @Override
+    public ByteField clone() {
+        StringByteField that = (StringByteField)super.clone();
+        
+        that.charset = charset;
+        
+        return that;
     }
 }

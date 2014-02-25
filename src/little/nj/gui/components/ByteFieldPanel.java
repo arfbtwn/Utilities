@@ -17,6 +17,8 @@
  */
 package little.nj.gui.components;
 
+import java.util.EventListener;
+
 import javax.swing.GroupLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -26,23 +28,23 @@ import javax.xml.bind.DatatypeConverter;
 import little.nj.adts.ByteField;
 
 
-/**
- * @author Nicholas Little
- *
- */
 @SuppressWarnings("serial")
 public class ByteFieldPanel extends JPanel {
     
     private ByteField field;
 
-    private JLabel name, bytes, dummy;
+    private JLabel name, bytes;
+    
+    private JPanel dummy;
+    
+    private FieldRenderer renderer;
     
     public ByteFieldPanel(ByteField field) {
         this.field = field;
         
         name = new JLabel();
         bytes = new JLabel();
-        dummy = new JLabel();
+        dummy = new JPanel();
         
         init();
     }
@@ -56,7 +58,7 @@ public class ByteFieldPanel extends JPanel {
                         .addGroup(layout.createSequentialGroup()
                                 .addComponent(name)
                                 .addGap(10)
-                                .addComponent(getView()))
+                                .addComponent(dummy))
                         .addGap(10)
                         .addComponent(bytes)));
         
@@ -64,23 +66,48 @@ public class ByteFieldPanel extends JPanel {
                 .addGroup(layout.createParallelGroup()
                         .addComponent(name)
                         .addGap(10)
-                        .addComponent(getView()))
+                        .addComponent(dummy))
                 .addGap(10)
                 .addComponent(bytes));
         
+        name.setText(field.getName());
         refresh();
     }
     
     protected void refresh() {
-        name.setText(field.getName());
         bytes.setText(DatatypeConverter.printHexBinary(field.getBytes()));
+        
+        if (null != renderer) {
+            renderer.render(field);
+        }
     }
     
-    protected ByteField getField() {
-        return field;
+    public void setRenderer(FieldRenderer renderer) {
+        this.renderer = renderer;
+        
+        dummy.removeAll();
+        dummy.add(renderer.register(field, listener));
+        
+        renderer.render(field);
     }
     
-    protected JComponent getView() {
-        return dummy;
+    private FieldChangeListener listener = new FieldChangeListener() { 
+        @Override
+        public void fieldChange(byte[] data) {
+            field.setBytes(data);
+            bytes.setText(DatatypeConverter.printHexBinary(field.getBytes()));
+        }
+    };
+    
+    public static interface FieldRenderer {
+        
+        JComponent register(ByteField field, FieldChangeListener listener);
+        
+        void render(ByteField field);
+        
+    }
+    
+    public static interface FieldChangeListener extends EventListener {
+        void fieldChange(byte[] data);
     }
 }

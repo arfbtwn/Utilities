@@ -1,8 +1,6 @@
 package little.nj.reflection;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-
 import little.nj.expressions.predicates.FluentPredicateImpl;
 import little.nj.expressions.predicates.Predicate;
 
@@ -41,17 +39,17 @@ public class MethodMatcherFactoryImpl
         return new ReturnMatcher(clz);
     }
     
-    public abstract class MethodMatcher
+    public static abstract class MethodMatcher
         extends FluentPredicateImpl<Method> { }
     
     /**
      * Matches method names against a regular expression
      */
-    class NameMatcher extends MethodMatcher {
+    public static class NameMatcher extends MethodMatcher {
         
         final String pattern;
         
-        NameMatcher(String pattern) {
+        public NameMatcher(String pattern) {
             this.pattern = pattern;
         }
         
@@ -67,10 +65,10 @@ public class MethodMatcherFactoryImpl
     /**
      * Matches on parameter types
      */
-    class ArgumentMatcher extends MethodMatcher {
+    public static class ArgumentMatcher extends MethodMatcher {
         final Class<?>[] args;
         
-        ArgumentMatcher(Class<?>...args) {
+        public ArgumentMatcher(Class<?>...args) {
             this.args = args;
         }
         
@@ -79,18 +77,29 @@ public class MethodMatcherFactoryImpl
          */
         @Override
         public boolean evaluate(Method m) {
-            return Arrays.equals(m.getParameterTypes(), args);
+            Class<?>[] margs = m.getParameterTypes();
+            
+            if (margs.length != args.length)
+                return false;
+            
+            for(int i = 0, end = args.length; i < end; ++i) {
+                if (!margs[i].isAssignableFrom(args[i])) {
+                    return false;
+                }
+            }
+            
+            return true;
         }
     }
     
     /**
      * Matches based on return type
      */
-    class ReturnMatcher extends MethodMatcher {
+    public static class ReturnMatcher extends MethodMatcher {
 
         final Class<?> rv;
         
-        ReturnMatcher(Class<?> rv) {
+        public ReturnMatcher(Class<?> rv) {
             this.rv = rv;
         }
         
@@ -99,7 +108,7 @@ public class MethodMatcherFactoryImpl
          */
         @Override
         public boolean evaluate(Method obj) {
-            return rv.equals(obj.getReturnType());
+            return rv.isAssignableFrom(obj.getReturnType());
         }   
     }
 }

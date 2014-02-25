@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 import java.lang.reflect.Method;
 
 import little.nj.reflection.IterativeUtil;
+import little.nj.reflection.MethodMatcherFactoryImpl;
 import little.nj.reflection.RecursiveUtil;
 import little.nj.reflection.ReflectionUtil;
 
@@ -135,5 +136,19 @@ public class ReflectionUtilTest {
         assertNotNull(rv);
         assertEquals(METHOD, rv.getName());
         assertEquals(int.class, rv.getParameterTypes()[0]);
+    }
+    
+    @Test
+    public void Test_Recursive_Finds_Method_By_Return() {
+        Method rv = RECURSOR.getMethod(OBJECT, new MethodMatcherFactoryImpl.ReturnMatcher(String.class));
+        
+        assertNotNull(rv);
+    }
+
+    @Test
+    public void Test_Iterative_Finds_Method_By_Return() {
+        Method rv = ITERATOR.getMethod(OBJECT, new MethodMatcherFactoryImpl.ReturnMatcher(String.class));
+        
+        assertNotNull(rv);
     }
 }

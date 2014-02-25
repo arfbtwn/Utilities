@@ -173,7 +173,8 @@ public abstract class ReflectionUtil {
     
     /**
      * Singleton instance
-     * @return ReflectionUtil with default construction
+     * 
+     * @return RecursiveUtil with default construction
      */
     public final synchronized static ReflectionUtil getInstance() {
         if (_instance == null)

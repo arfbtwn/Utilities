@@ -17,12 +17,14 @@
  */
 package little.nj.gui.components;
 
+import java.awt.BorderLayout;
 import java.util.EventListener;
 
 import javax.swing.GroupLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.xml.bind.DatatypeConverter;
 
 import little.nj.adts.ByteField;
@@ -43,7 +45,6 @@ public class ByteFieldPanel extends JPanel {
         name = new JLabel();
         bytes = new JLabel();
         dummy = new JPanel();
-        dummy.setOpaque(false);
         
         init();
     }
@@ -51,28 +52,30 @@ public class ByteFieldPanel extends JPanel {
     public ByteFieldPanel(ByteField field) {
         this();
         setField(field);
+        setRenderer(read_only);
     }
     
     protected void init() {
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         
+        dummy.setOpaque(false);
+        dummy.setLayout(new BorderLayout());
+        
+        layout.setAutoCreateContainerGaps(true);
+        layout.setAutoCreateGaps(true);
+        
         layout.setHorizontalGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup()
-                        .addGroup(layout.createSequentialGroup()
-                                .addComponent(name)
-                                .addGap(10)
-                                .addComponent(dummy))
-                        .addGap(10)
-                        .addComponent(bytes)));
-        
-        layout.setVerticalGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup()
                         .addComponent(name)
-                        .addGap(10)
-                        .addComponent(dummy))
-                .addGap(10)
-                .addComponent(bytes));
+                        .addComponent(bytes))
+                .addComponent(dummy));
+        
+        layout.setVerticalGroup(layout.createParallelGroup()
+                .addGroup(layout.createSequentialGroup()
+                        .addComponent(name)
+                        .addComponent(bytes))
+                .addComponent(dummy));
     }
     
     public void setField(ByteField field) { 
@@ -102,7 +105,7 @@ public class ByteFieldPanel extends JPanel {
             return;
         
         name.setText(field.getName());
-        bytes.setText(DatatypeConverter.printHexBinary(field.getBytes()));
+        setText(field.getBytes());
         
         if (null == renderer)
             return;
@@ -110,11 +113,34 @@ public class ByteFieldPanel extends JPanel {
         renderer.render(field);
     }
     
+    private void setText(byte[] data) {
+        String bs = DatatypeConverter.printHexBinary(data);
+        
+        bytes.setText(bs.length() > 10 ? bs.substring(0, 7) + "..." : bs);
+    }
+    
+    private static FieldRenderer read_only = new FieldRenderer() {
+
+        final JLabel label = new JLabel();
+        
+        @Override
+        public JComponent register(ByteField field, FieldChangeListener listener) {
+            label.setHorizontalAlignment(SwingConstants.TRAILING);
+            return label;
+        }
+
+        @Override
+        public void render(ByteField field) {
+            label.setText(field.getValue().toString());
+        }
+        
+    };
+    
     private FieldChangeListener listener = new FieldChangeListener() { 
         @Override
         public void fieldChange(byte[] data) {
             field.setBytes(data);
-            bytes.setText(DatatypeConverter.printHexBinary(field.getBytes()));
+            setText(field.getBytes());
         }
     };
     

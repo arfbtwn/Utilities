@@ -384,10 +384,10 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
          */
         long value = i;
         LinkedList<Byte> digits = new LinkedList<Byte>();
-        while(value > 0) {
+        do {
             digits.addFirst((byte) (value % 10));
             value /= 10;
-        }
+        } while(value > 0);
         /*
          * Truncate to maximum length
          */

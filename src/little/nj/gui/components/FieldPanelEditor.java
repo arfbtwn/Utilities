@@ -22,17 +22,21 @@ import java.awt.Component;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 import little.nj.adts.ByteField;
+import little.nj.gui.components.ByteFieldPanel.FieldChangeListener;
 
 @SuppressWarnings("serial")
 public class FieldPanelEditor extends AbstractCellEditor
                               implements TableCellEditor, TableCellRenderer {
 
-    ByteField value;
+    private static final ByteFieldPanel panel = new ByteFieldPanel();
+    private transient ByteField value;
 
     @Override
     public Object getCellEditorValue() { return value; }
@@ -50,7 +54,25 @@ public class FieldPanelEditor extends AbstractCellEditor
     public Component getTableCellRendererComponent(JTable table, Object value,
             boolean isSelected, boolean hasFocus, int row, int column) {
         
-        ByteFieldPanel cell = FieldPanelFactory.create((ByteField)value);
+        ByteFieldPanel cell = panel;
+        
+        cell.setField((ByteField)value);
+        cell.setRenderer(new ByteFieldPanel.FieldRenderer() {
+            
+            JLabel label = new JLabel();
+            
+            @Override
+            public void render(ByteField field) {
+                String s = field.getValue().toString();
+                label.setText(s.length() > 10 ? s.substring(0, 7) + "..." : s);
+            }
+            
+            @Override
+            public JComponent register(ByteField field, FieldChangeListener listener) {
+                label.setHorizontalAlignment(JLabel.TRAILING);
+                return label;
+            }
+        });
         
         if (hasFocus) {
             cell.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));

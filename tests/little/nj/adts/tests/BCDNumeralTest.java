@@ -1,5 +1,6 @@
 /**
- * Copyright (C) 2013 Nicholas J. Little <arealityfarbetween@googlemail.com>
+ * Copyright (C) 2013 
+ * Nicholas J. Little <arealityfarbetween@googlemail.com>
  * 
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -19,9 +20,7 @@ package little.nj.adts.tests;
 import static little.nj.adts.BCDNumeral.PAD_RIGHT;
 import static little.nj.adts.BCDNumeral.ZERO;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
+import static org.junit.Assert.assertArrayEquals;
 
 import little.nj.adts.BCDNumeral;
 import little.nj.adts.BCDNumeral.Config;
@@ -60,8 +59,7 @@ public class BCDNumeralTest {
      */
     @Before
     public void setUp() throws Exception {
-        Config conf = new Config().setCompress(false)
-                .setJustification(Justification.LEFT).setLengths(1, 0);
+        Config conf = new Config();
         data = new BCDNumeral(1234567L, conf);
         System.out.println("---- Initial State");
         System.out.println(data.toByteString());
@@ -77,6 +75,8 @@ public class BCDNumeralTest {
 
     @Test
     public void test_compression() {
+        data.getConfig().setCompress(false);
+        
         int origin = data.toArray().length, 
             half = origin / 2 + origin % 2;
         
@@ -95,13 +95,17 @@ public class BCDNumeralTest {
     public void test_encoding() {
         long intBCD = data.longValue(), result;
         Byte[] arrBCD = new Byte[] { 1, 2, 3, 4, 5, 6, 7 };
+        Config conf = data.getConfig().setCompress(false);
+        
         System.out.println("---- Encode");
-        BCDNumeral bcd = new BCDNumeral(intBCD, data.getConfig());
+        BCDNumeral bcd = new BCDNumeral(intBCD, conf);
+        
         System.out.println(bcd.toByteString());
-        assertTrue(String.format("Invalid Return: %s", bcd.toByteString()),
-                Arrays.deepEquals(arrBCD, bcd.toArray()));
+        assertArrayEquals(arrBCD, bcd.toArray());
+        
         System.out.println("---- Long Conversion Test");
-        result = BCDNumeral.BCDNArrayToInteger(arrBCD, false);
+        result = BCDNumeral.BCDNArrayToInteger(arrBCD, conf.isCompress());
+        
         System.out.println(result);
         assertEquals(intBCD, result);
         System.out.println();
@@ -109,7 +113,7 @@ public class BCDNumeralTest {
 
     @Test
     public void test_justification() {
-        Config conf = data.getConfig().setMinLength(data.toArray().length + 1);
+        Config conf = data.getConfig().setLength(data.toArray().length + 1);
         System.out.println("---- Justification.RIGHT");
         conf.setJustification(Justification.RIGHT);
         System.out.println(data.toByteString());
@@ -117,40 +121,41 @@ public class BCDNumeralTest {
         System.out.println("---- Justification.LEFT");
         conf.setJustification(Justification.LEFT);
         System.out.println(data.toByteString());
-        assertEquals(PAD_RIGHT,
-                (byte) data.toArray()[data.toArray().length - 1]);
+        
+        Byte[] bs = data.toArray();
+        
+        assertEquals(Byte.valueOf(PAD_RIGHT), bs[bs.length - 1]);
+        
         System.out.println();
     }
 
     @Test
     public void test_length() {
-        final String ERR_LENGTH = "Length Error. " + "Min: %d, " + "Max: %d, "
-                + "Length: %d";
-        int min = 1, max = 0, norm = data.toArray().length;
         Config conf = data.getConfig();
-        min = 10;
-        System.out.println("---- Set Min: " + min);
-        data.getConfig().setMinLength(min);
+        int norm = data.toArray().length;
+        
+        int len = 4;
+        System.out.println("---- Set Len: " + len);
+        conf.setLength(len);
         System.out.println(data.toByteString());
-        assertEquals(
-                String.format(ERR_LENGTH, conf.getMinLength(),
-                        conf.getMaxLength(), data.toArray().length),
-                conf.getMinLength(), data.toArray().length);
-        max = 4;
-        System.out.println("---- Set Max: " + max);
-        data.getConfig().setMaxLength(4);
+        assertEquals(conf.getLength(), data.toArray().length);
+        
+        len = 0;
+        System.out.println("---- Set Len: " + len);
+        conf.setLength(len);
         System.out.println(data.toByteString());
-        assertTrue(
-                String.format(ERR_LENGTH, conf.getMinLength(),
-                        conf.getMaxLength(), data.toArray().length),
-                data.toArray().length <= conf.getMaxLength());
-        System.out.println("---- Set Min: 1, Max: 0");
-        data.getConfig().setLengths(1, 0);
-        System.out.println(data.toByteString());
-        assertEquals(
-                String.format(ERR_LENGTH, conf.getMinLength(),
-                        conf.getMaxLength(), data.toArray().length), norm,
-                data.toArray().length);
+        assertEquals(norm, data.toArray().length);
+        
         System.out.println();
+    }
+    
+    @Test
+    public void test_encode_zero() {
+        Config conf = data.getConfig();
+        
+        Byte[] arr = BCDNumeral.IntegerToBCDNArray(0, conf);
+        
+        assertEquals(1, arr.length);
+        assertEquals(0, (byte)arr[0]);
     }
 }

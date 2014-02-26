@@ -78,14 +78,9 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
         private Justification justification = Justification.RIGHT;
 
         /**
-         * Default: Max Length = 0
+         * Default: Length = 0
          */
-        private int           max_length    = 0;
-
-        /**
-         * Default: Min Length = 1
-         */
-        private int           min_length    = 1;
+        private int           length = 0;
 
         /**
          * @return the justification
@@ -97,15 +92,8 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
         /**
          * @return the max_length
          */
-        public int getMaxLength() {
-            return max_length;
-        }
-
-        /**
-         * @return the min_length
-         */
-        public int getMinLength() {
-            return min_length;
+        public int getLength() {
+            return length;
         }
 
         /**
@@ -153,50 +141,16 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
         }
 
         /**
-         * Set Min & Max Lengths
-         * 
-         * @see #setMinLength(int)
-         * @see #setMaxLength(int)
-         * @return This Configuration Object
-         */
-        public Config setLengths(int... limits) {
-            if (limits.length > 0)
-                setMinLength(limits[0]);
-            if (limits.length > 1)
-                setMaxLength(limits[1]);
-            return this;
-        }
-
-        /**
-         * Set Maximum Byte Length
+         * Set Byte[] Length
          * 
          * @param i
-         *            Maximum Byte Length
+         *            Byte Length
          * @return This Configuration Object
          */
-        public Config setMaxLength(int i) {
-            if (max_length != i) {
+        public Config setLength(int i) {
+            if (length != i) {
                 has_changed = true;
-                max_length = i < 0 ? 0 : i;
-                if (max_length > 0 && max_length < min_length)
-                    setMinLength(max_length);
-            }
-            return this;
-        }
-
-        /**
-         * Set Minimum Byte Length
-         * 
-         * @param i
-         *            Minimum Byte Length
-         * @return This Configuration Object
-         */
-        public Config setMinLength(int i) {
-            if (min_length != i) {
-                has_changed = true;
-                min_length = i <= 0 ? 1 : i;
-                if (max_length > 0 && min_length > max_length)
-                    setMaxLength(min_length);
+                length = i < 0 ? 0 : i;
             }
             return this;
         }
@@ -209,8 +163,7 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
             StringBuilder sb = new StringBuilder();
             sb.append("Justification:  " + justification + "\n");
             sb.append("Compression:    " + compressed + "\n");
-            sb.append("Minimum Length: " + min_length + "\n");
-            sb.append("Maximum Length: " + max_length + "\n");
+            sb.append("Length: " + length + "\n");
             return sb.toString();
         }
     }
@@ -398,12 +351,12 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
      * @return Byte[] Representation
      */
     public static Byte[] IntegerToBCDNArray(long i, boolean compress,
-            Justification j, int... lengths) {
+            Justification j, int length) {
         
         Config conf = new Config()
             .setCompress(compress)
             .setJustification(j)
-            .setLengths(lengths);
+            .setLength(length);
         
         return IntegerToBCDNArray(i, conf);
     }
@@ -420,29 +373,26 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
     public static Byte[] IntegerToBCDNArray(long i, Config config) {
         
         /*
-         * Record length parameters for use and expand if
+         * Record length parameter for use and expand if
          * we'll be compressing
          */
-        int max_length = config.max_length;
-        int min_length = config.min_length;
-        if (config.compressed) {
-            max_length *= 2;
-            min_length *= 2;
-        }
+        int length = config.compressed ? config.length * 2 : config.length;
+        boolean hasLength = length > 0;
+        
         /*
          * Take a List<Byte>
          */
         long value = i;
         LinkedList<Byte> digits = new LinkedList<Byte>();
-        while (value > 0) {
+        while(value > 0) {
             digits.addFirst((byte) (value % 10));
             value /= 10;
         }
         /*
          * Truncate to maximum length
          */
-        if (max_length > 0) {
-            while (digits.size() > max_length) {
+        if (hasLength) {
+            while (digits.size() > length) {
                 digits.removeFirst();
             }
         }
@@ -451,11 +401,11 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
          */
         switch (config.justification) {
         case RIGHT:
-            while (digits.size() < min_length)
+            while (digits.size() < length)
                 digits.addFirst(ZERO);
             break;
         case LEFT:
-            while (digits.size() < min_length)
+            while (digits.size() < length)
                 digits.addLast(PAD_RIGHT);
             break;
         }
@@ -501,7 +451,7 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
         this.config = config;
         binary_coded = in.clone();
         value = BCDNArrayToInteger(in, config.compressed);
-        config.setLengths(in.length, in.length);
+        config.setLength(in.length);
         config.has_changed = false;
     }
 

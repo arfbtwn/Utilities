@@ -41,6 +41,8 @@ import javax.xml.bind.DatatypeConverter;
  * <dd>Updated to support left justification. Fixed compression bugs.</dd>
  * <dt>0.3</dt>
  * <dd>Some performance tweaks.</dd>
+ * <dt>0.4</dt>
+ * <dd>Rewrite Decompression and Array => Long conversion</dd>
  * </dl>
  * 
  * <h4>Todo</h4>
@@ -63,9 +65,9 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
     public static class Config {
 
         /**
-         * Default: Compression = true
+         * Default: Compression = false
          */
-        private boolean       compressed    = true;
+        private boolean       compressed    = false;
 
         /*
          * Internal State variable
@@ -213,12 +215,18 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
         int length = in.length / 2 + in.length % 2;
         Byte[] rtn = new Byte[length];
         
-        for (int i = in.length - 1, j = rtn.length - 1; i >= 0; i -= 2, j--) {
-            int high = (i > 0 ? in[i - 1] << SIZE_NIBBLE : ZERO),
-                low  = in[i] & MASK_LEFT;
+        int i = in.length - 1,
+            j = rtn.length - 1,
+            lo, hi;
+        
+        for (; i >= 0; i -= 2, --j) {
             
-            rtn[j] = (byte) (high | low);
+            hi = (i > 0 ? in[i - 1] << SIZE_NIBBLE : ZERO);
+            lo = in[i] & MASK_LEFT;
+            
+            rtn[j] = (byte) (hi | lo);
         }
+        
         return rtn;
     }
 
@@ -227,28 +235,38 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
      * 
      * @param in
      *            Compressed BCD Byte[]
-     * @return Uncompressed BCD Byte[] FIXME: No check on whether the input is,
-     *         in fact, compressed
+     * @return Uncompressed BCD Byte[]
      */
     public static Byte[] BCDNArrayDecompress(Byte[] in) {
         Byte[] rtn = new Byte[in.length * 2];
-        Byte current;
-        for (int i = in.length - 1, j = rtn.length - 1; i >= 0; i--) {
+        
+        // Start from the end of each array
+        int i = in.length - 1,
+            j = rtn.length - 1;
+        
+        int lo, hi;
+        boolean inPad = true;
+        
+        for (i = in.length - 1, j = rtn.length - 1; i >= 0; i--) {
+
+            // Extract the low and high nibbles
+            lo = in[i] & MASK_LEFT;
+            hi = in[i] >>> 4;
             
-            current = (byte) (in[i] & MASK_LEFT);
-            if (current == MASK_LEFT) {
-                // Restore Masked Padding Byte
-                current = PAD_RIGHT;
+            // Evaluate if the low nibble is padding
+            if (inPad) {
+                inPad = MASK_LEFT == lo;
             }
-            rtn[j--] = current;
-            current = (byte) ((in[i] & MASK_RIGHT) >> SIZE_NIBBLE & MASK_LEFT);
+            rtn[j--] = inPad ? PAD_RIGHT : (byte) lo;
             
-            if (current == MASK_LEFT) {
-                current = PAD_RIGHT;
+            // Evaluate if the high nibble is padding
+            if (inPad) {
+                inPad = MASK_LEFT == hi;
             }
+            rtn[j--] = inPad ? PAD_RIGHT : (byte) hi;
             
-            rtn[j--] = current;
         }
+        
         return rtn;
     }
 
@@ -260,26 +278,25 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
      * @return Long Integer Value
      */
     public static Long BCDNArrayToInteger(Byte[] in, boolean compressed) {
-        int pow = 0;
-        Long tmp = 0L;
-        byte current;
-        for (int i = in.length - 1; i >= 0; i--) {
-            current = (byte) (in[i] & MASK_LEFT);
-            if (current != MASK_LEFT) {
-                tmp += (long) (current * Math.pow(10, pow));
-                pow++;
-            }
-            /*
-             * TODO: Test for compression
-             */
-            if (compressed) {
-                current = (byte) ((in[i] & MASK_RIGHT) >> SIZE_NIBBLE & MASK_LEFT);
-                if (current != MASK_LEFT) {
-                    tmp += (long) (current * Math.pow(10, pow));
-                    pow++;
-                }
-            }
+        // Convert a complex problem to a simple one
+        if (compressed) {
+            in = BCDNArrayDecompress(in);
         }
+        
+        // Start from the back and skip any padding
+        int i = in.length - 1;
+        while(PAD_RIGHT == in[i] && i >= 0) --i;
+        
+        // Collect powers for each digit
+        int pow = 0;
+        long tmp = 0L;
+        byte current;
+        for (; i >= 0; --i) {
+            current = in[i];
+            tmp += current * Math.pow(10, pow);
+            ++pow;
+        }
+        
         return tmp;
     }
 
@@ -346,8 +363,8 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
      *            Compress 2 digits into one byte
      * @param j
      *            {@link Justification}
-     * @param lengths
-     *            Optional Minimum + Maximum Byte[] lengths
+     * @param length
+     *            Length of resulting Byte[], 0 == No Restriction
      * @return Byte[] Representation
      */
     public static Byte[] IntegerToBCDNArray(long i, boolean compress,
@@ -371,12 +388,15 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
      * @return Byte[] Representation
      */
     public static Byte[] IntegerToBCDNArray(long i, Config config) {
+        if (i < 0)
+            throw new IllegalArgumentException("negative");
         
         /*
          * Record length parameter for use and expand if
          * we'll be compressing
          */
-        int length = config.compressed ? config.length * 2 : config.length;
+        int length = config.compressed ? config.length * 2 
+                                       : config.length;
         boolean hasLength = length > 0;
         
         /*
@@ -385,30 +405,33 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
         long value = i;
         LinkedList<Byte> digits = new LinkedList<Byte>();
         do {
-            digits.addFirst((byte) (value % 10));
+            digits.addFirst((byte)(value % 10));
             value /= 10;
         } while(value > 0);
-        /*
-         * Truncate to maximum length
-         */
+        
         if (hasLength) {
+            /*
+             * Truncate to length
+             */
             while (digits.size() > length) {
                 digits.removeFirst();
             }
+            
+            /*
+             * Justify up to minimum length
+             */
+            switch (config.justification) {
+            case RIGHT:
+                while (digits.size() < length)
+                    digits.addFirst(ZERO);
+                break;
+            case LEFT:
+                while (digits.size() < length)
+                    digits.addLast(PAD_RIGHT);
+                break;
+            }
         }
-        /*
-         * Justify up to minimum length
-         */
-        switch (config.justification) {
-        case RIGHT:
-            while (digits.size() < length)
-                digits.addFirst(ZERO);
-            break;
-        case LEFT:
-            while (digits.size() < length)
-                digits.addLast(PAD_RIGHT);
-            break;
-        }
+        
         /*
          * Transfer to Byte[]
          */
@@ -427,7 +450,7 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
     /**
      * Byte[] Representation
      */
-    transient private Byte[] binary_coded;
+    private transient Byte[] binary_coded;
 
     /**
      * Configuration & State Tracking
@@ -474,6 +497,9 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
      *            {@link Config}
      */
     public BCDNumeral(long value, Config config) {
+        if (value < 0)
+            throw new IllegalArgumentException("negative");
+        
         this.value = value;
         this.config = config;
     }
@@ -563,10 +589,7 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
     public Byte[] toArray() {
         refresh();
         
-        Byte[] rtn = new Byte[binary_coded.length];
-        System.arraycopy(binary_coded, 0, rtn, 0, rtn.length);
-        
-        return rtn;
+        return binary_coded.clone();
     }
 
     /**

@@ -247,7 +247,7 @@ public class BCDNumeral extends Number implements Comparable<BCDNumeral> {
         int lo, hi;
         boolean inPad = true;
         
-        for (i = in.length - 1, j = rtn.length - 1; i >= 0; i--) {
+        for (; i >= 0; --i) {
 
             // Extract the low and high nibbles
             lo = in[i] & MASK_LEFT;

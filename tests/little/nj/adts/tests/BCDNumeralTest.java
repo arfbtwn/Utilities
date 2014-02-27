@@ -84,10 +84,12 @@ public class BCDNumeralTest {
         data.getConfig().setCompress(true);
         System.out.println(data.toByteString());
         assertEquals(half, data.toArray().length);
+        
         System.out.println("---- Decompress");
         data.getConfig().setCompress(false);
         System.out.println(data.toByteString());
         assertEquals(origin, data.toArray().length);
+        
         System.out.println();
     }
 
@@ -114,17 +116,17 @@ public class BCDNumeralTest {
     @Test
     public void test_justification() {
         Config conf = data.getConfig().setLength(data.toArray().length + 1);
+        
         System.out.println("---- Justification.RIGHT");
         conf.setJustification(Justification.RIGHT);
         System.out.println(data.toByteString());
         assertEquals(ZERO, (byte) data.toArray()[0]);
+        
         System.out.println("---- Justification.LEFT");
         conf.setJustification(Justification.LEFT);
         System.out.println(data.toByteString());
-        
         Byte[] bs = data.toArray();
-        
-        assertEquals(Byte.valueOf(PAD_RIGHT), bs[bs.length - 1]);
+        assertEquals(PAD_RIGHT, (byte) bs[bs.length - 1]);
         
         System.out.println();
     }
@@ -157,5 +159,14 @@ public class BCDNumeralTest {
         
         assertEquals(1, arr.length);
         assertEquals(0, (byte)arr[0]);
+    }
+    
+    @Test
+    public void test_array_to_integer() {
+        Config conf = data.getConfig();
+        
+        Long value = data.longValue();
+        
+        assertEquals(value, BCDNumeral.BCDNArrayToInteger(data.toArray(), conf.isCompress()));
     }
 }

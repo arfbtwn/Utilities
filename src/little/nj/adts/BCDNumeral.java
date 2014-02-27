@@ -51,7 +51,7 @@ import javax.xml.bind.DatatypeConverter;
  * </ul>
  * 
  * @author Nicholas Little
- * @version 0.3
+ * @version 0.4
  * 
  */
 @SuppressWarnings("serial")

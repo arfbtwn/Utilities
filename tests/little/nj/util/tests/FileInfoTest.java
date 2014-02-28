@@ -12,7 +12,7 @@ public class FileInfoTest
     @Test
     public void test_FileInfo()
     {
-        String path = "Foo/Bar.java";
+        String path = "/Foo/Bar.java";
 
         FileInfo fi = new FileInfo(path);
 

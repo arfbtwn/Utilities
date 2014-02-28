@@ -75,6 +75,8 @@ public class ListPanel extends JPanel {
     	add(controls, BorderLayout.PAGE_END);
     }
     
+    public JPanel asJPanel() { return controls; }
+    
     public JList asJList() { return list; }
     
     private class ControlPanel extends JPanel {

@@ -39,7 +39,7 @@ public class PermutationGenerator<T>
     final T[] sym;
     boolean stop;
 
-    PermutationGenerator(Callback<T> callback, T... symbols)
+	public PermutationGenerator(Callback<T> callback, T... symbols)
     {
         if (symbols.length == 0)
             throw new IllegalArgumentException("No Symbols");
@@ -53,7 +53,7 @@ public class PermutationGenerator<T>
      *
      * @param size
      */
-    void start(T[] size)
+    public void start(T[] size)
     {
         stop = false;
         recurse(size, size.length - 1);

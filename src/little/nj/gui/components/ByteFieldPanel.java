@@ -119,7 +119,7 @@ public class ByteFieldPanel extends JPanel {
         bytes.setText(bs.length() > 10 ? bs.substring(0, 7) + "..." : bs);
     }
     
-    private static FieldRenderer read_only = new FieldRenderer() {
+    private FieldRenderer read_only = new FieldRenderer() {
 
         final JLabel label = new JLabel();
         
@@ -131,7 +131,7 @@ public class ByteFieldPanel extends JPanel {
 
         @Override
         public void render(ByteField field) {
-            label.setText(field.getValue().toString());
+            label.setText(DatatypeConverter.printHexBinary(field.getBytes()));
         }
         
     };

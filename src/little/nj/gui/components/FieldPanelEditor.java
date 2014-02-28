@@ -27,6 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.xml.bind.DatatypeConverter;
 
 import little.nj.adts.ByteField;
 import little.nj.gui.components.ByteFieldPanel.FieldChangeListener;
@@ -63,7 +64,7 @@ public class FieldPanelEditor extends AbstractCellEditor
             
             @Override
             public void render(ByteField field) {
-                String s = field.getValue().toString();
+                String s = DatatypeConverter.printHexBinary(field.getBytes());
                 label.setText(s.length() > 10 ? s.substring(0, 7) + "..." : s);
             }
             

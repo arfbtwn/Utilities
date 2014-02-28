@@ -107,13 +107,9 @@ public class ByteField implements Comparable<ByteField>, Cloneable {
         return raw.duplicate();
     }
     
-    public Object getValue() {
-        return DatatypeConverter.printHexBinary(raw.array());
-    }
+    public Object getValue() { return null; }
     
-    public void setValue(Object x) {
-        setBytes(DatatypeConverter.parseHexBinary(x.toString()));
-    }
+    public void setValue(Object x) { }
     
     /*
      * (non-Javadoc)

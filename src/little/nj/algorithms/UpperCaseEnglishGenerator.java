@@ -2,7 +2,7 @@ package little.nj.algorithms;
 
 public class UpperCaseEnglishGenerator extends PermutationGenerator<Byte>
 {
-    UpperCaseEnglishGenerator(Callback<Byte> callback)
+    public UpperCaseEnglishGenerator(Callback<Byte> callback)
     {
         super(callback, convert("ABCDEFGHIJKLMNOPQRSTUVWXYZ".getBytes()));
     }

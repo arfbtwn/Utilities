@@ -46,7 +46,7 @@ public class BruteForceGenerator
     final byte[] sym;
     boolean stop;
 
-    BruteForceGenerator(Callback cb, byte... symbols)
+    public BruteForceGenerator(Callback cb, byte... symbols)
     {
         if (symbols.length == 0)
             throw new IllegalArgumentException("No Symbols");
@@ -60,7 +60,7 @@ public class BruteForceGenerator
      *
      * @param len
      */
-    void start(int len)
+    public void start(int len)
     {
         stop = false;
         recurse(new byte[len], len - 1);

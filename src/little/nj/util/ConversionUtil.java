@@ -29,7 +29,7 @@ public class ConversionUtil {
     private ConversionUtil() { }
 
     /**
-     * A mask to removeListener sign bits from a single byte.
+     * A mask to remove sign bits from a single byte.
      */
     public final static int MASK_BYTE_UNSIGN = 0xff;
 

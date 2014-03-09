@@ -17,56 +17,21 @@
  */
 package little.nj.gui.events;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.EventListener;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 
-/**
- * @author Nicholas Little
- *
- */
 public class EventSupportTest {
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
 
     @Test
     public void test_Fires_ActionListener_ActionEvent() {
 
-        EventSupportImpl<ActionListener, ActionEvent> es = new EventSupportImpl<ActionListener, ActionEvent>();
+        EventSupport<ActionListener> es = new EventSupport<ActionListener>();
 
         MockListener ml = new MockListener();
 
@@ -76,6 +41,35 @@ public class EventSupportTest {
 
         assertEquals(1, ml.count);
         assertEquals("Foo", ml.last_command);
+    }
+
+    @Test
+    public void test_Handles_Listener_Subtypes() {
+        EventSupport<ActionListener> es = new EventSupport<ActionListener>();
+
+        MockListener ml = new MockListener();
+        MockingListener mingl = new MockingListener();
+
+        es.addListener(ml);
+        es.addListener(mingl);
+
+        es.fireEvent(new ActionEvent(this, 0, "Foo"));
+    }
+
+    @Test
+    public void test_Handles_Listeners_With_Weird_Signatures() {
+        class MyListener implements EventListener {
+            @SuppressWarnings("unused")
+            void weirdSignature(String foo, int bar) {
+                System.out.println (foo + " " + bar);
+            }
+        }
+        EventSupport<MyListener> es = new EventSupport<MyListener>();
+
+        es.addListener(new MyListener());
+
+        es.fireEvent("Hello", 1);
+        es.fireEvent("World", 2);
     }
 
     class MockListener implements ActionListener {
@@ -89,5 +83,13 @@ public class EventSupportTest {
             last_command = e.getActionCommand();
         }
 
+    }
+
+    class MockingListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+
+        }
     }
 }

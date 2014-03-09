@@ -1,31 +1,25 @@
 package little.nj.gui.binding.tests;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
+import little.nj.core.tests.MockObjects.Ob;
+import little.nj.core.tests.MockObjects.ObGeneric;
+import little.nj.core.tests.MockObjects.ObGenericChangeNotify;
+import little.nj.gui.binding.*;
+import little.nj.gui.binding.GenericBindingImpl.Getter;
+import little.nj.gui.binding.GenericBindingImpl.Marshal;
+import little.nj.gui.binding.GenericBindingImpl.Setter;
+import little.nj.gui.binding.StdComponents.GetterImpl;
+import little.nj.gui.binding.StdComponents.IntToStringMarshal;
+import little.nj.gui.binding.StdComponents.SetterImpl;
+import little.nj.gui.binding.StdComponents.StringToIntMarshal;
+import little.nj.gui.binding.events.AbstractEventSource;
+import org.junit.Test;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 
-import little.nj.core.tests.MockObjects.Ob;
-import little.nj.core.tests.MockObjects.ObGeneric;
-import little.nj.core.tests.MockObjects.ObGenericChangeNotify;
-
-import little.nj.gui.binding.GenericBindingImpl;
-import little.nj.gui.binding.GenericBindingImpl.Getter;
-import little.nj.gui.binding.GenericBindingImpl.Marshal;
-import little.nj.gui.binding.GenericBindingImpl.Setter;
-import little.nj.gui.binding.FluentBinding;
-import little.nj.gui.binding.FluentBindingImpl;
-import little.nj.gui.binding.FluentBindingFactory;
-import little.nj.gui.binding.FluentBindingFactoryImpl;
-import little.nj.gui.binding.events.EventSourceImpl;
-import little.nj.gui.binding.StdComponents.GetterImpl;
-import little.nj.gui.binding.StdComponents.SetterImpl;
-import little.nj.gui.binding.StdComponents.IntToStringMarshal;
-import little.nj.gui.binding.StdComponents.StringToIntMarshal;
-
-import org.junit.Test;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
 
 @SuppressWarnings("deprecation")
 public class FluentBindingTest {
@@ -157,10 +151,10 @@ public class FluentBindingTest {
         bind.from(new GetterImpl<String>(ob1, "getField", String.class))
             .to(new SetterImpl<Integer>(ob2, "setField", int.class))
             .via(stringToInt)
-            .when(new EventSourceImpl<ObGenericChangeNotify<String>>(ob1) {
+            .when(new AbstractEventSource<ObGenericChangeNotify<String>>(ob1) {
 
                 @Override
-                protected void init() {
+                protected void init(ObGenericChangeNotify<String> obj) {
                     obj.addPropertyChangeListener(new PropertyChangeListener() {
 
                         @Override

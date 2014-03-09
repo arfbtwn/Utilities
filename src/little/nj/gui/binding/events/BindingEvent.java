@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  * Nicholas J. Little <arealityfarbetween@googlemail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +21,12 @@ import java.util.EventObject;
 
 @SuppressWarnings("serial")
 public class BindingEvent extends EventObject {
-    
-    public BindingEvent(Object source) {
-        super(source);
+
+    Object event;
+
+    public BindingEvent(Object source, Object event)
+    {
+        super (source);
+        this.event = event;
     }
 }

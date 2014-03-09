@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  * Nicholas J. Little <arealityfarbetween@googlemail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,23 +17,20 @@
  */
 package little.nj.gui.binding.events;
 
+import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import javax.swing.JToggleButton;
 
+public class JToggleButtonSource extends AbstractEventSource<JToggleButton>
+{
 
-public class JToggleButtonSource extends EventSourceImpl<JToggleButton> {
-    
     public JToggleButtonSource(JToggleButton source) {
         super(source);
     }
 
-    /* (non-Javadoc)
-     * @see little.nj.gui.binding.events.BindingEventSource#init()
-     */
     @Override
-    protected void init() {
+    protected void init(JToggleButton obj) {
         obj.addItemListener(new ItemListener() {
 
             @Override

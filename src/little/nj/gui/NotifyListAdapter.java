@@ -1,16 +1,24 @@
 package little.nj.gui;
 
+import little.nj.gui.events.EventSupport;
+
+import java.util.List;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.EventListener;
 import java.util.EventObject;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
-import little.nj.gui.events.EventSupportImpl;
-
+/**
+ * An adapter for wrapping {@link java.util.List} instances to
+ * provide observation functions when the list is modified through
+ * the adapter or through an {@link java.util.Iterator} constructed
+ * by the adapter
+ *
+ * @param <T> Type of elements in the list
+ */
 public class NotifyListAdapter<T> implements List<T> {
-	
+
     @SuppressWarnings("serial")
 	public static class ListEvent extends EventObject {
 
@@ -18,9 +26,9 @@ public class NotifyListAdapter<T> implements List<T> {
             ADD, CLEAR, REMOVE, SET;
         }
 
-        Object item = null;
+        private final Object item;
 
-        Action   action;
+        private final Action action;
 
         public ListEvent(Object src, Object item, Action action) {
         	super(src);
@@ -41,10 +49,11 @@ public class NotifyListAdapter<T> implements List<T> {
         void listChanged(ListEvent paramListEvent);
     }
 
-	private EventSupportImpl<ListListener, ListEvent> support = 
-			new EventSupportImpl<ListListener, ListEvent>();
-	private List<T> wrap;
-	
+	private EventSupport<ListListener> support =
+			new EventSupport<ListListener>();
+
+	private final List<T> wrap;
+
 	public NotifyListAdapter(List<T> list) {
 		wrap = list;
 	}
@@ -52,7 +61,7 @@ public class NotifyListAdapter<T> implements List<T> {
 	/*
 	 * Event Generating functions
 	 */
-	
+
 	@Override
 	public boolean add(T e) {
 		if (wrap.add(e)) {
@@ -70,7 +79,7 @@ public class NotifyListAdapter<T> implements List<T> {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean addAll(Collection<? extends T> c) {
 		if (wrap.addAll(c)) {
@@ -108,9 +117,9 @@ public class NotifyListAdapter<T> implements List<T> {
 	}
 
 	@Override
-	public void clear() { 
-		wrap.clear(); 
-		support.fireEvent(new ListEvent(this, wrap, ListEvent.Action.CLEAR)); 
+	public void clear() {
+		wrap.clear();
+		support.fireEvent(new ListEvent(this, wrap, ListEvent.Action.CLEAR));
 	}
 
 	@Override
@@ -132,11 +141,11 @@ public class NotifyListAdapter<T> implements List<T> {
 		support.fireEvent(new ListEvent(this, old, ListEvent.Action.REMOVE));
 		return old;
 	}
-	
+
 	/*
 	 * Forwarding functions
 	 */
-	
+
 	@Override
 	public int size() { return wrap.size(); }
 
@@ -153,9 +162,6 @@ public class NotifyListAdapter<T> implements List<T> {
 	public boolean containsAll(Collection<?> c) { return wrap.containsAll(c); }
 
 	@Override
-	public Iterator<T> iterator() { return wrap.iterator();	}
-
-	@Override
 	public Object[] toArray() { return wrap.toArray(); }
 
 	@Override
@@ -167,13 +173,100 @@ public class NotifyListAdapter<T> implements List<T> {
 	@Override
 	public int lastIndexOf(Object o) { return wrap.lastIndexOf(o); }
 
-	@Override
-	public ListIterator<T> listIterator() { return wrap.listIterator(); }
+    @Override
+    public Iterator<T> iterator() { return listIterator();	}
+
+    /*
+     * Iteration functions
+     */
+
+    @Override
+	public ListIterator<T> listIterator() {
+        return listIterator(0);
+    }
 
 	@Override
-	public ListIterator<T> listIterator(int index) { return wrap.listIterator(index); }
+	public ListIterator<T> listIterator(int index) {
+        return new NotifyListIterator(wrap.listIterator(index));
+    }
 
 	@Override
-	public List<T> subList(int fromIndex, int toIndex) { return wrap.subList(fromIndex, toIndex); }
-	
+	public List<T> subList(int fromIndex, int toIndex) {
+        return wrap.subList(fromIndex, toIndex);
+    }
+
+    private class NotifyListIterator implements ListIterator<T>
+    {
+        private final ListIterator<T> wrap;
+        private T last;
+
+        NotifyListIterator (ListIterator<T> iterator) {
+            wrap = iterator;
+        }
+
+        @Override
+        public boolean hasNext() { return wrap.hasNext(); }
+
+        @Override
+        public T next() { last = wrap.next(); return last; }
+
+        @Override
+        public boolean hasPrevious() { return wrap.hasPrevious(); }
+
+        @Override
+        public T previous() { last = wrap.previous(); return last; }
+
+        @Override
+        public int nextIndex() { return wrap.nextIndex(); }
+
+        @Override
+        public int previousIndex() { return wrap.previousIndex(); }
+
+        @Override
+        public void remove()
+        {
+            wrap.remove();
+            support.fireEvent(
+                    new ListEvent (
+                            NotifyListAdapter.this,
+                            last,
+                            ListEvent.Action.REMOVE
+                    )
+            );
+
+            last = null;
+        }
+
+        @Override
+        public void set(T t)
+        {
+            wrap.set(t);
+            support.fireEvent(
+                    new ListEvent (
+                            NotifyListAdapter.this,
+                            last,
+                            ListEvent.Action.SET
+                    )
+            );
+
+            last = t;
+        }
+
+        @Override
+        public void add(T t)
+        {
+            wrap.add(t);
+
+            support.fireEvent(
+                    new ListEvent(
+                            NotifyListAdapter.this,
+                            t,
+                            ListEvent.Action.ADD
+                    )
+            );
+
+            last = t;
+        }
+    }
+
 }

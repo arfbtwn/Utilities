@@ -21,7 +21,8 @@ import java.awt.ItemSelectable;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-public class ItemSelectableSource extends EventSourceImpl<ItemSelectable> {
+public class ItemSelectableSource extends AbstractEventSource<ItemSelectable>
+{
 
     public ItemSelectableSource(ItemSelectable source) {
         super(source);
@@ -31,7 +32,7 @@ public class ItemSelectableSource extends EventSourceImpl<ItemSelectable> {
      * @see little.nj.gui.binding.events.BindingEventSource#init()
      */
     @Override
-    protected void init() {
+    protected void init(ItemSelectable obj) {
         obj.addItemListener(new ItemListener()
         {
             @Override

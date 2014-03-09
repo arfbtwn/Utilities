@@ -17,26 +17,80 @@
  */
 package little.nj.gui.events;
 
+import little.nj.reflection.ReflectionUtil;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.EventListener;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * A decoration interface, used to standardise {@link EventSupportImpl}
+ * Grand Unified Event Support
+ *
+ * Contains a Set of listener type T, uses reflection
+ * to associate the event handler with a signal argument.
+ *
+ * This class is externally threadsafe
  *
  * @author Nicholas Little
- *
  */
-public interface EventSupport<T extends EventListener> {
+public class EventSupport<T extends EventListener> {
+
+    private final Set<T> listeners = new HashSet<T>();
+
+    public final synchronized void addListener(T aListener) {
+        listeners.add(aListener);
+    }
+
+    public final synchronized void removeListener(T aListener) {
+        listeners.remove(aListener);
+    }
 
     /**
-     * Register a listener
-     * @param aListener
+     * Fires the appropriate event method, based on
+     * event argument type
+     *
+     * @param args
      */
-    void addListener(T aListener);
+    public final synchronized void fireEvent(Object... args) {
+        for(T i : listeners) {
+            Method m = getMethod(i, args);
+
+            if (null == m)
+            {
+                throw new RuntimeException();
+            }
+
+            try {
+                m.setAccessible(true);
+                m.invoke(i, args);
+            } catch (IllegalAccessException e1) {
+                throw new RuntimeException(e1);
+            } catch (IllegalArgumentException e2) {
+                throw new RuntimeException(e2);
+            } catch (InvocationTargetException e3) {
+                throw new RuntimeException(e3);
+            }
+
+        }
+    }
 
     /**
-     * Remove a registered listener
-     * @param aListener
+     * Gets the Method to execute on the listeners
+     *
+     * @param listener
+     * @param args
+     * @return null if no method was found
      */
-    void removeListener(T aListener);
+    protected Method getMethod(T listener, Object... args) {
+        Class<?> tListener = listener.getClass();
 
+        Class<?>[] tArgs = new Class<?>[args.length];
+        for(int i=0, end = tArgs.length; i < end; ++i) {
+            tArgs [i] = args [i].getClass();
+        }
+
+        return ReflectionUtil.getInstance().getMethodByArgs(tListener, tArgs);
+    }
 }

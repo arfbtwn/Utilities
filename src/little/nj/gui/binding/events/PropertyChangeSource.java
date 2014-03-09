@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  * Nicholas J. Little <arealityfarbetween@googlemail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,51 +17,49 @@
  */
 package little.nj.gui.binding.events;
 
+import little.nj.reflection.ReflectionUtil;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import little.nj.reflection.ReflectionUtil;
 
-
-public class PropertyChangeSource extends EventSourceImpl<Object> {
+public class PropertyChangeSource extends AbstractEventSource<Object>
+{
 
     private final static ReflectionUtil REFLECTOR = ReflectionUtil.getInstance();
-    
-    /**
-     * @param obj
-     * @param binding
-     */
+
     public PropertyChangeSource(Object source) {
         super(source);
     }
-    
+
     @Override
-    protected void init() {
-        
-        Method listen = REFLECTOR.getMethodByArgs(obj, 
+    protected void init(Object obj) {
+
+        Method listen = REFLECTOR.getMethodByArgs(obj,
                                   PropertyChangeListener.class);
 
         if (listen == null)
             return;
-        
+
         try {
-            listen.invoke(obj, new PropertyChangeListener() {
-            
-                @Override
-                public void propertyChange(PropertyChangeEvent e) {
-                    fireBindingEvent(e);
-                } 
-              
-            });
+            listen.invoke(obj, listener);
         } catch (IllegalAccessException e1) {
         	throw new RuntimeException(e1);
         } catch (IllegalArgumentException e2) {
         	throw new RuntimeException(e2);
         } catch (InvocationTargetException e3) {
             throw new RuntimeException(e3);
-        } 
+        }
     }
 
+    private PropertyChangeListener listener = new PropertyChangeListener() {
+
+        @Override
+        public void propertyChange(PropertyChangeEvent e) {
+            fireBindingEvent(e);
+        }
+
+    };
 }

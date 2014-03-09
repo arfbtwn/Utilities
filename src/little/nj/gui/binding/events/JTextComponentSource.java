@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  * Nicholas J. Little <arealityfarbetween@googlemail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,13 +22,15 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 
 
-public class JTextComponentSource extends EventSourceImpl<JTextComponent> {
+public class JTextComponentSource extends AbstractEventSource<JTextComponent>
+{
 
     public JTextComponentSource(JTextComponent source) {
         super(source);
     }
 
-    protected void init() {
+    @Override
+    protected void init(JTextComponent obj) {
         obj.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
@@ -45,7 +47,7 @@ public class JTextComponentSource extends EventSourceImpl<JTextComponent> {
             public void changedUpdate(DocumentEvent e) {
                 fireBindingEvent(e);
             }
-            
+
         });
     }
 }

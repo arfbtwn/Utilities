@@ -17,39 +17,41 @@
  */
 package little.nj.gui.binding.events;
 
-import little.nj.gui.events.EventSupportImpl;
+import little.nj.gui.events.EventSupport;
 
 
-public abstract class EventSourceImpl<T> implements BindingEventSource {
+public abstract class AbstractEventSource<T> implements BindingEventSource {
 
-    private final EventSupportImpl<BindingListener, BindingEvent> support;
-    protected final T obj;
+    private final EventSupport<BindingListener> support;
+    private final T obj;
 
-    public EventSourceImpl(T src) {
-        support = new EventSupportImpl<BindingListener, BindingEvent>();
+    public AbstractEventSource(T obj) {
+        support = new EventSupport<BindingListener>();
 
-        obj = src;
+        this.obj = obj;
 
-        init();
+        init(this.obj);
     }
 
-    protected abstract void init();
+    protected abstract void init(T obj);
 
+    @Override
     public void addBindingListener(BindingListener listener) {
         support.addListener(listener);
     }
 
+    @Override
     public void removeBindingListener(BindingListener listener) {
         support.removeListener(listener);
     }
 
     /**
      * FIXME: I'd like to narrow this to EventObject, but the concrete
-     * class is trouble with interface typed events
+     * class is trouble with interface typed events, e.g. DocumentEvent
      *
      * @param event
      */
     protected void fireBindingEvent(Object event) {
-        support.fireEvent(new BindingEvent(event));
+        support.fireEvent(new BindingEvent(obj, event));
     }
 }

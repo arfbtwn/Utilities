@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  * Nicholas J. Little <arealityfarbetween@googlemail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +19,8 @@ package little.nj.gui.binding.events;
 
 
 public interface BindingEventSource {
-    
+
     void addBindingListener(BindingListener listener);
     void removeBindingListener(BindingListener listener);
-    
+
 }

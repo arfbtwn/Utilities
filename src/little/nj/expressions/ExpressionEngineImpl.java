@@ -1,16 +1,16 @@
 /**
  * Copyright (C) 2013 Nicholas J. Little <arealityfarbetween@googlemail.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,10 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import little.nj.expressions.collections.MinusCollection;
-import little.nj.expressions.collections.PredicateCollection;
-import little.nj.expressions.collections.SelectCollection;
-import little.nj.expressions.collections.UnionCollection;
+import little.nj.expressions.collections.*;
 import little.nj.expressions.predicates.Predicate;
 
 public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
@@ -153,7 +150,7 @@ public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
         return new ExpressionEngineImpl<E>(new SelectCollection<T, E>(backing,
                 expression));
     }
-    
+
     /*
      * (non-Javadoc)
      * @see little.nj.expressions.IExpressionEngine#union(java.lang.Iterable)
@@ -162,7 +159,7 @@ public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
     public ExpressionEngine<T> union(Iterable<T> union) {
         return getEngine(new UnionCollection<T>(backing, union));
     }
-    
+
     /* (non-Javadoc)
      * @see little.nj.expressions.ExpressionEngine#minus(java.lang.Iterable)
      */
@@ -170,28 +167,19 @@ public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
     public ExpressionEngine<T> minus(Iterable<T> minus) {
         return getEngine(new MinusCollection<T>(backing, minus));
     }
-    
+
     /* (non-Javadoc)
      * @see little.nj.expressions.ExpressionEngine#intersect(java.lang.Iterable)
      */
     @Override
     public ExpressionEngine<T> intersect(Iterable<T> intersect) {
-        
-        UnionCollection<T> union = new UnionCollection<T>(backing, intersect);
-        
-        MinusCollection<T> minusAB = new MinusCollection<T>(backing, intersect);
-        
-        MinusCollection<T> minusBA = new MinusCollection<T>(intersect, backing);
-        
-        UnionCollection<T> unionMinus = new UnionCollection<T>(minusAB, minusBA);
-        
-        return getEngine(new MinusCollection<T>(union, unionMinus));
+        return getEngine(new IntersectCollection<T>(backing, intersect));
     }
-    
+
     protected ExpressionEngine<T> getEngine(Iterable<T> iterable) {
         return new ExpressionEngineImpl<T>(iterable);
     }
-    
+
     /* (non-Javadoc)
      * @see little.nj.expressions.IExpressionEngine#toList()
      */
@@ -199,10 +187,10 @@ public class ExpressionEngineImpl<T> implements ExpressionEngine<T> {
     public List<T> toList() {
         List<T> rv = new ArrayList<T>();
         Iterator<T> it = iterator();
-        
+
         while(it.hasNext())
             rv.add(it.next());
-        
+
         return rv;
     }
 }

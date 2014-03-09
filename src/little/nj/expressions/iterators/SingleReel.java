@@ -44,7 +44,7 @@ public abstract class SingleReel<A, B>
     }
 
     /* (non-Javadoc)
-     * @see java.util.Iterator#removeListener()
+     * @see java.util.Iterator#remove()
      */
     @Override
     public final void remove() {

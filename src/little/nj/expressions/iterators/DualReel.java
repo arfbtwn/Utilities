@@ -17,9 +17,9 @@
  */
 package little.nj.expressions.iterators;
 
-import java.util.Iterator;
-
 import little.nj.exceptions.NotImplementedException;
+
+import java.util.Iterator;
 
 
 public abstract class DualReel<A, B>
@@ -47,7 +47,7 @@ public abstract class DualReel<A, B>
     }
 
     /* (non-Javadoc)
-     * @see java.util.Iterator#removeListener()
+     * @see java.util.Iterator#remove()
      */
     @Override
     public final void remove() {

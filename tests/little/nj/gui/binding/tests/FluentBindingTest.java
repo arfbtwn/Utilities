@@ -18,10 +18,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-@SuppressWarnings("deprecation")
+
 public class FluentBindingTest {
 
     private static Marshal<Integer, String> intToString = new IntToStringMarshal();

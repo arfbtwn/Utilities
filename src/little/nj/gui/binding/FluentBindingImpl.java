@@ -81,12 +81,12 @@ public class FluentBindingImpl<X, Y>
 
     private void setEventSource(BindingEventSource events) {
         if (this.events != null)
-            events.ignore(listener);
+            events.removeBindingListener(listener);
 
         this.events = events;
 
         if (this.events != null)
-            events.listen(listener);
+            events.addBindingListener(listener);
     }
 
     private void disableTwin() {

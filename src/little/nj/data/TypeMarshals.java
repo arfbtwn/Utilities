@@ -18,6 +18,7 @@
 package little.nj.data;
 
 import java.nio.ByteBuffer;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +28,7 @@ public class TypeMarshals {
 
     final static Map<Class<?>, TypeMarshal> defaultTypeMarshals;
 
-    final static TypeMarshal byteReader = new TypeMarshal()
+    public final static TypeMarshal byteReader = new TypeMarshal()
     {
         @Override
         public Object read(ByteBuffer buffer) {
@@ -40,7 +41,7 @@ public class TypeMarshals {
         }
     };
 
-    final static TypeMarshal charReader = new TypeMarshal()
+    public final static TypeMarshal charReader = new TypeMarshal()
     {
         @Override
         public Object read(ByteBuffer buffer) {
@@ -53,7 +54,7 @@ public class TypeMarshals {
         }
     };
 
-    final static TypeMarshal shortReader = new TypeMarshal()
+    public final static TypeMarshal shortReader = new TypeMarshal()
     {
         @Override
         public Object read(ByteBuffer buffer) {
@@ -66,7 +67,7 @@ public class TypeMarshals {
         }
     };
 
-    final static TypeMarshal integerReader = new TypeMarshal()
+    public final static TypeMarshal integerReader = new TypeMarshal()
     {
         @Override
         public Object read(ByteBuffer buffer) {
@@ -79,7 +80,7 @@ public class TypeMarshals {
         }
     };
 
-    final static TypeMarshal longReader = new TypeMarshal()
+    public final static TypeMarshal longReader = new TypeMarshal()
     {
         @Override
         public Object read(ByteBuffer buffer) {
@@ -92,7 +93,7 @@ public class TypeMarshals {
         }
     };
 
-    final static TypeMarshal floatReader = new TypeMarshal()
+    public final static TypeMarshal floatReader = new TypeMarshal()
     {
         @Override
         public Object read(ByteBuffer buffer) {
@@ -105,7 +106,7 @@ public class TypeMarshals {
         }
     };
 
-    final static TypeMarshal doubleReader = new TypeMarshal()
+    public final static TypeMarshal doubleReader = new TypeMarshal()
     {
         @Override
         public Object read(ByteBuffer buffer) {
@@ -137,4 +138,8 @@ public class TypeMarshals {
         defaultTypeMarshals.put(Double.class, doubleReader);
     }
 
+    public static final Map<Class<?>, TypeMarshal> getDefaultMarshals()
+    {
+        return Collections.unmodifiableMap(defaultTypeMarshals);
+    }
 }

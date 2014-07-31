@@ -41,7 +41,7 @@ import little.nj.data.FieldMarshals.FinalArrayExtractor;
 import little.nj.data.FieldMarshals.FinalBytesExtractor;
 import little.nj.data.FieldMarshals.FixedStringExtractor;
 
-public final class MarshalBuilder {
+public class MarshalBuilder {
 
     public static interface TypeMarshal {
         Object read(ByteBuffer buffer);
@@ -62,21 +62,21 @@ public final class MarshalBuilder {
         this(defaultTypeMarshals);
     }
 
-    public MarshalBuilder register(Class<?> clz, TypeMarshal marshal)
+    public final MarshalBuilder register(Class<?> clz, TypeMarshal marshal)
     {
         typeMarshals.put(clz, marshal);
         return this;
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T read(ByteBuffer buffer, Class<T> type)
+    public final <T> T read(ByteBuffer buffer, Class<T> type)
     {
         TypeMarshal reader = typeMarshal(type);
 
         return (T) reader.read(buffer);
     }
 
-    public void write(ByteBuffer buffer, Object struct)
+    public final void write(ByteBuffer buffer, Object struct)
     {
         Class<?> type = struct.getClass();
         TypeMarshal writer = typeMarshal(type);

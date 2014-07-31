@@ -17,7 +17,7 @@ public class IntersectCollection<T> implements Iterable<T>
     @Override
     public Iterator<T> iterator()
     {
-        return new IntersectIterator(base.iterator(), intersect.iterator());
+        return new IntersectIterator<T>(base.iterator(), intersect.iterator());
     }
 
     private static class IntersectIterator<T> implements Iterator<T> {

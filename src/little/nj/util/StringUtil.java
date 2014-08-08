@@ -17,8 +17,20 @@
  */
 package little.nj.util;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+
 
 public class StringUtil {
+
+    /**
+     * The empty string, for semantic effect
+     */
+    public final static String EMPTY_STRING = "";
+
+    public static final String[] SEPARATORS = { "[", "=>", "]" };
 
     private StringUtil() { }
 
@@ -90,8 +102,112 @@ public class StringUtil {
         return x.trim().equals(y.trim());
     }
 
-    /**
-     * The empty string, for semantic effect
-     */
-    public final static String EMPTY_STRING = "";
+    public static final String valueOf (Collection <?> collection)
+    {
+        StringBuilder sb = openBuilder ();
+        boolean first = true;
+
+        for (Object i : collection)
+        {
+            if (!first)
+            {
+                sb.append (", ");
+            }
+
+            sb.append (String.valueOf (i));
+
+            first = false;
+        }
+
+        return closeBuilder (sb);
+    }
+
+    public static final String valueOf (Map <?, ?> map)
+    {
+        StringBuilder sb = openBuilder ();
+
+        boolean first = true;
+
+        for (Map.Entry<?, ?> i : map.entrySet ())
+        {
+            if (!first)
+            {
+                sb.append (", ");
+            }
+
+            String kv = String.format (
+                "%s %s %s",
+                valueOf (i.getKey ()),
+                SEPARATORS[1],
+                valueOf (i.getValue())
+            );
+
+            sb.append (kv);
+
+            first = false;
+        }
+
+        return closeBuilder (sb);
+    }
+
+    public static final <T> String valueOf (T[] array)
+    {
+        return valueOfArray (array);
+    }
+
+    public static final String valueOfArray (Object array)
+    {
+        StringBuilder sb = openBuilder ();
+
+        int count = Array.getLength (array);
+
+        for (int i = 0; i < count; ++i)
+        {
+            if (0 < i)
+            {
+                sb.append (", ");
+            }
+
+            sb.append (valueOf (Array.get (array, i)));
+        }
+
+        return closeBuilder (sb);
+    }
+
+    public static final String valueOf (Object object)
+    {
+        if (null == object)
+        {
+            return "null";
+        }
+
+        Class<?> clz = object.getClass ();
+
+        if (clz.isArray ())
+        {
+            return valueOfArray (object);
+        }
+        else if (Collection.class.isAssignableFrom (clz))
+        {
+            return valueOf ((Collection<?>) object);
+        }
+        else if (Map.class.isAssignableFrom (clz))
+        {
+            return valueOf ((Map<?, ?>) object);
+        }
+        else
+        {
+            return object.toString ();
+        }
+    }
+
+    private static final StringBuilder openBuilder()
+    {
+        return new StringBuilder (SEPARATORS[0]);
+    }
+
+    private static final String closeBuilder (StringBuilder sb)
+    {
+        return sb.append (SEPARATORS[2]).toString ();
+    }
 }

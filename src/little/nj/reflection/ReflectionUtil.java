@@ -19,6 +19,7 @@ package little.nj.reflection;
 
 import java.lang.reflect.Method;
 import little.nj.expressions.predicates.Predicate;
+import little.nj.iterable.Iterables;
 
 
 public abstract class ReflectionUtil {
@@ -77,13 +78,7 @@ public abstract class ReflectionUtil {
      * @return
      */
     protected Method matchImpl(Method[] poss, Predicate<Method> matcher) {
-
-        for(Method i : poss) {
-            if (matcher.evaluate(i))
-                return i;
-        }
-    
-        return null;
+        return Iterables.first (poss, matcher);
     }
     
     /**

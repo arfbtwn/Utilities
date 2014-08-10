@@ -17,7 +17,7 @@
  */
 package little.nj.expressions.predicates;
 
-public abstract class UnaryPredicate<T> extends FluentPredicateImpl<T> {
+public abstract class UnaryPredicate<T> extends FluentPredicate<T> {
 
     protected final Predicate<? super T> predicate;
     

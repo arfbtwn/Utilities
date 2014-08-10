@@ -26,7 +26,7 @@ import little.nj.core.tests.MockObjects.Ob;
 import little.nj.core.tests.MockObjects.ObGeneric;
 import little.nj.expressions.ExpressionEngineImpl;
 import little.nj.expressions.ExpressionEngine;
-import little.nj.expressions.predicates.FluentPredicateImpl;
+import little.nj.expressions.predicates.FluentPredicate;
 
 import org.junit.Test;
 
@@ -44,7 +44,7 @@ public class PredicateTest {
                                                               : "World, Hello"));
         }
         
-        FluentPredicate<ObGeneric<String>> pred = new FluentPredicateImpl<ObGeneric<String>>() {
+        FluentPredicate<ObGeneric<String>> pred = new FluentPredicate<ObGeneric<String>>() {
 
             @Override
             public boolean evaluate(ObGeneric<String> obj) {
@@ -52,7 +52,7 @@ public class PredicateTest {
             }
         };
         
-        FluentPredicate<ObGeneric<String>> pred2 = new FluentPredicateImpl<ObGeneric<String>>() {
+        FluentPredicate<ObGeneric<String>> pred2 = new FluentPredicate<ObGeneric<String>>() {
 
             @Override
             public boolean evaluate(ObGeneric<String> obj) {
@@ -85,7 +85,7 @@ public class PredicateTest {
         assertEquals(100, start.toList().size());
     }
     
-    private class BoxedPredicate<T> extends FluentPredicateImpl<T> {
+    private class BoxedPredicate<T> extends FluentPredicate<T> {
 
         Predicate<T> misbehaved = new Predicate<T>() {
 
@@ -125,7 +125,7 @@ public class PredicateTest {
     
     @Test
     public void test_Contravariance() {
-        FluentPredicate<Ob> pred = new FluentPredicateImpl<Ob>() {
+        FluentPredicate<Ob> pred = new FluentPredicate<Ob>() {
 
             @Override
             public boolean evaluate(Ob obj) {

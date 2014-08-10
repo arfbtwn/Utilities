@@ -17,8 +17,9 @@
  */
 package little.nj.reflection;
 
-import little.nj.expressions.predicates.FluentPredicateImpl;
+import little.nj.expressions.predicates.FluentPredicate;
 import little.nj.expressions.predicates.Predicate;
+import little.nj.util.ConversionUtil;
 
 import java.lang.reflect.Method;
 
@@ -58,7 +59,7 @@ public class MethodMatcherFactoryImpl
     }
 
     public static abstract class MethodMatcher
-        extends FluentPredicateImpl<Method> { }
+        extends FluentPredicate<Method> { }
 
     /**
      * Matches method names against a regular expression
@@ -101,7 +102,7 @@ public class MethodMatcherFactoryImpl
                 return false;
 
             for(int i = 0, end = args.length; i < end; ++i) {
-                if (!assignCompatible(margs[i], args[i]))
+                if (!ConversionUtil.assignCompatible(margs[i], args[i]))
                 {
                     return false;
                 }
@@ -127,35 +128,7 @@ public class MethodMatcherFactoryImpl
          */
         @Override
         public boolean evaluate(Method obj) {
-            return assignCompatible(rv, obj.getReturnType());
+            return ConversionUtil.assignCompatible(rv, obj.getReturnType());
         }
-    }
-
-    private static boolean assignCompatible(Class<?> to, Class<?> from) {
-        if (to.isPrimitive() ^ from.isPrimitive())
-        {
-            Class<?> prim, ref;
-            if (to.isPrimitive()) {
-                prim = to;
-                ref = from;
-            }
-            else {
-                prim = from;
-                ref = to;
-            }
-
-            return (
-                    boolean.class.equals(prim) && Boolean.class.equals(ref)   ||
-                            byte.class.equals(prim)    && Byte.class.equals(ref)      ||
-                            char.class.equals(prim)    && Character.class.equals(ref) ||
-                            short.class.equals(prim)   && Short.class.equals(ref)     ||
-                            int.class.equals(prim)     && Integer.class.equals(ref)   ||
-                            long.class.equals(prim)    && Long.class.equals(ref)      ||
-                            float.class.equals(prim)   && Float.class.equals(ref)     ||
-                            double.class.equals(prim)  && Double.class.equals(ref)
-            );
-        }
-
-        return to.isAssignableFrom(from);
     }
 }

@@ -17,10 +17,10 @@
  */
 package little.nj.expressions.predicates.finals;
 
-import little.nj.expressions.predicates.FluentPredicateImpl;
+import little.nj.expressions.predicates.FluentPredicate;
 
 
-public final class FalsePredicate extends FluentPredicateImpl<Object> {
+public final class FalsePredicate extends FluentPredicate<Object> {
 
     /* (non-Javadoc)
      * @see little.nj.expressions.IExpression#evaluate(java.lang.Object)

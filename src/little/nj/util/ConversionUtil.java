@@ -85,4 +85,43 @@ public class ConversionUtil {
     public final static String printHexBinary(byte[] in) {
         return in == null ? "null" : DatatypeConverter.printHexBinary(in);
     }
+
+    /**
+     * Test if two classes are assignment compatible, taking primitive box
+     * types into account
+     *
+     * @param to
+     * @param from
+     *
+     * @return true iff instances of 'to' can be assigned from instances of 'from'
+     */
+    public static boolean assignCompatible(Class<?> to, Class<?> from) {
+        if (to.isPrimitive() ^ from.isPrimitive())
+        {
+            Class<?> prim, ref;
+            if (to.isPrimitive())
+            {
+                prim = to;
+                ref = from;
+            }
+            else
+            {
+                prim = from;
+                ref = to;
+            }
+
+            return (
+                boolean.class.equals(prim) && Boolean.class.equals(ref)   ||
+                byte.class.equals(prim)    && Byte.class.equals(ref)      ||
+                char.class.equals(prim)    && Character.class.equals(ref) ||
+                short.class.equals(prim)   && Short.class.equals(ref)     ||
+                int.class.equals(prim)     && Integer.class.equals(ref)   ||
+                long.class.equals(prim)    && Long.class.equals(ref)      ||
+                float.class.equals(prim)   && Float.class.equals(ref)     ||
+                double.class.equals(prim)  && Double.class.equals(ref)
+            );
+        }
+
+        return to.isAssignableFrom(from);
+    }
 }

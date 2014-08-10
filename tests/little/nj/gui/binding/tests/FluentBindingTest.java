@@ -4,14 +4,12 @@ import little.nj.core.tests.MockObjects.Ob;
 import little.nj.core.tests.MockObjects.ObGeneric;
 import little.nj.core.tests.MockObjects.ObGenericChangeNotify;
 import little.nj.gui.binding.*;
-import little.nj.gui.binding.GenericBindingImpl.Getter;
-import little.nj.gui.binding.GenericBindingImpl.Marshal;
-import little.nj.gui.binding.GenericBindingImpl.Setter;
-import little.nj.gui.binding.StdComponents.GetterImpl;
+import little.nj.gui.binding.GenericBinding.*;
+import little.nj.gui.binding.Bindings;
 import little.nj.gui.binding.StdComponents.IntToStringMarshal;
-import little.nj.gui.binding.StdComponents.SetterImpl;
 import little.nj.gui.binding.StdComponents.StringToIntMarshal;
 import little.nj.gui.binding.events.AbstractEventSource;
+
 import org.junit.Test;
 
 import java.beans.PropertyChangeEvent;
@@ -33,7 +31,7 @@ public class FluentBindingTest {
         final Ob ob1 = new Ob(10);
         final ObGeneric<String> ob2 = new ObGeneric<String>("Hello, World");
 
-        GenericBindingImpl<Integer, String> bind = new GenericBindingImpl<Integer, String>(
+        GenericBinding<Integer, String> bind = new GenericBinding<Integer, String>(
                 new Getter<Integer>() {
                     @Override
                     public Integer get() {
@@ -57,8 +55,8 @@ public class FluentBindingTest {
         final Ob ob1 = new Ob(10);
         final ObGeneric<String> ob2 = new ObGeneric<String>("Hello, World");
 
-        FluentBindingImpl<Integer, String> bind =
-                FluentBindingImpl.bind(int.class, String.class)
+        FluentBinding<Integer, String> bind =
+                Bindings.bind(int.class, String.class)
                     .from(new Getter<Integer>() {
 
                         @Override
@@ -83,7 +81,7 @@ public class FluentBindingTest {
         Ob ob1 = new Ob(10);
         ObGeneric<String> ob2 = new ObGeneric<String>("Hello, World");
 
-        FluentBindingFactory fac = new FluentBindingFactoryImpl();
+        FluentBindingFactory fac = Bindings.getDefaultFactory();
 
         FluentBinding<Integer, String> bind =
                 fac.bind(ob1, int.class, "getField", ob2, String.class, "setField");
@@ -111,7 +109,7 @@ public class FluentBindingTest {
         final Ob ob1 = new Ob(10);
         final ObGeneric<String> ob2 = new ObGeneric<String>("Hello, World");
 
-        FluentBindingFactory fac = new FluentBindingFactoryImpl();
+        FluentBindingFactory fac = Bindings.getDefaultFactory();
 
         try {
             @SuppressWarnings("unused")
@@ -124,32 +122,15 @@ public class FluentBindingTest {
     }
 
     @Test
-    public void test_Fluent4() {
-
-        final Ob ob1 = new Ob(10);
-        final ObGeneric<String> ob2 = new ObGeneric<String>("Hello, World");
-
-        FluentBindingImpl<Integer, String> bind = new FluentBindingImpl<Integer, String>();
-
-        bind.from(new GetterImpl<Integer>(ob1, "getField", int.class))
-            .to(new SetterImpl<String>(ob2, "setField", String.class))
-            .via(intToString);
-
-        bind.bind();
-
-        assertEquals("10", ob2.getField());
-    }
-
-    @Test
     public void test_Fluent_Bind_Event()
     {
         ObGenericChangeNotify<String> ob1 = new ObGenericChangeNotify<String>("Hello, World");
         Ob ob2 = new Ob(10);
 
 
-        FluentBindingImpl<String, Integer> bind = new FluentBindingImpl<String, Integer>();
-        bind.from(new GetterImpl<String>(ob1, "getField", String.class))
-            .to(new SetterImpl<Integer>(ob2, "setField", int.class))
+        @SuppressWarnings("unused")
+        FluentBinding<String, Integer> bind = Bindings.getDefaultFactory()
+            .bind(ob1, String.class, "getField", ob2, int.class, "setField")
             .via(stringToInt)
             .when(new AbstractEventSource<ObGenericChangeNotify<String>>(ob1) {
 
@@ -159,7 +140,7 @@ public class FluentBindingTest {
 
                         @Override
                         public void propertyChange(PropertyChangeEvent evt) {
-                            fireBindingEvent(evt.getSource());
+                            fireBindingEvent();
                         }
                     });
                 }
@@ -189,7 +170,7 @@ public class FluentBindingTest {
         ob1.setField(field1);
         ob2.setField(field2);
 
-        FluentBinding<byte[], byte[]> bind = new FluentBindingImpl<byte[], byte[]>();
+        FluentBinding<byte[], byte[]> bind = Bindings.bind(byte[].class, byte[].class);
 
         bind.from(new Getter<byte[]>() {
             @Override

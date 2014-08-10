@@ -22,11 +22,11 @@ import little.nj.gui.events.EventSupport;
 
 public abstract class AbstractEventSource<T> implements BindingEventSource {
 
-    private final EventSupport<BindingListener> support;
+    private final EventSupport<BindingListener, BindingEvent> support;
     private final T obj;
 
     public AbstractEventSource(T obj) {
-        support = new EventSupport<BindingListener>();
+        support = new EventSupport<BindingListener, BindingEvent>();
 
         this.obj = obj;
 
@@ -51,7 +51,7 @@ public abstract class AbstractEventSource<T> implements BindingEventSource {
      *
      * @param event
      */
-    protected void fireBindingEvent(Object event) {
-        support.fireEvent(new BindingEvent(obj, event));
+    protected void fireBindingEvent() {
+        support.fireEvent(new BindingEvent(obj));
     }
 }

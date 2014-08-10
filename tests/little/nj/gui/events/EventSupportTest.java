@@ -17,13 +17,12 @@
  */
 package little.nj.gui.events;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.EventListener;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 
 public class EventSupportTest {
@@ -31,7 +30,8 @@ public class EventSupportTest {
     @Test
     public void test_Fires_ActionListener_ActionEvent() {
 
-        EventSupport<ActionListener> es = new EventSupport<ActionListener>();
+        EventSupport<ActionListener, ActionEvent> es =
+                new EventSupport<ActionListener, ActionEvent>();
 
         MockListener ml = new MockListener();
 
@@ -45,7 +45,8 @@ public class EventSupportTest {
 
     @Test
     public void test_Handles_Listener_Subtypes() {
-        EventSupport<ActionListener> es = new EventSupport<ActionListener>();
+        EventSupport<ActionListener, ActionEvent> es =
+                new EventSupport<ActionListener, ActionEvent>();
 
         MockListener ml = new MockListener();
         MockingListener mingl = new MockingListener();
@@ -54,22 +55,6 @@ public class EventSupportTest {
         es.addListener(mingl);
 
         es.fireEvent(new ActionEvent(this, 0, "Foo"));
-    }
-
-    @Test
-    public void test_Handles_Listeners_With_Weird_Signatures() {
-        class MyListener implements EventListener {
-            @SuppressWarnings("unused")
-            void weirdSignature(String foo, int bar) {
-                System.out.println (foo + " " + bar);
-            }
-        }
-        EventSupport<MyListener> es = new EventSupport<MyListener>();
-
-        es.addListener(new MyListener());
-
-        es.fireEvent("Hello", 1);
-        es.fireEvent("World", 2);
     }
 
     class MockListener implements ActionListener {

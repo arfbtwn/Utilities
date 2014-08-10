@@ -35,17 +35,17 @@ public class JTextComponentSource extends AbstractEventSource<JTextComponent>
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-                fireBindingEvent(e);
+                fireBindingEvent();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                fireBindingEvent(e);
+                fireBindingEvent();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                fireBindingEvent(e);
+                fireBindingEvent();
             }
 
         });

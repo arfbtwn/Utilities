@@ -49,8 +49,8 @@ public class NotifyListAdapter<T> implements List<T> {
         void listChanged(ListEvent paramListEvent);
     }
 
-	private EventSupport<ListListener> support =
-			new EventSupport<ListListener>();
+	private EventSupport<ListListener, ListEvent> support =
+			new EventSupport<ListListener, ListEvent>();
 
 	private final List<T> wrap;
 

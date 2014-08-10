@@ -35,7 +35,7 @@ import java.util.Set;
  *
  * @author Nicholas Little
  */
-public class EventSupport<T extends EventListener> {
+public class EventSupport<T extends EventListener, V> {
 
     private final Set<T> listeners = new HashSet<T>();
 
@@ -53,9 +53,9 @@ public class EventSupport<T extends EventListener> {
      *
      * @param args
      */
-    public final synchronized void fireEvent(Object... args) {
+    public final synchronized void fireEvent(V arg) {
         for(T i : listeners) {
-            Method m = getMethod(i, args);
+            Method m = getMethod(i, arg);
 
             if (null == m)
             {
@@ -64,7 +64,7 @@ public class EventSupport<T extends EventListener> {
 
             try {
                 m.setAccessible(true);
-                m.invoke(i, args);
+                m.invoke(i, arg);
             } catch (IllegalAccessException e1) {
                 throw new RuntimeException(e1);
             } catch (IllegalArgumentException e2) {
@@ -83,14 +83,9 @@ public class EventSupport<T extends EventListener> {
      * @param args
      * @return null if no method was found
      */
-    protected Method getMethod(T listener, Object... args) {
-        Class<?> tListener = listener.getClass();
-
-        Class<?>[] tArgs = new Class<?>[args.length];
-        for(int i=0, end = tArgs.length; i < end; ++i) {
-            tArgs [i] = args [i].getClass();
-        }
-
-        return ReflectionUtil.getInstance().getMethodByArgs(tListener, tArgs);
+    protected Method getMethod(T listener, V arg) {
+        return ReflectionUtil
+            .getInstance()
+            .getMethodByArgs(listener, arg.getClass());
     }
 }

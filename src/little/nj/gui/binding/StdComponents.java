@@ -1,8 +1,6 @@
 package little.nj.gui.binding;
 
-import little.nj.gui.binding.GenericBindingImpl.Getter;
-import little.nj.gui.binding.GenericBindingImpl.Setter;
-import little.nj.gui.binding.GenericBindingImpl.Marshal;
+import little.nj.gui.binding.GenericBinding.*;
 import little.nj.reflection.ReflectionUtil;
 
 import java.lang.reflect.InvocationTargetException;
@@ -12,7 +10,7 @@ public class StdComponents
 {
 	private StdComponents() { }
 	
-    public abstract static class ReflectingImpl {
+    abstract static class ReflectingImpl {
         protected final Object obj;
         protected final String mth;
         protected final Class<?> sample;
@@ -42,7 +40,7 @@ public class StdComponents
         protected abstract void testOrThrowImpl();
     }
 
-    public static class GetterImpl<V> extends ReflectingImpl implements Getter<V>
+    static class GetterImpl<V> extends ReflectingImpl implements Getter<V>
     {
         public GetterImpl(Object x, String method, Class<V> sample)
         {
@@ -71,7 +69,7 @@ public class StdComponents
         }
     }
 
-    public static class SetterImpl<V> extends ReflectingImpl implements Setter<V>
+    static class SetterImpl<V> extends ReflectingImpl implements Setter<V>
     {
         public SetterImpl(Object x, String method, Class<V> sample)
         {

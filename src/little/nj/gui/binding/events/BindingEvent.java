@@ -22,11 +22,8 @@ import java.util.EventObject;
 @SuppressWarnings("serial")
 public class BindingEvent extends EventObject {
 
-    Object event;
-
-    public BindingEvent(Object source, Object event)
+    public BindingEvent(Object source)
     {
         super (source);
-        this.event = event;
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013
+ * Copyright (C) 2014
  * Nicholas J. Little <arealityfarbetween@googlemail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,30 +15,20 @@
  *  You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.gui.binding.events;
+package little.nj.gui.binding;
 
-import javax.swing.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+public class Bindings {
 
+    private Bindings() { }
 
-public class JToggleButtonSource extends AbstractEventSource<JToggleButton>
-{
-
-    public JToggleButtonSource(JToggleButton source) {
-        super(source);
+    public final static FluentBindingFactory getDefaultFactory()
+    {
+        return new FluentBindingFactoryImpl();
     }
 
-    @Override
-    protected void init(JToggleButton obj) {
-        obj.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED)
-                    fireBindingEvent();
-            } });
-
+    public final static <X, Y> FluentBinding<X, Y> bind(Class<X> sample1,
+                                                        Class<Y> sample2)
+    {
+        return new FluentBinding<X, Y>();
     }
-
 }

@@ -58,7 +58,7 @@ public class PropertyChangeSource extends AbstractEventSource<Object>
 
         @Override
         public void propertyChange(PropertyChangeEvent e) {
-            fireBindingEvent(e);
+            fireBindingEvent();
         }
 
     };

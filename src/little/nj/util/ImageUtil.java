@@ -21,7 +21,11 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 import javax.swing.ImageIcon;
 
 
@@ -99,5 +103,30 @@ public class ImageUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Reads an image from the specified sequence of bytes, if possible.
+     *
+     * @param bytes
+     * @return a BufferedImage reference or null
+     */
+    public final static BufferedImage readImage (byte[] bytes)
+    {
+        ByteArrayInputStream bis = new ByteArrayInputStream (bytes);
+        ImageInputStream iis;
+        BufferedImage img;
+        try
+        {
+            iis = ImageIO.createImageInputStream (bis);
+            img = ImageIO.read (iis);
+
+            return img;
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace ();
+            return null;
+        }
     }
 }

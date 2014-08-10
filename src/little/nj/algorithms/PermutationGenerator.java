@@ -1,5 +1,7 @@
 package little.nj.algorithms;
 
+import java.lang.reflect.Array;
+
 /**
  * A class to create a set of permutations recursively based on an
  * arbitrary array of symbols
@@ -53,10 +55,12 @@ public class PermutationGenerator<T>
      *
      * @param size
      */
-    public void start(T[] size)
+    public void start(int size)
     {
+        @SuppressWarnings("unchecked")
+        T[] begin = (T[]) Array.newInstance(sym[0].getClass(), size);
         stop = false;
-        recurse(size, size.length - 1);
+        recurse(begin, size - 1);
     }
 
     private void recurse(T[] word, int at)

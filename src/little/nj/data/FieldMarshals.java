@@ -24,6 +24,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 import little.nj.data.MarshalBuilder.TypeMarshal;
 
@@ -237,7 +238,23 @@ public class FieldMarshals {
                 throws IllegalAccessException, InvocationTargetException
         {
             String value = (String) field.get(struct);
-            buffer.put(value.getBytes(charset), 0, array.length);
+            toBuffer (value);
+            buffer.put(array, 0, array.length);
+        }
+
+        private void toBuffer (String value)
+        {
+            Arrays.fill (array, (byte) 0);
+            byte[] string = value.getBytes (charset);
+            System.arraycopy (
+                string,
+                0,
+                array,
+                0,
+                string.length < array.length
+                    ? string.length
+                    : array.length
+            );
         }
     }
 

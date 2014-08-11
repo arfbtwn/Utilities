@@ -22,10 +22,12 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
 import javax.swing.ImageIcon;
 
 
@@ -126,6 +128,30 @@ public class ImageUtil {
         catch (IOException ex)
         {
             ex.printStackTrace ();
+            return null;
+        }
+    }
+
+    /**
+     * @param i
+     * @return
+     */
+    public static byte[] writeImage (BufferedImage image, String formatName)
+    {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream ();
+
+        ImageOutputStream ios;
+
+        try
+        {
+            ios = ImageIO.createImageOutputStream (bos);
+            ImageIO.write (image, formatName, ios);
+
+            return bos.toByteArray ();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
             return null;
         }
     }

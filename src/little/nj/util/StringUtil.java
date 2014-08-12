@@ -173,6 +173,26 @@ public class StringUtil {
         return closeBuilder (sb);
     }
 
+    public static String deepToString (Iterable<?> iterable)
+    {
+        StringBuilder sb = openBuilder ();
+
+        boolean first = true;
+
+        for (Object i : iterable)
+        {
+            if (!first) {
+                sb.append (", ");
+            }
+
+            sb.append (valueOf (i));
+
+            first = false;
+        }
+
+        return closeBuilder (sb);
+    }
+
     public static final String valueOf (Object object)
     {
         if (null == object)
@@ -193,6 +213,10 @@ public class StringUtil {
         else if (Map.class.isAssignableFrom (clz))
         {
             return valueOf ((Map<?, ?>) object);
+        }
+        else if (Iterable.class.isAssignableFrom (clz))
+        {
+            return deepToString ((Iterable<?>) object);
         }
         else
         {

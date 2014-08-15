@@ -17,34 +17,36 @@
  */
 package little.nj.tuples;
 
-public class OrderedTrio<
+public class OrderedQuin <
     A extends Comparable<A>,
     B extends Comparable<B>,
-    C extends Comparable<C>
+    C extends Comparable<C>,
+    D extends Comparable<D>,
+    E extends Comparable<E>
 >
-extends Trio<A, B, C>
-implements Comparable<Trio<A, B, C>>
+extends Quin<A, B, C, D, E>
+implements Comparable<Quin<A, B, C, D, E>>
 {
-    public OrderedTrio(A item1, B item2, C item3)
+
+    public OrderedQuin(A item1, B item2, C item3, D item4, E item5)
     {
-        super (item1, item2, item3);
+        super (item1, item2, item3, item4, item5);
     }
 
     @Override
-    public int compareTo (Trio<A, B, C> o)
+    public int compareTo (Quin<A, B, C, D, E> o)
     {
-        int comp = Item1.compareTo (o.Item1);
+        int comp;
 
-        if (0 == comp)
-        {
-            comp = Item2.compareTo (o.Item2);
-        }
-
-        if (0 == comp)
-        {
-            comp = Item3.compareTo (o.Item3);
-        }
-
-        return comp;
+        return
+            0 == (comp = Item1.compareTo(o.Item1))
+                ? 0 == (comp = Item2.compareTo (o.Item2))
+                    ? 0 == (comp = Item3.compareTo (o.Item3))
+                        ? 0 == (comp = Item4.compareTo (o.Item4))
+                            ? Item5.compareTo (o.Item5)
+                            : comp
+                        : comp
+                    : comp
+                : comp;
     }
 }

@@ -17,13 +17,13 @@
  */
 package little.nj.tuples;
 
-public class Trio<A, B, C> extends Tuple
+public class Triple<A, B, C> extends Tuple
 {
     public final A Item1;
     public final B Item2;
     public final C Item3;
 
-    public Trio(A item1, B item2, C item3)
+    public Triple(A item1, B item2, C item3)
     {
         super (item1, item2, item3);
         this.Item1 = item1;

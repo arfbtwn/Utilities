@@ -24,26 +24,62 @@ public class Tuples
         return new Tuple (items);
     }
 
-    public static <A, B> Pair<A, B> pair (A item1, B item2)
+    public static <A, B>
+    Pair<A, B> tuple (A item1, B item2)
     {
         return new Pair <A, B> (item1, item2);
     }
 
-    public static <A extends Comparable<A>, B extends Comparable<B>>
-    OrderedPair<A, B> pair (A item1, B item2)
+    public static <A extends Comparable<A>,
+                   B extends Comparable<B>>
+    OrderedPair<A, B> tuple (A item1, B item2)
     {
         return new OrderedPair <A, B> (item1, item2);
     }
 
-    public static <A, B, C> Trio<A, B, C> trio (A item1, B item2, C item3)
+    public static <A, B, C>
+    Triple<A, B, C> tuple (A item1, B item2, C item3)
     {
-        return new Trio <A, B, C> (item1, item2, item3);
+        return new Triple <A, B, C> (item1, item2, item3);
     }
 
-    public static <A extends Comparable<A>, B extends Comparable<B>, C extends Comparable<C>>
-    OrderedTrio<A, B, C> trio (A item1, B item2, C item3)
+    public static <A extends Comparable<A>,
+                   B extends Comparable<B>,
+                   C extends Comparable<C>>
+    OrderedTriple<A, B, C> tuple (A item1, B item2, C item3)
     {
-        return new OrderedTrio <A, B, C> (item1, item2, item3);
+        return new OrderedTriple <A, B, C> (item1, item2, item3);
+    }
+
+    public static <A, B, C, D>
+    Quad<A, B, C, D> tuple (A item1, B item2, C item3, D item4)
+    {
+        return new Quad <A, B, C, D> (item1, item2, item3, item4);
+    }
+
+    public static <A extends Comparable<A>,
+                   B extends Comparable<B>,
+                   C extends Comparable<C>,
+                   D extends Comparable<D>>
+    OrderedQuad<A, B, C, D> tuple (A item1, B item2, C item3, D item4)
+    {
+        return new OrderedQuad <A, B, C, D> (item1, item2, item3, item4);
+    }
+
+    public static <A, B, C, D, E>
+    Quin<A, B, C, D, E> tuple (A item1, B item2, C item3, D item4, E item5)
+    {
+        return new Quin <A, B, C, D, E> (item1, item2, item3, item4, item5);
+    }
+
+    public static <A extends Comparable<A>,
+                   B extends Comparable<B>,
+                   C extends Comparable<C>,
+                   D extends Comparable<D>,
+                   E extends Comparable<E>>
+    OrderedQuin<A, B, C, D, E> tuple (A item1, B item2, C item3, D item4, E item5)
+    {
+        return new OrderedQuin <A, B, C, D, E> (item1, item2, item3, item4, item5);
     }
 
     private Tuples () { }

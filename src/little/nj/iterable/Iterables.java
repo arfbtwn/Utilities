@@ -32,21 +32,67 @@ public class Iterables
         List<String> test = new ArrayList<String> ();
 
         test.addAll (
-            Arrays.asList ("Hello, World", "FooBar", "Foo", "Bar")
+            Arrays.asList ("Hello", "FooBar", "World", "Foo", "Bar")
         );
 
-        Iterable<String> foos = filter (test, new Predicate<String>() {
-
+        final Predicate<String> fooPredicate = new Predicate<String>() {
             @Override
             public boolean evaluate (String obj)
             {
                 return obj != null && obj.contains ("Foo");
             }
+        };
+
+        final Expression<String, Boolean> expPred = new Expression<String, Boolean> ()
+        {
+            @Override
+            public Boolean evaluate (String obj)
+            {
+                return fooPredicate.evaluate (obj);
+            }
+
+        };
+
+        final Folder<Long, String> folder = new Summator<String> ()
+        {
+            @Override
+            public Long fold (Long fold, String element)
+            {
+                return fold += element.length ();
+            }
+
+        };
+
+        Iterable<String> foos = filter (test, fooPredicate);
+
+        Iterable<Boolean> foobools = transform (test, expPred);
+
+        Long length       = fold (test, 0L, folder),
+             filterLength = fold (foos, 0L, folder);
+
+        iter (test, new Predicate<String> () {
+
+            @Override
+            public boolean evaluate (String obj)
+            {
+                if ("Foo".equals (obj))
+                {
+                    System.out.println ();
+                    return true;
+                }
+
+                System.out.print (obj + " ");
+                return false;
+            }
         });
 
         String[] obj = toArray (foos);
+        Boolean[] bools = toArray (foobools);
 
         System.out.println (Arrays.deepToString (obj));
+        System.out.println (Arrays.deepToString (bools));
+        System.out.println ("Sum of Lengths: " + length);
+        System.out.println ("Filter Lengths: " + filterLength);
     }
 
     public static <T> T first (Iterable<T> sequence, Predicate<? super T> predicate)
@@ -84,6 +130,35 @@ public class Iterables
     public static <T, E> Iterable<E> transform (T[] sequence, Expression<T, E> transform)
     {
         return transform (Arrays.asList (sequence), transform);
+    }
+
+    public static <T> void iter (Iterable<T> sequence, Predicate<? super T> function)
+    {
+        for (T i : sequence)
+        {
+            if (function.evaluate (i))
+                break;
+        }
+    }
+
+    public static <T> void iter (T[] sequence, Predicate<? super T> function)
+    {
+        iter (Arrays.asList (sequence), function);
+    }
+
+    public static <T, E> E fold (Iterable<T> sequence, E init, Folder<E, T> folder)
+    {
+        for (T i : sequence)
+        {
+            init = folder.fold (init, i);
+        }
+
+        return init;
+    }
+
+    public static <T, E> E fold (T[] sequence, E init, Folder<E, T> folder)
+    {
+        return fold (Arrays.asList (sequence), init, folder);
     }
 
     public static <T> T[] toArray (Iterable<T> sequence, T... arr)

@@ -108,7 +108,7 @@ public class MarshalBuilder {
             return new VariableMarshal(info);
     }
 
-    private FieldMarshal fieldMarshal(StructInfo info, Field field)
+    protected FieldMarshal fieldMarshal(StructInfo info, Field field)
     {
         Class<?> fieldType = field.getType();
 
@@ -185,7 +185,7 @@ public class MarshalBuilder {
                 }
                 else if (null != ctr)
                 {
-                    counters.put(ctr.counter(), i);
+                    counters.put(ctr.id(), i);
                 }
 
                 required.add(fieldMarshal(this, i));
@@ -231,7 +231,7 @@ public class MarshalBuilder {
     @Target(ElementType.FIELD)
     public @interface Counter
     {
-        int counter();
+        int id();
         int adjustment() default 0;
     }
 

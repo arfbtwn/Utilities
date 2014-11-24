@@ -305,7 +305,7 @@ public class FieldMarshals {
             Counted ctd = counted.getAnnotation(Counted.class);
             Counter ctr = counter.getAnnotation(Counter.class);
 
-            if (null == ctd || null == ctr || ctd.counter() != ctr.counter())
+            if (null == ctd || null == ctr || ctd.counter() != ctr.id())
             {
                 throw new IllegalArgumentException();
             }

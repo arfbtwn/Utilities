@@ -19,6 +19,8 @@ package little.nj.data;
 
 import java.nio.ByteBuffer;
 
+import little.nj.data.MarshalBuilder.TypeMarshal;
+
 public class MarshalRoot
 {
     private static final MarshalBuilder BUILDER = new MarshalBuilder ();
@@ -26,6 +28,11 @@ public class MarshalRoot
     public static MarshalBuilder getInstance ()
     {
         return BUILDER;
+    }
+
+    public static void register(Class<?> clz, TypeMarshal marshal)
+    {
+        BUILDER.register (clz, marshal);
     }
 
     public static <T> T read (ByteBuffer buffer, Class<T> clz)

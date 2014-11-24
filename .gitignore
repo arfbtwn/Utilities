@@ -10,5 +10,9 @@
 .classpath
 .project
 
+# Intellij files
+*.iml
+*.eml
+
 doc
 bin

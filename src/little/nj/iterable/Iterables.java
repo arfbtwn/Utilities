@@ -95,6 +95,16 @@ public class Iterables
         System.out.println ("Filter Lengths: " + filterLength);
     }
 
+    public static <T> boolean contains (T[] sequence, Predicate<? super T> predicate)
+    {
+        return contains(Arrays.asList (sequence), predicate);
+    }
+
+    public static <T> boolean contains (Iterable<T> sequence, Predicate<? super T> predicate)
+    {
+        return null != first(sequence, predicate);
+    }
+
     public static <T> T first (Iterable<T> sequence, Predicate<? super T> predicate)
     {
         Iterator<T> filtered = filter (sequence, predicate).iterator ();

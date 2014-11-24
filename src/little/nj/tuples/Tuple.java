@@ -18,10 +18,12 @@
 package little.nj.tuples;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class Tuple
 {
-    public final Object[] Items;
+    public final List<Object> Items;
 
     public Tuple (Object...items)
     {
@@ -30,24 +32,24 @@ public class Tuple
             throw new IllegalArgumentException ();
         }
 
-        this.Items = items;
+        this.Items = Collections.unmodifiableList (Arrays.asList (items));
     }
 
     @Override
     public boolean equals (Object obj)
     {
-        return obj instanceof Tuple && Arrays.deepEquals (Items, ((Tuple)obj).Items);
+        return obj instanceof Tuple && Items.equals (((Tuple)obj).Items);
     }
 
     @Override
     public int hashCode ()
     {
-        return Arrays.deepHashCode (Items);
+        return Items.hashCode ();
     }
 
     @Override
     public String toString ()
     {
-        return Arrays.deepToString (Items);
+        return Items.toString ();
     }
 }

@@ -31,7 +31,7 @@ import java.io.IOException;
 public class ImageUtil {
 
     private ImageUtil() { }
-    
+
     public static Image resizeImage(Image image, int max_w, int max_h)
     {
     	if (!(image instanceof BufferedImage))

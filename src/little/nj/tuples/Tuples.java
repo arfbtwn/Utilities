@@ -17,33 +17,8 @@
  */
 package little.nj.tuples;
 
-import static org.junit.Assert.*;
-
 public class Tuples
 {
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static void main (String [] args)
-    {
-        OrderedTriple tuple1 = tuple ("Hello, World", 1, "foo"),
-                      tuple2 = tuple ("World, Hello", 2, "bar");
-
-        System.out.printf (
-            "Testing %2$s: %1$s%n" + "Against %4$s: %3$s%n",
-            tuple1.toString (), tuple1.getClass ().getSimpleName (),
-            tuple2.toString (), tuple2.getClass ().getSimpleName ()
-        );
-
-        assertTrue (!tuple1.equals (tuple2));
-        assertTrue (!tuple2.equals (tuple1));
-        assertTrue (tuple1.equals(tuple1));
-        assertTrue (tuple2.equals (tuple2));
-        assertTrue (0 > tuple1.compareTo (tuple2));
-        assertTrue (0 < tuple2.compareTo (tuple1));
-
-        System.out.println ("Assertions Pass...");
-
-    }
-
     public static Tuple tuple (Object...items)
     {
         return new Tuple (items);

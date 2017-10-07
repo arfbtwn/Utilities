@@ -17,13 +17,13 @@
  */
 package little.nj.iterable;
 
+import little.nj.expressions.Expression;
+import little.nj.expressions.predicates.Predicate;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
-import little.nj.expressions.Expression;
-import little.nj.expressions.predicates.Predicate;
 
 public class Iterables
 {
@@ -58,7 +58,7 @@ public class Iterables
             @Override
             public Long fold (Long fold, String element)
             {
-                return fold += element.length ();
+                return fold + element.length ();
             }
 
         };

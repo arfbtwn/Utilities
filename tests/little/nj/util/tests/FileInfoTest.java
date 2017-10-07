@@ -1,12 +1,10 @@
 package little.nj.util.tests;
 
-
-import static junit.framework.Assert.*;
-
 import little.nj.util.FileInfo;
 import org.junit.Test;
 
-@SuppressWarnings("deprecation")
+import static org.junit.Assert.assertEquals;
+
 public class FileInfoTest
 {
     @Test

@@ -25,7 +25,7 @@ import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.Queue;
 
-
+@Deprecated
 public class StreamUtil {
 
     public static interface InputAction {

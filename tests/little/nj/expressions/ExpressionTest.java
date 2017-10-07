@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import little.nj.core.tests.MockObjects.Ob;
+import little.nj.core.MockObjects.Ob;
 import little.nj.expressions.predicates.Predicate;
 import little.nj.util.StringUtil;
 

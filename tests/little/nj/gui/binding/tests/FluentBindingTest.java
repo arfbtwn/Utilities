@@ -1,8 +1,8 @@
 package little.nj.gui.binding.tests;
 
-import little.nj.core.tests.MockObjects.Ob;
-import little.nj.core.tests.MockObjects.ObGeneric;
-import little.nj.core.tests.MockObjects.ObGenericChangeNotify;
+import little.nj.core.MockObjects.Ob;
+import little.nj.core.MockObjects.ObGeneric;
+import little.nj.core.MockObjects.ObGenericChangeNotify;
 import little.nj.gui.binding.*;
 import little.nj.gui.binding.GenericBinding.*;
 import little.nj.gui.binding.Bindings;

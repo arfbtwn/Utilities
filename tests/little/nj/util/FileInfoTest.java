@@ -1,4 +1,4 @@
-package little.nj.util.tests;
+package little.nj.util;
 
 import little.nj.util.FileInfo;
 import org.junit.Test;

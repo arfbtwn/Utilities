@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  * Nicholas J. Little <arealityfarbetween@googlemail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package little.nj.core.tests;
+package little.nj.core;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  * A set of mock objects to test the binding infrastructure
- * 
+ *
  * @author Nicholas Little
  *
  */
@@ -33,7 +33,7 @@ public class MockObjects {
     /*
      * @formatter: off
      */
-    
+
     /**
      * A basic class containing an integer primitive
      *
@@ -56,7 +56,7 @@ public class MockObjects {
         public T getField() { return field; }
         public void setField(T x) { field = x; }
     }
-    
+
     /**
      * A basic class supporting change notification
      *
@@ -74,8 +74,8 @@ public class MockObjects {
         public synchronized void removePropertyChangeListener(PropertyChangeListener x) {
             list.remove(x);
         }
-        private synchronized void firePropertyChange(String property, 
-                                                     Object old, 
+        private synchronized void firePropertyChange(String property,
+                                                     Object old,
                                                      Object nnew) {
             PropertyChangeEvent evt = new PropertyChangeEvent(this, property, old, nnew);
             for(PropertyChangeListener i : list)
@@ -83,7 +83,7 @@ public class MockObjects {
         }
         private List<PropertyChangeListener> list = new ArrayList<PropertyChangeListener>();
     }
-    
+
     /**
      * A generic class of type T supporting change notification
      *
@@ -102,8 +102,8 @@ public class MockObjects {
         public synchronized void removePropertyChangeListener(PropertyChangeListener x) {
             list.remove(x);
         }
-        private synchronized void firePropertyChange(String property, 
-                                                     Object old, 
+        private synchronized void firePropertyChange(String property,
+                                                     Object old,
                                                      Object nnew) {
             PropertyChangeEvent evt = new PropertyChangeEvent(this, property, old, nnew);
             for(PropertyChangeListener i : list)
